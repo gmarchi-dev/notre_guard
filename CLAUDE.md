@@ -4,10 +4,10 @@ Sistema de gestão de segurança patrimonial (ronda eletrônica, RDO, ocorrênci
 Notre Dame Campinas. Ver [README.md](README.md) e
 [docs/01-plano-de-implantacao.md](docs/01-plano-de-implantacao.md).
 
-**Estado atual:** Fases 1 e 2 completas, RDO da Fase 3 no ar. Laravel 13 + **Filament 4** (não
-3 — ver `docs/04-decisoes-tecnicas.md`), painel com cadastros, telas operacionais e relatório
-diário com PDF selado; API de sincronização e PWA de campo offline-first. 50 testes passando.
-Faltam dashboards e notificações.
+**Estado atual:** Fases 1 e 2 completas, Fase 3 quase inteira. Laravel 13 + **Filament 4** (não
+3 — ver `docs/04-decisoes-tecnicas.md`), painel com cadastros, telas operacionais, RDO com PDF
+selado e painel de indicadores; API de sincronização e PWA de campo offline-first. 71 testes
+passando. Faltam as notificações.
 
 Antes de mexer no modelo de dados ou em resources, ler `docs/03-modelo-de-dados.md` e
 `docs/04-decisoes-tecnicas.md` — há duas renomeações obrigatórias (`PatrolRoute`,
@@ -60,3 +60,5 @@ Não reabrir sem o usuário pedir:
 - **RDO em rascunho é espelho do banco; fechado é fotografia selada.** Não recalcular RDO
   fechado, não editar o conteúdo — a saída para registro atrasado é reabrir. Consultar sempre
   com `whereDate()` (ver `docs/07-rdo.md`).
+- **Nos indicadores, ausência de dado é `null`, nunca zero** — "não houve ronda" e "as rondas
+  falharam" levam a decisões diferentes (ver `docs/08-dashboard.md`).

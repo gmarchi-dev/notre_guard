@@ -49,6 +49,19 @@ class PanelSmokeTest extends TestCase
             ->assertOk();
     }
 
+    public function test_dashboard_renders(): void
+    {
+        // Os widgets são lazy e não entram no HTML inicial — o conteúdo deles
+        // está coberto em DashboardWidgetsTest. Aqui só a página e os filtros.
+        $this->seed(DatabaseSeeder::class);
+
+        $this->actingAs($this->admin())
+            ->get('/admin')
+            ->assertOk()
+            ->assertSee('Painel operacional')
+            ->assertSee('Período');
+    }
+
     public function test_field_app_is_reachable_without_authentication(): void
     {
         // A PWA precisa abrir antes de existir qualquer token — inclusive

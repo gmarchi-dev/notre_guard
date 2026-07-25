@@ -6,13 +6,16 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use App\Filament\Pages\Dashboard;
+use App\Filament\Widgets\AdherenceChart;
+use App\Filament\Widgets\IncidentsByHourChart;
+use App\Filament\Widgets\IncidentsByTypeChart;
+use App\Filament\Widgets\OperationOverview;
+use App\Filament\Widgets\RecurrenceChart;
 use Filament\Navigation\NavigationGroup;
-use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Widgets\AccountWidget;
-use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
@@ -43,10 +46,14 @@ class AdminPanelProvider extends PanelProvider
             ->pages([
                 Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
+            // Sem discoverWidgets: a ordem e a composição do painel são
+            // decisão explícita, não resultado de varredura de diretório.
             ->widgets([
-                AccountWidget::class,
-                FilamentInfoWidget::class,
+                OperationOverview::class,
+                AdherenceChart::class,
+                IncidentsByHourChart::class,
+                RecurrenceChart::class,
+                IncidentsByTypeChart::class,
             ])
             ->middleware([
                 EncryptCookies::class,

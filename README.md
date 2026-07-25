@@ -4,9 +4,9 @@ Sistema de gestão para a equipe de segurança patrimonial:
 ronda eletrônica, RDO/ocorrências, checklists e indicadores. Desktop (supervisão) + mobile
 (campo).
 
-**Estado:** Fases 1 e 2 completas e o RDO da Fase 3 no ar. O painel roda com os cadastros base,
-as telas operacionais e o relatório diário com PDF selado; a PWA do vigilante executa o ciclo
-completo de turno, inclusive sem rede. Faltam os dashboards e as notificações.
+**Estado:** Fases 1 e 2 completas e a Fase 3 quase inteira. O painel roda com os cadastros base,
+as telas operacionais, o RDO com PDF selado e o painel de indicadores; a PWA do vigilante
+executa o ciclo completo de turno, inclusive sem rede. Faltam as notificações.
 
 ## Stack
 
@@ -61,6 +61,9 @@ php artisan test
 
 **Painel (supervisão)**
 
+- **Painel operacional** com aderência de ronda, ocorrências, taxa de desvio e turnos abertos,
+  filtrável por período e unidade, com gráficos de aderência diária, recorrência por hora e
+  pontos com mais não conformidade
 - Cadastro de unidades, com postos e pontos de controle gerenciados na própria tela da unidade
 - Roteiros de ronda com ordem dos pontos e janelas de execução por dia da semana
 - Checklists com itens reordenáveis, vinculáveis a um ponto de controle
@@ -98,6 +101,7 @@ Turnos, rondas e leituras são imutáveis: nascem em campo e o painel só consul
 | [05 — API de sincronização](docs/05-api-de-sincronizacao.md) | Endpoints, tipos de evento, idempotência, desvios |
 | [06 — PWA de campo](docs/06-pwa-de-campo.md) | Telas, offline, decisões de interface, limitações |
 | [07 — RDO](docs/07-rdo.md) | Ciclo do relatório diário, selo de integridade, PDF |
+| [08 — Painel operacional](docs/08-dashboard.md) | Indicadores, gráficos e como ler os números |
 
 ## Relação com o Portal de Segurança Digital
 

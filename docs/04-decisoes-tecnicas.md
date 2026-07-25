@@ -119,14 +119,24 @@ Bug encontrado pelos testes e digno de nota: o cast `date` grava `'Y-m-d H:i:s'`
 por `where('report_date', '2026-07-25')` não casa e cria um segundo RDO da mesma data. Usar
 `whereDate()`.
 
+## 2026-07-25 — Painel operacional com filtros no servidor
+
+Detalhes em [08-dashboard.md](08-dashboard.md). O que não pode ser afrouxado:
+
+- **Ausência de dado é `null`, não zero** — em aderência e na série diária. Zero por cento e
+  "não houve ronda" levam a decisões diferentes.
+- **O filtro de unidade não é segurança.** `ReadsDashboardFilters` reforça a unidade do gestor
+  no servidor; o que vem do Livewire é sugestão.
+- Widgets registrados explicitamente no `AdminPanelProvider`, sem `discoverWidgets()`: a
+  composição do painel é decisão, não varredura de diretório.
+
 ## Pendências conhecidas
 
 - Não há autenticação Google Workspace ainda: login do painel é e-mail/senha local.
-- **Não há dashboard nem gráficos.** O RDO entrega os números do dia; falta a visão agregada
-  (aderência por período, recorrência por local e horário) e as notificações de ocorrência
-  grave.
+- **Não há notificações.** Ocorrência grave não avisa a supervisão por e-mail nem por push.
 - O RDO é gerado sob demanda. Não há job agendado criando o rascunho do dia anterior
   automaticamente.
+- O dashboard não tem exportação. Levar os números para fora exige o PDF do RDO.
 - O escopo por unidade cobre a **leitura**. Um gestor de unidade ainda consegue criar registros
   para outra unidade escolhendo-a no formulário — falta restringir as opções dos selects.
 - Botão de pânico, alerta de inatividade e controle de recursos seguem fora (Fase 5).
