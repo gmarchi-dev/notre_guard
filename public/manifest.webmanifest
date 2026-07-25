@@ -1,0 +1,32 @@
+{
+    "name": "Notre Guard — Campo",
+    "short_name": "Notre Guard",
+    "description": "Ronda eletrônica e registro de ocorrências.",
+    "lang": "pt-BR",
+    "start_url": "/campo",
+    "scope": "/campo",
+    "display": "standalone",
+    "orientation": "portrait",
+    "background_color": "#0b1220",
+    "theme_color": "#0b1220",
+    "icons": [
+        {
+            "src": "/icons/notre-guard-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/icons/notre-guard-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/icons/notre-guard-maskable.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}
