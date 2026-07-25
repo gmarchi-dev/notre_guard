@@ -1,6 +1,6 @@
 # Notre Guard
 
-Sistema de gestão para a equipe de segurança patrimonial do Colégio Notre Dame Campinas:
+Sistema de gestão para a equipe de segurança patrimonial:
 ronda eletrônica, RDO/ocorrências, checklists e indicadores. Desktop (supervisão) + mobile
 (campo).
 
