@@ -130,12 +130,27 @@ Detalhes em [08-dashboard.md](08-dashboard.md). O que não pode ser afrouxado:
 - Widgets registrados explicitamente no `AdminPanelProvider`, sem `discoverWidgets()`: a
   composição do painel é decisão, não varredura de diretório.
 
+## 2026-07-25 — Notificações só para o que é grave
+
+Detalhes em [09-notificacoes.md](09-notificacoes.md). O aviso sai na criação da ocorrência, por
+observer, e só para gravidade alta/crítica ou tipo marcado como `notify_supervision`. Ocorrência
+rotineira entra no RDO e não acorda ninguém: ruído constante faz a supervisão ignorar o sistema,
+e aí o alerta que importa também se perde.
+
+Duas armadilhas encontradas: `Illuminate\Bus\Queueable` já declara `$afterCommit` (redeclarar
+com tipo é erro fatal de composição de trait), e a ação da notificação do Filament vem de
+`Filament\Actions\Action` — `Filament\Notifications\Actions\Action` não existe na v4.
+
+**Exige worker de fila rodando.** Sem `queue:work`, os avisos ficam parados na tabela `jobs`.
+
 ## Pendências conhecidas
 
 - Não há autenticação Google Workspace ainda: login do painel é e-mail/senha local.
-- **Não há notificações.** Ocorrência grave não avisa a supervisão por e-mail nem por push.
+- **Não há push no celular** — só sino no painel e e-mail. Falta chave VAPID e assinatura de
+  push na PWA.
 - O RDO é gerado sob demanda. Não há job agendado criando o rascunho do dia anterior
   automaticamente.
+- Não há worker de fila configurado como serviço; em produção isso precisa ser supervisionado.
 - O dashboard não tem exportação. Levar os números para fora exige o PDF do RDO.
 - O escopo por unidade cobre a **leitura**. Um gestor de unidade ainda consegue criar registros
   para outra unidade escolhendo-a no formulário — falta restringir as opções dos selects.

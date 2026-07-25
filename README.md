@@ -4,9 +4,10 @@ Sistema de gestão para a equipe de segurança patrimonial:
 ronda eletrônica, RDO/ocorrências, checklists e indicadores. Desktop (supervisão) + mobile
 (campo).
 
-**Estado:** Fases 1 e 2 completas e a Fase 3 quase inteira. O painel roda com os cadastros base,
-as telas operacionais, o RDO com PDF selado e o painel de indicadores; a PWA do vigilante
-executa o ciclo completo de turno, inclusive sem rede. Faltam as notificações.
+**Estado:** Fases 1, 2 e 3 completas. O painel roda com os cadastros base, as telas
+operacionais, o RDO com PDF selado, o painel de indicadores e as notificações de ocorrência
+grave; a PWA do vigilante executa o ciclo completo de turno, inclusive sem rede. O próximo
+passo é o rollout (Fase 4), que depende do levantamento com a equipe.
 
 ## Stack
 
@@ -32,6 +33,12 @@ npm install && npm run build
 
 ```bash
 php artisan serve --port=8010
+```
+
+As notificações são enfileiradas, então é preciso um worker rodando em paralelo:
+
+```bash
+php artisan queue:work
 ```
 
 O painel fica em <http://127.0.0.1:8010/admin> e a PWA do vigilante em
@@ -74,6 +81,8 @@ php artisan test
 - Consulta de turnos, rondas (com aderência e desvios de cada leitura) e ocorrências
 - **RDO** por unidade e data, com fechamento selado por SHA-256, PDF para envio e detecção de
   registros que chegaram depois do fechamento
+- **Notificações** de ocorrência grave por e-mail e sino no painel, respeitando a unidade do
+  destinatário
 - Gestão de usuários e perfis (só administrador), com criação do login direto no cadastro
   de vigilante
 - **Escopo por unidade**: o gestor de unidade enxerga apenas a própria unidade
@@ -102,6 +111,7 @@ Turnos, rondas e leituras são imutáveis: nascem em campo e o painel só consul
 | [06 — PWA de campo](docs/06-pwa-de-campo.md) | Telas, offline, decisões de interface, limitações |
 | [07 — RDO](docs/07-rdo.md) | Ciclo do relatório diário, selo de integridade, PDF |
 | [08 — Painel operacional](docs/08-dashboard.md) | Indicadores, gráficos e como ler os números |
+| [09 — Notificações](docs/09-notificacoes.md) | Quando dispara, quem recebe, canais e fila |
 
 ## Relação com o Portal de Segurança Digital
 

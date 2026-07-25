@@ -4,10 +4,12 @@ Sistema de gestão de segurança patrimonial (ronda eletrônica, RDO, ocorrênci
 Notre Dame Campinas. Ver [README.md](README.md) e
 [docs/01-plano-de-implantacao.md](docs/01-plano-de-implantacao.md).
 
-**Estado atual:** Fases 1 e 2 completas, Fase 3 quase inteira. Laravel 13 + **Filament 4** (não
-3 — ver `docs/04-decisoes-tecnicas.md`), painel com cadastros, telas operacionais, RDO com PDF
-selado e painel de indicadores; API de sincronização e PWA de campo offline-first. 71 testes
-passando. Faltam as notificações.
+**Estado atual:** Fases 1, 2 e 3 completas. Laravel 13 + **Filament 4** (não 3 — ver
+`docs/04-decisoes-tecnicas.md`), painel com cadastros, telas operacionais, RDO com PDF selado,
+indicadores e notificações; API de sincronização e PWA de campo offline-first. 78 testes
+passando. Próximo passo é o rollout (Fase 4), que depende do levantamento com a equipe.
+
+As notificações são enfileiradas: sem `php artisan queue:work` os avisos ficam parados.
 
 Antes de mexer no modelo de dados ou em resources, ler `docs/03-modelo-de-dados.md` e
 `docs/04-decisoes-tecnicas.md` — há duas renomeações obrigatórias (`PatrolRoute`,
@@ -62,3 +64,5 @@ Não reabrir sem o usuário pedir:
   com `whereDate()` (ver `docs/07-rdo.md`).
 - **Nos indicadores, ausência de dado é `null`, nunca zero** — "não houve ronda" e "as rondas
   falharam" levam a decisões diferentes (ver `docs/08-dashboard.md`).
+- **Só ocorrência grave notifica.** Não ampliar o gatilho sem o usuário pedir: ruído constante
+  faz a supervisão ignorar o sistema (ver `docs/09-notificacoes.md`).

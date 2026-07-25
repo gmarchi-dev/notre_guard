@@ -33,6 +33,10 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->brandName('Notre Guard')
+            // Sino no topo do painel. O polling é a via mais simples que
+            // funciona sem WebSockets; 30s é suficiente para o uso aqui.
+            ->databaseNotifications()
+            ->databaseNotificationsPolling('30s')
             ->colors([
                 'primary' => Color::Blue,
             ])
