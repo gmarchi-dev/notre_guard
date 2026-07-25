@@ -69,6 +69,9 @@ php artisan test
 - Folhas de QR Code prontas para impressão, por ponto, por posto ou para a unidade inteira
   (`/qr/unidade/{unidade}/pontos`)
 - Consulta de turnos, rondas (com aderência e desvios de cada leitura) e ocorrências
+- Gestão de usuários e perfis (só administrador), com criação do login direto no cadastro
+  de vigilante
+- **Escopo por unidade**: o gestor de unidade enxerga apenas a própria unidade
 
 **PWA de campo (vigilante)**
 
@@ -76,6 +79,7 @@ php artisan test
 - Assunção de posto, ronda com leitura de QR, checklist por ponto, ponto pulado com
   justificativa, ocorrência com foto, encerramento de ronda e de turno
 - **Funciona offline**: os registros ficam no aparelho e sobem sozinhos quando há rede
+- Tela de fila mostrando o que está pendente e o que o servidor recusou, com o motivo
 - Desvios (fora do raio, sem GPS, fora da janela, fora de ordem, relógio divergente) são
   marcados pelo servidor — o app nunca recusa um registro
 

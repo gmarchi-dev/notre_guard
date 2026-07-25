@@ -74,13 +74,45 @@ Na ocorrência, os fatos relatados são somente leitura e só a análise da supe
 `review_notes`) é editável. Um formulário editável ali transformaria aderência de ronda em número
 negociável e destruiria o valor probatório do RDO.
 
+## 2026-07-25 — Escopo por unidade via trait, com ponto de extensão
+
+`App\Filament\Concerns\ScopedToUnit` filtra o resource pela unidade do gestor logado. Admin e
+supervisão têm `unit_id` nulo e enxergam tudo; o gestor de unidade só vê a dele.
+
+Resources com regra própria sobrescrevem **`applyUnitScope()`**, nunca `getEloquentQuery()`.
+Motivo concreto: chamar `Resource::getEloquentQuery()` estaticamente perde o late static
+binding e o Filament tenta instanciar a classe `App\Models\` (vazia), com erro 500 na listagem.
+
+Casos especiais em uso: `UnitResource` filtra por `id` (a própria unidade),
+`SecurityGuardResource` por `default_unit_id`, e `ChecklistTemplateResource` inclui os modelos
+globais (`unit_id` nulo), que valem para todas as unidades.
+
+## 2026-07-25 — Gestão de contas restrita a administrador
+
+`UserResource::canAccess()` exige `isAdmin()`. Supervisão e gestor de unidade operam o sistema
+mas não criam login nem trocam perfil de ninguém.
+
+O cadastro de vigilante cria o login na própria tela (`createOptionForm` no select de usuário),
+e o select só oferece usuários com perfil `guard` que ainda não têm cadastro — um login por
+vigilante. Sem isso, cadastrar alguém dependia de `tinker`.
+
+## 2026-07-25 — Tela de fila para o vigilante
+
+A PWA mostra o que está no aparelho: pendentes, em retentativa e **recusados**, com o motivo
+que o servidor devolveu. Os recusados têm ação de tentar de novo e de descartar.
+
+Registro recusado por falha permanente não sobe sozinho e não pode sumir em silêncio: se o
+vigilante não consegue ver o que não chegou, ele deixa de confiar no aplicativo e volta para o
+papel — que é o risco número um do projeto.
+
 ## Pendências conhecidas
 
-- O painel ainda não filtra por unidade. `unit_manager` hoje enxerga todas as unidades — falta
-  o escopo por unidade antes de dar acesso a gestor de unidade.
 - Não há autenticação Google Workspace ainda: login do painel é e-mail/senha local.
 - **RDO ainda não existe** (Fase 3): a tabela `daily_reports` está criada, mas não há
   fechamento, PDF nem dashboard de aderência.
-- **O vigilante não tem tela de fila.** Vê o contador de pendentes, mas não a lista nem os
-  registros rejeitados por falha permanente.
+- O escopo por unidade cobre a **leitura**. Um gestor de unidade ainda consegue criar registros
+  para outra unidade escolhendo-a no formulário — falta restringir as opções dos selects.
 - Botão de pânico, alerta de inatividade e controle de recursos seguem fora (Fase 5).
+- **A Fase 0 (levantamento com a equipe) continua pendente.** Unidades, postos, rotas e a
+  taxonomia de ocorrências que estão no sistema são um ponto de partida, não o levantamento
+  real.

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Incidents;
 
+use App\Filament\Concerns\ScopedToUnit;
 use App\Filament\Resources\Incidents\Pages\CreateIncident;
 use App\Filament\Resources\Incidents\Pages\EditIncident;
 use App\Filament\Resources\Incidents\Pages\ListIncidents;
@@ -17,6 +18,8 @@ use UnitEnum;
 
 class IncidentResource extends Resource
 {
+    use ScopedToUnit;
+
     protected static ?string $model = Incident::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedExclamationTriangle;

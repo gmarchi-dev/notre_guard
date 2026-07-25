@@ -53,3 +53,7 @@ Não reabrir sem o usuário pedir:
   perdido não afeta contas.
 - Tudo que entra no IndexedDB passa por `plain()` em `db.js`: o Alpine entrega `Proxy` e o
   IndexedDB não consegue cloná-los.
+- Escopo por unidade: usar o trait `ScopedToUnit` e sobrescrever `applyUnitScope()`. **Nunca**
+  sobrescrever `getEloquentQuery()` chamando `Resource::getEloquentQuery()` — perde o late
+  static binding e quebra a listagem com erro 500.
+- Criar login e trocar perfil é só de administrador (`UserResource::canAccess()`).

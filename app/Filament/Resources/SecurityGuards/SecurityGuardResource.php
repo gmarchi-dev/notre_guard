@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\SecurityGuards;
 
+use App\Filament\Concerns\ScopedToUnit;
 use App\Filament\Resources\SecurityGuards\Pages\CreateSecurityGuard;
 use App\Filament\Resources\SecurityGuards\Pages\EditSecurityGuard;
 use App\Filament\Resources\SecurityGuards\Pages\ListSecurityGuards;
@@ -17,6 +18,8 @@ use UnitEnum;
 
 class SecurityGuardResource extends Resource
 {
+    use ScopedToUnit;
+
     protected static ?string $model = SecurityGuard::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
@@ -28,6 +31,11 @@ class SecurityGuardResource extends Resource
     protected static ?string $pluralModelLabel = 'vigilantes';
 
     protected static ?int $navigationSort = 5;
+
+    protected static function unitScopeColumn(): string
+    {
+        return 'default_unit_id';
+    }
 
     public static function form(Schema $schema): Schema
     {

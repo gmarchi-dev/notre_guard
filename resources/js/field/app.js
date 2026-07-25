@@ -1,5 +1,15 @@
 import Alpine from 'alpinejs'
-import { db, putCache, getCache, clearAll, enqueue, enqueueBlob } from './db'
+import {
+    db,
+    putCache,
+    getCache,
+    clearAll,
+    enqueue,
+    enqueueBlob,
+    queueSnapshot,
+    retryEvent,
+    discardEvent,
+} from './db'
 import * as api from './api'
 import { sync, startSyncLoop, onSyncChange, refreshPending } from './sync'
 import { QrScanner, confirmFeedback } from './scanner'
@@ -8,10 +18,13 @@ import { currentPosition } from './geo'
 function fieldApp() {
     return {
         // --- estado ---
-        screen: 'loading', // loading | login | home | patrol | scan | checklist | incident
+        screen: 'loading', // loading | login | home | patrol | scan | checklist | incident | queue
         online: navigator.onLine,
         pending: 0,
+        rejected: 0,
         syncing: false,
+        queue: { events: [], photos: 0 },
+        previousScreen: 'home',
         message: null,
         busy: false,
 
@@ -41,7 +54,12 @@ function fieldApp() {
 
             onSyncChange((state) => {
                 this.pending = state.pending
+                this.rejected = state.rejected
                 this.syncing = state.running
+
+                if (this.screen === 'queue') {
+                    this.loadQueue()
+                }
             })
 
             this.data = await getCache('bootstrap')
@@ -418,6 +436,56 @@ function fieldApp() {
             } finally {
                 this.busy = false
             }
+        },
+
+        // --- fila ---
+        async openQueue() {
+            this.previousScreen = this.screen
+            this.screen = 'queue'
+            await this.loadQueue()
+        },
+
+        async loadQueue() {
+            this.queue = await queueSnapshot()
+        },
+
+        closeQueue() {
+            this.screen = this.previousScreen === 'queue' ? 'home' : this.previousScreen
+        },
+
+        async retry(id) {
+            await retryEvent(id)
+            await this.loadQueue()
+            sync()
+        },
+
+        async discard(id) {
+            if (!confirm('Descartar este registro? Ele não será enviado e não poderá ser recuperado.')) {
+                return
+            }
+
+            await discardEvent(id)
+            await this.loadQueue()
+            await refreshPending()
+        },
+
+        queueLabel(type) {
+            return {
+                'shift.start': 'Assunção de posto',
+                'shift.end': 'Encerramento de turno',
+                'patrol.start': 'Início de ronda',
+                'patrol.scan': 'Leitura de ponto',
+                'patrol.end': 'Encerramento de ronda',
+                'incident.report': 'Ocorrência',
+            }[type] ?? type
+        },
+
+        queueStatusLabel(status) {
+            return {
+                pending: 'Aguardando envio',
+                retry: 'Tentando de novo',
+                rejected: 'Recusado pelo servidor',
+            }[status] ?? status
         },
 
         // --- utilidades ---

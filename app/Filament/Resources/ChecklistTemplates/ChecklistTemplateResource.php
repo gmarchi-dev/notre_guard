@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\ChecklistTemplates;
 
+use App\Filament\Concerns\ScopedToUnit;
 use App\Filament\Resources\ChecklistTemplates\Pages\CreateChecklistTemplate;
 use App\Filament\Resources\ChecklistTemplates\Pages\EditChecklistTemplate;
 use App\Filament\Resources\ChecklistTemplates\Pages\ListChecklistTemplates;
@@ -13,10 +14,13 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
 class ChecklistTemplateResource extends Resource
 {
+    use ScopedToUnit;
+
     protected static ?string $model = ChecklistTemplate::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentCheck;
@@ -28,6 +32,17 @@ class ChecklistTemplateResource extends Resource
     protected static ?string $pluralModelLabel = 'checklists';
 
     protected static ?int $navigationSort = 1;
+
+    /**
+     * Checklist com unit_id nulo é modelo global, válido para todas as unidades —
+     * o gestor precisa enxergá-lo junto com os da própria unidade.
+     */
+    protected static function applyUnitScope(Builder $query, int $unitId): Builder
+    {
+        return $query->where(
+            fn (Builder $q) => $q->where('unit_id', $unitId)->orWhereNull('unit_id'),
+        );
+    }
 
     public static function form(Schema $schema): Schema
     {

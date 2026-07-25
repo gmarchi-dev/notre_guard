@@ -76,8 +76,44 @@ export async function pendingEvents(limit = 100) {
         .then((rows) => rows.slice(0, limit))
 }
 
+/**
+ * Fila completa para a tela de diagnóstico do vigilante: pendentes, em
+ * retentativa e rejeitados. Ele precisa conseguir ver o que não subiu.
+ */
+export async function queueSnapshot() {
+    const events = await db.queue.orderBy('created_at').reverse().toArray()
+    const blobs = await db.blobs.toArray()
+
+    return {
+        events: events.map(({ id, uuid, type, occurred_at, status, attempts, error }) => ({
+            id,
+            uuid,
+            type,
+            occurred_at,
+            status,
+            attempts,
+            error,
+        })),
+        photos: blobs.filter((b) => b.status === 'pending').length,
+    }
+}
+
+/** Devolve um registro rejeitado para a fila, para tentar de novo. */
+export async function retryEvent(id) {
+    await db.queue.update(id, { status: 'retry', error: null })
+}
+
+export async function discardEvent(id) {
+    await db.queue.delete(id)
+}
+
 export async function pendingCount() {
     const events = await db.queue.where('status').anyOf('pending', 'retry').count()
     const blobs = await db.blobs.where('status').equals('pending').count()
     return events + blobs
+}
+
+/** Rejeitados por falha permanente: não sobem sozinhos, exigem decisão. */
+export async function rejectedCount() {
+    return db.queue.where('status').equals('rejected').count()
 }

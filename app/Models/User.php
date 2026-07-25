@@ -8,12 +8,13 @@ use Filament\Panel;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-#[Fillable(['name', 'email', 'password', 'role', 'active'])]
+#[Fillable(['name', 'email', 'password', 'role', 'active', 'unit_id'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements FilamentUser
 {
@@ -53,6 +54,20 @@ class User extends Authenticatable implements FilamentUser
     public function securityGuard(): HasOne
     {
         return $this->hasOne(SecurityGuard::class);
+    }
+
+    public function unit(): BelongsTo
+    {
+        return $this->belongsTo(Unit::class);
+    }
+
+    /**
+     * Gestor de unidade só enxerga a própria unidade. Admin e supervisão
+     * enxergam todas — por isso o unit_id deles fica nulo.
+     */
+    public function isScopedToUnit(): bool
+    {
+        return $this->role === self::ROLE_UNIT_MANAGER && $this->unit_id !== null;
     }
 
     /**

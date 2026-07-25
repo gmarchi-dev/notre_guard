@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Shifts;
 
+use App\Filament\Concerns\ScopedToUnit;
 use App\Filament\Resources\Shifts\Pages\EditShift;
 use App\Filament\Resources\Shifts\Pages\ListShifts;
 use App\Filament\Resources\Shifts\Schemas\ShiftForm;
@@ -16,6 +17,8 @@ use UnitEnum;
 
 class ShiftResource extends Resource
 {
+    use ScopedToUnit;
+
     protected static ?string $model = Shift::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClock;

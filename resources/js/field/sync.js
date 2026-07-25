@@ -1,4 +1,4 @@
-import { db, pendingEvents, pendingCount } from './db'
+import { db, pendingEvents, pendingCount, rejectedCount } from './db'
 import { pushEvents, pushAttachment, ApiError } from './api'
 
 /**
@@ -14,6 +14,7 @@ let timer = null
 
 export const syncState = {
     pending: 0,
+    rejected: 0,
     lastSyncAt: null,
     lastError: null,
     running: false,
@@ -28,6 +29,7 @@ export function onSyncChange(fn) {
 
 async function emit() {
     syncState.pending = await pendingCount()
+    syncState.rejected = await rejectedCount()
     listeners.forEach((fn) => fn({ ...syncState }))
 }
 

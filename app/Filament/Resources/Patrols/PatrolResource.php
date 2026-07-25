@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Patrols;
 
+use App\Filament\Concerns\ScopedToUnit;
 use App\Filament\Resources\Patrols\Pages\EditPatrol;
 use App\Filament\Resources\Patrols\Pages\ListPatrols;
 use App\Filament\Resources\Patrols\Schemas\PatrolForm;
@@ -16,6 +17,8 @@ use UnitEnum;
 
 class PatrolResource extends Resource
 {
+    use ScopedToUnit;
+
     protected static ?string $model = Patrol::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedArrowPath;

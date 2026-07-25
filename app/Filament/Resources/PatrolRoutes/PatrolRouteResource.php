@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\PatrolRoutes;
 
+use App\Filament\Concerns\ScopedToUnit;
 use App\Filament\Resources\PatrolRoutes\Pages\CreatePatrolRoute;
 use App\Filament\Resources\PatrolRoutes\Pages\EditPatrolRoute;
 use App\Filament\Resources\PatrolRoutes\Pages\ListPatrolRoutes;
@@ -17,6 +18,8 @@ use UnitEnum;
 
 class PatrolRouteResource extends Resource
 {
+    use ScopedToUnit;
+
     protected static ?string $model = PatrolRoute::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedMap;

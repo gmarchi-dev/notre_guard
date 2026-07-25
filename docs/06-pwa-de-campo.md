@@ -23,6 +23,10 @@ Login por matrícula → assumir posto → iniciar ronda → ler pontos (QR, man
 justificativa) → checklist por ponto → encerrar ronda → encerrar turno. Ocorrência pode ser
 aberta a qualquer momento, dentro ou fora da ronda.
 
+O indicador da barra de estado abre a **tela de fila**, que lista o que está no aparelho:
+aguardando envio, tentando de novo e recusado. Os recusados mostram o motivo devolvido pelo
+servidor e têm ação de tentar de novo ou descartar.
+
 ## Decisões da interface
 
 Tratadas como requisito, não como acabamento:
@@ -54,8 +58,7 @@ turno em curso.
   primário e o campo `nfc_uid` já está no modelo para quando isso for necessário.
 - **Notificação push exige o app instalado na tela inicial** no iOS (16.4+). Entra no roteiro
   de preparação do aparelho.
-- **Sem tela de fila para o vigilante.** Ele vê o contador, mas não a lista do que está
-  pendente nem o que foi rejeitado. Falta antes do piloto.
+- A tela de fila lista os eventos, mas **não as fotos individualmente** — só o total pendente.
 
 ## Privacidade
 

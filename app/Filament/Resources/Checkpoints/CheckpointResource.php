@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Checkpoints;
 
+use App\Filament\Concerns\ScopedToUnit;
 use App\Filament\Resources\Checkpoints\Pages\CreateCheckpoint;
 use App\Filament\Resources\Checkpoints\Pages\EditCheckpoint;
 use App\Filament\Resources\Checkpoints\Pages\ListCheckpoints;
@@ -17,6 +18,8 @@ use UnitEnum;
 
 class CheckpointResource extends Resource
 {
+    use ScopedToUnit;
+
     protected static ?string $model = Checkpoint::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedMapPin;

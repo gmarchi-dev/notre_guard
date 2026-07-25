@@ -22,14 +22,22 @@
             <span class="pill offline"><span class="dot"></span> Sem rede</span>
         </template>
 
+        <template x-if="rejected > 0">
+            <button type="button" class="pill rejected" style="min-height:auto" @click="openQueue()">
+                <span x-text="rejected + ' recusado(s)'"></span>
+            </button>
+        </template>
+
         <template x-if="pending > 0">
-            <button type="button" class="pill pending" style="min-height:auto" @click="syncNow()">
+            <button type="button" class="pill pending" style="min-height:auto" @click="openQueue()">
                 <span x-text="syncing ? 'Enviando…' : pending + ' pendente(s)'"></span>
             </button>
         </template>
 
-        <template x-if="online && pending === 0 && screen !== 'login'">
-            <span class="pill clean"><span class="dot"></span> Em dia</span>
+        <template x-if="online && pending === 0 && rejected === 0 && screen !== 'login' && screen !== 'loading'">
+            <button type="button" class="pill clean" style="min-height:auto" @click="openQueue()">
+                <span class="dot"></span> Em dia
+            </button>
         </template>
     </div>
 
@@ -233,6 +241,57 @@
             </div>
         </template>
 
+        {{-- ======================= FILA ======================= --}}
+        <template x-if="screen === 'queue'">
+            <div>
+                <h1>Registros no aparelho</h1>
+                <p class="muted">
+                    <span x-text="pending"></span> aguardando envio<span x-show="queue.photos > 0">,
+                    <span x-text="queue.photos"></span> foto(s)</span><span x-show="rejected > 0">,
+                    <span x-text="rejected"></span> recusado(s)</span>.
+                </p>
+
+                <template x-if="queue.events.length === 0">
+                    <div class="card" style="margin-top:16px">
+                        <p>Nada pendente. Tudo que você registrou já está no servidor.</p>
+                    </div>
+                </template>
+
+                <div style="margin-top:16px">
+                    <template x-for="item in queue.events" :key="item.id">
+                        <div class="card" style="margin-bottom:10px">
+                            <div style="display:flex; gap:10px; align-items:baseline">
+                                <strong x-text="queueLabel(item.type)"></strong>
+                                <span class="muted" style="margin-left:auto" x-text="formatTime(item.occurred_at)"></span>
+                            </div>
+
+                            <p class="muted" style="margin-top:6px">
+                                <span x-text="queueStatusLabel(item.status)"></span>
+                                <span x-show="item.attempts > 0"> · <span x-text="item.attempts"></span> tentativa(s)</span>
+                            </p>
+
+                            <template x-if="item.status === 'rejected'">
+                                <div>
+                                    <div class="message error" style="margin-top:10px">
+                                        <span x-text="item.error || 'O servidor recusou este registro.'"></span>
+                                    </div>
+                                    <div class="actions row" style="margin-top:10px">
+                                        <button type="button" class="ghost small" @click="retry(item.id)">Tentar de novo</button>
+                                        <button type="button" class="ghost small" @click="discard(item.id)">Descartar</button>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+
+                <p class="notice" style="margin-top:16px">
+                    Registros recusados não sobem sozinhos. Se você não souber o motivo,
+                    avise a supervisão antes de descartar.
+                </p>
+            </div>
+        </template>
+
         {{-- ======================= OCORRÊNCIA ======================= --}}
         <template x-if="screen === 'incident'">
             <div>
@@ -332,6 +391,14 @@
                 <button type="button" class="primary" :disabled="busy" @click="submitIncident()"
                         x-text="busy ? 'Registrando…' : 'Registrar ocorrência'"></button>
                 <button type="button" class="ghost" @click="screen = patrol ? 'patrol' : 'home'">Cancelar</button>
+            </div>
+        </template>
+
+        <template x-if="screen === 'queue'">
+            <div class="actions">
+                <button type="button" class="primary" :disabled="syncing || pending === 0" @click="syncNow()"
+                        x-text="syncing ? 'Enviando…' : 'Enviar agora'"></button>
+                <button type="button" class="ghost" @click="closeQueue()">Voltar</button>
             </div>
         </template>
 

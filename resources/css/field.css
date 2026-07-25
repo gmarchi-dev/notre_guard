@@ -103,6 +103,11 @@ body {
     color: #86efac;
 }
 
+.pill.rejected {
+    background: #450a0a;
+    color: #fca5a5;
+}
+
 .dot {
     width: 8px;
     height: 8px;

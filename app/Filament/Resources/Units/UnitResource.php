@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Units;
 
+use App\Filament\Concerns\ScopedToUnit;
 use App\Filament\Resources\Units\Pages\CreateUnit;
 use App\Filament\Resources\Units\Pages\EditUnit;
 use App\Filament\Resources\Units\Pages\ListUnits;
@@ -17,6 +18,8 @@ use UnitEnum;
 
 class UnitResource extends Resource
 {
+    use ScopedToUnit;
+
     protected static ?string $model = Unit::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingOffice2;
@@ -28,6 +31,12 @@ class UnitResource extends Resource
     protected static ?string $pluralModelLabel = 'unidades';
 
     protected static ?int $navigationSort = 1;
+
+    /** A própria unidade é o alvo do escopo. */
+    protected static function unitScopeColumn(): string
+    {
+        return 'id';
+    }
 
     public static function form(Schema $schema): Schema
     {
