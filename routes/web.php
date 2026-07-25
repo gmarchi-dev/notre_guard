@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DailyReportPdfController;
 use App\Http\Controllers\QrCodeController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,4 +16,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/qr/posto/{post}', [QrCodeController::class, 'post'])->name('qr.post');
     Route::get('/qr/ponto/{checkpoint}', [QrCodeController::class, 'checkpoint'])->name('qr.checkpoint');
     Route::get('/qr/unidade/{unit}/pontos', [QrCodeController::class, 'unitCheckpoints'])->name('qr.unit.checkpoints');
+
+    Route::get('/rdo/{dailyReport}/pdf', DailyReportPdfController::class)->name('rdo.pdf');
 });

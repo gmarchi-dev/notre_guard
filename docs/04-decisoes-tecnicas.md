@@ -105,11 +105,28 @@ Registro recusado por falha permanente não sobe sozinho e não pode sumir em si
 vigilante não consegue ver o que não chegou, ele deixa de confiar no aplicativo e volta para o
 papel — que é o risco número um do projeto.
 
+## 2026-07-25 — RDO: rascunho é espelho, fechado é fotografia
+
+Detalhes em [07-rdo.md](07-rdo.md). Três decisões que sustentam o valor do documento:
+
+1. **Fechar exige turnos encerrados na data.** Do contrário o RDO nasceria desatualizado.
+2. **Selo SHA-256 do conteúdo**, comparado depois para detectar registros que chegaram após o
+   fechamento — o caso real do aparelho que passou dias sem rede.
+3. **Reabertura é de administrador** e invalida selo e PDF. É o caminho honesto quando chega
+   registro atrasado; editar o documento fechado não é.
+
+Bug encontrado pelos testes e digno de nota: o cast `date` grava `'Y-m-d H:i:s'`, então buscar
+por `where('report_date', '2026-07-25')` não casa e cria um segundo RDO da mesma data. Usar
+`whereDate()`.
+
 ## Pendências conhecidas
 
 - Não há autenticação Google Workspace ainda: login do painel é e-mail/senha local.
-- **RDO ainda não existe** (Fase 3): a tabela `daily_reports` está criada, mas não há
-  fechamento, PDF nem dashboard de aderência.
+- **Não há dashboard nem gráficos.** O RDO entrega os números do dia; falta a visão agregada
+  (aderência por período, recorrência por local e horário) e as notificações de ocorrência
+  grave.
+- O RDO é gerado sob demanda. Não há job agendado criando o rascunho do dia anterior
+  automaticamente.
 - O escopo por unidade cobre a **leitura**. Um gestor de unidade ainda consegue criar registros
   para outra unidade escolhendo-a no formulário — falta restringir as opções dos selects.
 - Botão de pânico, alerta de inatividade e controle de recursos seguem fora (Fase 5).

@@ -4,9 +4,9 @@ Sistema de gestão para a equipe de segurança patrimonial:
 ronda eletrônica, RDO/ocorrências, checklists e indicadores. Desktop (supervisão) + mobile
 (campo).
 
-**Estado:** Fases 1 e 2 implementadas. O painel administrativo roda com os cadastros base e as
-telas operacionais, e a PWA do vigilante executa o ciclo completo de turno — inclusive sem
-rede. O RDO e os dashboards (Fase 3) ainda não existem.
+**Estado:** Fases 1 e 2 completas e o RDO da Fase 3 no ar. O painel roda com os cadastros base,
+as telas operacionais e o relatório diário com PDF selado; a PWA do vigilante executa o ciclo
+completo de turno, inclusive sem rede. Faltam os dashboards e as notificações.
 
 ## Stack
 
@@ -69,6 +69,8 @@ php artisan test
 - Folhas de QR Code prontas para impressão, por ponto, por posto ou para a unidade inteira
   (`/qr/unidade/{unidade}/pontos`)
 - Consulta de turnos, rondas (com aderência e desvios de cada leitura) e ocorrências
+- **RDO** por unidade e data, com fechamento selado por SHA-256, PDF para envio e detecção de
+  registros que chegaram depois do fechamento
 - Gestão de usuários e perfis (só administrador), com criação do login direto no cadastro
   de vigilante
 - **Escopo por unidade**: o gestor de unidade enxerga apenas a própria unidade
@@ -95,6 +97,7 @@ Turnos, rondas e leituras são imutáveis: nascem em campo e o painel só consul
 | [04 — Decisões técnicas](docs/04-decisoes-tecnicas.md) | Decisões tomadas na implementação, com o motivo |
 | [05 — API de sincronização](docs/05-api-de-sincronizacao.md) | Endpoints, tipos de evento, idempotência, desvios |
 | [06 — PWA de campo](docs/06-pwa-de-campo.md) | Telas, offline, decisões de interface, limitações |
+| [07 — RDO](docs/07-rdo.md) | Ciclo do relatório diário, selo de integridade, PDF |
 
 ## Relação com o Portal de Segurança Digital
 
