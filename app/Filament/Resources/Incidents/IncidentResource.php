@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Incidents;
 
 use App\Filament\Concerns\ScopedToUnit;
-use App\Filament\Resources\Incidents\Pages\CreateIncident;
 use App\Filament\Resources\Incidents\Pages\EditIncident;
 use App\Filament\Resources\Incidents\Pages\ListIncidents;
 use App\Filament\Resources\Incidents\Schemas\IncidentForm;
@@ -32,6 +31,16 @@ class IncidentResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
+    /**
+     * Ocorrência nasce no aplicativo do vigilante, como turno e ronda. A ficha
+     * aqui mostra o relato original e recebe a análise da supervisão — não há
+     * como criar uma da qual ninguém foi testemunha.
+     */
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
     public static function form(Schema $schema): Schema
     {
         return IncidentForm::configure($schema);
@@ -53,7 +62,6 @@ class IncidentResource extends Resource
     {
         return [
             'index' => ListIncidents::route('/'),
-            'create' => CreateIncident::route('/create'),
             'edit' => EditIncident::route('/{record}/edit'),
         ];
     }
