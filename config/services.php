@@ -14,6 +14,16 @@ return [
     |
     */
 
+    /*
+     * Credenciais OAuth do Google Workspace. O que liga ou desliga o recurso é
+     * config/google.php, não a presença destas chaves.
+     */
+    'google' => [
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect' => env('GOOGLE_REDIRECT_URI', env('APP_URL').'/auth/google/callback'),
+    ],
+
     'postmark' => [
         'key' => env('POSTMARK_API_KEY'),
     ],

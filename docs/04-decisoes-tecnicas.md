@@ -160,9 +160,25 @@ Interação sutil: o expurgo quebraria a verificação de selo do RDO, que recal
 compararia com vazio. Daí a coluna `daily_reports.data_purged_at`, respeitada por
 `hasLateRecords()` e por `buildOrUpdate()`.
 
+## 2026-07-26 — Google Workspace pronto, mas desligado
+
+A pedido do usuário: implementado e verificado, `GOOGLE_AUTH_ENABLED=false`. Detalhes e roteiro
+de ativação em [11-autenticacao-google.md](11-autenticacao-google.md).
+
+- **Não provisiona conta automaticamente.** Sistema de segurança patrimonial: criar acesso para
+  quem clicar no botão abriria a operação para a escola inteira.
+- **Vínculo pelo `google_id`**, não só pelo e-mail — endereço institucional é reaproveitado, e
+  sem isso o sucessor herdaria o acesso do antecessor.
+- **Senha continua funcionando** com o Google ligado: adoção faseada, e caminho de entrada se o
+  OAuth falhar.
+- O botão entra por render hook, não por subclasse da página de login do Filament.
+- O aplicativo de campo **não** usa Google: matrícula e senha no aparelho corporativo, para não
+  deixar sessão Google aberta entre turnos.
+
 ## Pendências conhecidas
 
-- Não há autenticação Google Workspace ainda: login do painel é e-mail/senha local.
+- A autenticação Google está pronta mas **desligada** — falta criar as credenciais OAuth no
+  domínio. Enquanto isso o painel usa e-mail e senha.
 - **Não há push no celular** — só sino no painel e e-mail. Falta chave VAPID e assinatura de
   push na PWA.
 - O RDO é gerado sob demanda. Não há job agendado criando o rascunho do dia anterior

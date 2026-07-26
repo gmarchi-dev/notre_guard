@@ -16,6 +16,7 @@ use Filament\Navigation\NavigationGroup;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
@@ -72,6 +73,18 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+            ])
+            // Render hook em vez de subclasse da página de login: o botão é um
+            // acréscimo, e trocar a página inteira do Filament por causa dele
+            // criaria dívida a cada upgrade.
+            //
+            // A condição fica dentro da closure, avaliada a cada render, para
+            // que virar o flag no .env baste — sem republicar nada.
+            ->renderHook(
+                PanelsRenderHook::AUTH_LOGIN_FORM_AFTER,
+                fn (): string => config('google.enabled')
+                    ? view('auth.google-button')->render()
+                    : '',
+            );
     }
 }

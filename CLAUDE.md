@@ -6,8 +6,9 @@ Notre Dame Campinas. Ver [README.md](README.md) e
 
 **Estado atual:** Fases 1, 2 e 3 completas. Laravel 13 + **Filament 4** (não 3 — ver
 `docs/04-decisoes-tecnicas.md`), painel com cadastros, telas operacionais, RDO com PDF selado,
-indicadores e notificações; API de sincronização e PWA de campo offline-first. 78 testes
-passando. Próximo passo é o rollout (Fase 4), que depende do levantamento com a equipe.
+indicadores, notificações, retenção LGPD e login Google (desligado); API de sincronização e PWA
+de campo offline-first. 105 testes passando. Próximo passo é o rollout (Fase 4), que depende do
+levantamento com a equipe e da implantação com HTTPS.
 
 As notificações são enfileiradas: sem `php artisan queue:work` os avisos ficam parados. O
 expurgo de dados vencidos depende do agendador (`schedule:run` no cron).
@@ -67,6 +68,9 @@ Não reabrir sem o usuário pedir:
   falharam" levam a decisões diferentes (ver `docs/08-dashboard.md`).
 - **Só ocorrência grave notifica.** Não ampliar o gatilho sem o usuário pedir: ruído constante
   faz a supervisão ignorar o sistema (ver `docs/09-notificacoes.md`).
+- **Login Google está pronto e desligado** (`GOOGLE_AUTH_ENABLED=false`), por decisão do
+  usuário. Não ligar sem ele pedir. Não provisiona conta automaticamente, e a senha continua
+  valendo (ver `docs/11-autenticacao-google.md`).
 - **Retenção:** evidência vencida perde o binário, não a linha (o hash fica como prova); turno
   aberto nunca é expurgado; toda execução é registrada em `retention_runs`. Prazos em
   `config/retention.php` — alterar é decisão de negócio, documentar o motivo em

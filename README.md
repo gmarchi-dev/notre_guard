@@ -92,6 +92,8 @@ php artisan test
   destinatário
 - **Retenção de dados (LGPD)**: expurgo diário automatizado com prazos configuráveis e
   histórico das execuções para prestação de contas
+- **Login Google Workspace** implementado e **desligado** (`GOOGLE_AUTH_ENABLED=false`);
+  ativação é só credencial e flag — ver [docs/11](docs/11-autenticacao-google.md)
 - Gestão de usuários e perfis (só administrador), com criação do login direto no cadastro
   de vigilante
 - **Escopo por unidade**: o gestor de unidade enxerga apenas a própria unidade
@@ -122,9 +124,10 @@ Turnos, rondas e leituras são imutáveis: nascem em campo e o painel só consul
 | [08 — Painel operacional](docs/08-dashboard.md) | Indicadores, gráficos e como ler os números |
 | [09 — Notificações](docs/09-notificacoes.md) | Quando dispara, quem recebe, canais e fila |
 | [10 — LGPD e retenção](docs/10-lgpd-e-retencao.md) | Prazos, regras do expurgo e prestação de contas |
+| [11 — Autenticação Google](docs/11-autenticacao-google.md) | Regras de aceite e roteiro de ativação |
 
 ## Relação com o Portal de Segurança Digital
 
-Aplicação **independente** (código e banco próprios). Compartilha com o Portal a autenticação
-Google Workspace (ainda a implementar) e a linguagem visual — mas não componentes de código,
+Aplicação **independente** (código e banco próprios). Compartilha com o Portal o modelo de
+autenticação Google Workspace faseada e a linguagem visual — mas não componentes de código,
 porque o Portal está em Filament 3 e este projeto em Filament 4.

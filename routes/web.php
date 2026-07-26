@@ -1,10 +1,18 @@
 <?php
 
+use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\DailyReportPdfController;
 use App\Http\Controllers\QrCodeController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/admin');
+
+// Login Google Workspace. As rotas existem sempre, mas o controller aborta com
+// 404 enquanto GOOGLE_AUTH_ENABLED=false — ver config/google.php.
+Route::prefix('auth/google')->name('auth.google.')->group(function () {
+    Route::get('/', [GoogleController::class, 'redirect'])->name('redirect');
+    Route::get('/callback', [GoogleController::class, 'callback'])->name('callback');
+});
 
 // PWA do vigilante. A página em si é pública: quem autentica é a API, e o app
 // precisa abrir offline antes de ter qualquer token para mostrar a tela de login.
