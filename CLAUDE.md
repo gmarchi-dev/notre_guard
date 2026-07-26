@@ -7,8 +7,9 @@ Notre Dame Campinas. Ver [README.md](README.md) e
 **Estado atual:** Fases 1, 2 e 3 completas. Laravel 13 + **Filament 4** (não 3 — ver
 `docs/04-decisoes-tecnicas.md`), painel com cadastros, telas operacionais, RDO com PDF selado,
 indicadores, notificações, retenção LGPD e login Google (desligado); API de sincronização e PWA
-de campo offline-first. 105 testes passando. Próximo passo é o rollout (Fase 4), que depende do
-levantamento com a equipe e da implantação com HTTPS.
+de campo offline-first; painel da portaria com controle de chaves; alertas de pânico e
+inatividade. 138 testes passando. Próximo passo é o rollout (Fase 4), que depende do levantamento
+com a equipe e da implantação com HTTPS.
 
 As notificações são enfileiradas: sem `php artisan queue:work` os avisos ficam parados. O
 expurgo de dados vencidos depende do agendador (`schedule:run` no cron).
@@ -69,6 +70,11 @@ Não reabrir sem o usuário pedir:
   com `whereDate()` (ver `docs/07-rdo.md`).
 - **Nos indicadores, ausência de dado é `null`, nunca zero** — "não houve ronda" e "as rondas
   falharam" levam a decisões diferentes (ver `docs/08-dashboard.md`).
+- **Default de boolean (`active` etc.) vai no `$attributes` do model**, não só no banco. Já
+  causou bug três vezes: instância criada em código fica com o campo nulo até ser recarregada.
+- **Controle de chaves opera no painel `/portaria`** (login por matrícula), separado do
+  administrativo de propósito. Situação da chave é derivada do empréstimo em aberto, nunca uma
+  coluna (ver `docs/13-controle-de-chaves.md`).
 - **Pânico não passa pela fila** e sua notificação **não** é `ShouldQueue` — depender do worker
   tornaria o botão inútil. A fila é só contingência, com o mesmo uuid. Inatividade vigia
   **rondas**, não turnos (ver `docs/12-seguranca-do-vigilante.md`).

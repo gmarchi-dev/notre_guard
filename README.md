@@ -113,6 +113,12 @@ php artisan test
 
 Turnos, rondas e leituras são imutáveis: nascem em campo e o painel só consulta.
 
+**Portaria** (`/portaria`, login por matrícula)
+
+- Quadro de chaves com entrega e devolução, cadastro de solicitante na hora da retirada
+- Livro de retiradas com prazo por retirada e aviso diário de chaves não devolvidas
+- Painel separado do administrativo: o vigilante entra aqui, e não na operação das unidades
+
 ## Documentação
 
 | Documento | Conteúdo |
@@ -129,6 +135,7 @@ Turnos, rondas e leituras são imutáveis: nascem em campo e o painel só consul
 | [10 — LGPD e retenção](docs/10-lgpd-e-retencao.md) | Prazos, regras do expurgo e prestação de contas |
 | [11 — Autenticação Google](docs/11-autenticacao-google.md) | Regras de aceite e roteiro de ativação |
 | [12 — Segurança do vigilante](docs/12-seguranca-do-vigilante.md) | Botão de pânico, inatividade e atendimento |
+| [13 — Controle de chaves](docs/13-controle-de-chaves.md) | Livro da portaria, prazos e painel próprio |
 
 ## Relação com o Portal de Segurança Digital
 

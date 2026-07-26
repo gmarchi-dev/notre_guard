@@ -211,6 +211,26 @@ sustentam o funcionamento:
 - Silêncio medido por `occurred_at`, não `received_at`: leitura atrasada por falta de rede não é
   inatividade.
 
+## 2026-07-26 — Controle de chaves e painel da portaria
+
+Detalhes em [13-controle-de-chaves.md](13-controle-de-chaves.md).
+
+- **Painel separado em `/portaria`**, não um recorte do administrativo. O vigilante precisa
+  entrar, e o administrativo tem a operação inteira das duas unidades.
+- **Login por matrícula** nesse painel: mesma credencial do app de campo, para não criar uma
+  segunda credencial por pessoa.
+- **Situação da chave é derivada**, não é coluna. Status materializado precisaria ser mantido em
+  sincronia com os empréstimos, e é aí que o livro começa a mentir.
+- **Uma linha por cópia física** da chave, porque a portaria pendura cada uma no seu gancho.
+- `lockForUpdate` na liberação: sem ele, dois registros simultâneos colocariam a mesma chave com
+  duas pessoas.
+- No RDO, "em aberto" é medido no fim do dia do relatório — um RDO de ontem não muda porque a
+  chave voltou hoje.
+
+Repetição de armadilha já vista: `KeyHolder` e `KeyItem` criados em código ficavam com `active`
+nulo e a liberação era recusada. **Default de boolean vai no `$attributes` do model**, não só no
+banco — mesma correção feita antes em `User`.
+
 ## Pendências conhecidas
 
 - A autenticação Google está pronta mas **desligada** — falta criar as credenciais OAuth no
@@ -230,8 +250,9 @@ sustentam o funcionamento:
   gestor restrito a uma unidade para quem essa brecha importe.
 - **Alertas de segurança sem escalonamento**: se ninguém reconhecer, não há segundo aviso nem
   contato alternativo. A lacuna mais séria da Fase 5.
-- Controle de chaves ainda não implementado. **Armamento está fora do escopo** (informado em
-  26/07/2026: não se aplica a este contexto) e rádio depende de decisão.
+- **Armamento está fora do escopo** e **rádio segue em avaliação** — reavaliar depois do piloto.
+- Controle de chaves não tem autorização permanente: registra toda retirada, mas não valida se
+  aquela pessoa poderia levar aquela chave.
 - **A Fase 0 (levantamento com a equipe) continua pendente.** Unidades, postos, rotas e a
   taxonomia de ocorrências que estão no sistema são um ponto de partida, não o levantamento
   real.

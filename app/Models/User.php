@@ -72,15 +72,23 @@ class User extends Authenticatable implements FilamentUser
     }
 
     /**
-     * O vigilante usa a PWA de campo, não o painel administrativo.
+     * O vigilante não entra no painel administrativo — lá está a operação
+     * inteira das duas unidades. Ele entra apenas no painel da portaria, que
+     * só tem controle de chaves.
      */
     public function canAccessPanel(Panel $panel): bool
     {
-        return $this->active && in_array($this->role, [
-            self::ROLE_ADMIN,
-            self::ROLE_SUPERVISOR,
-            self::ROLE_UNIT_MANAGER,
-        ], true);
+        if (! $this->active) {
+            return false;
+        }
+
+        $management = [self::ROLE_ADMIN, self::ROLE_SUPERVISOR, self::ROLE_UNIT_MANAGER];
+
+        if ($panel->getId() === 'portaria') {
+            return in_array($this->role, [...$management, self::ROLE_GUARD], true);
+        }
+
+        return in_array($this->role, $management, true);
     }
 
     public function isAdmin(): bool

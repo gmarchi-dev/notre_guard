@@ -17,3 +17,10 @@ Schedule::command('notre-guard:watch-inactivity')
     ->everyFiveMinutes()
     ->onOneServer()
     ->withoutOverlapping();
+
+// Chaves não devolvidas: uma vez no fim do expediente. Avisar de hora em hora
+// transformaria a pendência em ruído, e a portaria já vê o atraso no quadro.
+Schedule::command('notre-guard:overdue-keys')
+    ->dailyAt('19:00')
+    ->weekdays()
+    ->onOneServer();

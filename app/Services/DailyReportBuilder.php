@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\ChecklistResponse;
 use App\Models\DailyReport;
 use App\Models\Incident;
+use App\Models\KeyLoan;
 use App\Models\Patrol;
 use App\Models\PatrolScan;
 use App\Models\Shift;
@@ -127,6 +128,49 @@ class DailyReportBuilder
             'scans' => $this->scans($unit, $date),
             'nonconformities' => $this->nonconformities($unit, $date),
             'incidents' => $this->incidents($unit, $date),
+            'keys' => $this->keys($unit, $date),
+        ];
+    }
+
+    /**
+     * Movimentação de chaves do dia e o que ficou fora do quadro. A chave não
+     * devolvida é a pendência que a portaria passa para o turno seguinte — é
+     * exatamente o tipo de coisa que o RDO existe para registrar.
+     */
+    private function keys(Unit $unit, Carbon $date): array
+    {
+        $released = KeyLoan::query()
+            ->where('unit_id', $unit->id)
+            ->whereDate('released_at', $date->toDateString())
+            ->with(['keyItem', 'holder'])
+            ->orderBy('released_at')
+            ->get();
+
+        $endOfDay = $date->copy()->endOfDay();
+
+        // "Em aberto" é medido no fim do dia do relatório, não agora: um RDO de
+        // ontem não pode mudar porque a chave voltou hoje de manhã.
+        $outstanding = KeyLoan::query()
+            ->where('unit_id', $unit->id)
+            ->where('released_at', '<=', $endOfDay)
+            ->where(fn ($q) => $q->whereNull('returned_at')->orWhere('returned_at', '>', $endOfDay))
+            ->with(['keyItem', 'holder'])
+            ->orderBy('due_at')
+            ->get();
+
+        return [
+            'released' => $released->count(),
+            'returned' => $released->whereNotNull('returned_at')->count(),
+            'outstanding' => $outstanding->count(),
+            'overdue' => $outstanding->filter(fn (KeyLoan $l) => $l->due_at->lte($endOfDay))->count(),
+            'items' => $outstanding->map(fn (KeyLoan $loan) => [
+                'code' => $loan->keyItem?->code ?? '—',
+                'name' => $loan->keyItem?->name ?? '—',
+                'holder' => $loan->holder?->name ?? '—',
+                'released_at' => $loan->released_at->format('d/m H:i'),
+                'due_at' => $loan->due_at->format('d/m H:i'),
+                'overdue' => $loan->due_at->lte($endOfDay),
+            ])->all(),
         ];
     }
 

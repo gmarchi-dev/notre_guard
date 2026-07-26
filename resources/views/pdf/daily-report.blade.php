@@ -170,6 +170,34 @@
     @endforeach
 @endif
 
+@if (($summary['keys']['released'] ?? 0) > 0 || ($summary['keys']['outstanding'] ?? 0) > 0)
+    <h2>Chaves</h2>
+    <table class="numbers" style="width:auto">
+        <tr><td class="k" style="width:220px">Retiradas no dia</td><td class="v">{{ $summary['keys']['released'] }}</td></tr>
+        <tr><td class="k">Devolvidas</td><td class="v">{{ $summary['keys']['returned'] }}</td></tr>
+        <tr><td class="k">Em aberto no fim do dia</td><td class="v">{{ $summary['keys']['outstanding'] }}</td></tr>
+    </table>
+
+    @if (! empty($summary['keys']['items']))
+        <table style="margin-top:8px">
+            <thead>
+            <tr><th style="width:70px">Chave</th><th>Abre</th><th>Com</th><th style="width:80px">Retirada</th><th style="width:80px">Prazo</th></tr>
+            </thead>
+            <tbody>
+            @foreach ($summary['keys']['items'] as $key)
+                <tr>
+                    <td>{{ $key['code'] }}</td>
+                    <td>{{ $key['name'] }}</td>
+                    <td>{{ $key['holder'] }}</td>
+                    <td>{{ $key['released_at'] }}</td>
+                    <td>{{ $key['due_at'] }}{{ $key['overdue'] ? ' (vencido)' : '' }}</td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+    @endif
+@endif
+
 @if ($report->notes)
     <h2>Observações da supervisão</h2>
     <p>{{ $report->notes }}</p>
