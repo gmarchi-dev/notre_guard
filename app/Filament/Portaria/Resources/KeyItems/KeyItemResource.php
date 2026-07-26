@@ -5,6 +5,7 @@ namespace App\Filament\Portaria\Resources\KeyItems;
 use App\Filament\Portaria\Resources\KeyItems\Pages\ListKeyItems;
 use App\Filament\Portaria\Resources\KeyItems\Tables\KeyItemsTable;
 use App\Models\KeyItem;
+use App\Models\User;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
@@ -25,6 +26,15 @@ class KeyItemResource extends Resource
     protected static ?string $pluralModelLabel = 'quadro de chaves';
 
     protected static ?int $navigationSort = 1;
+
+    /**
+     * Segunda barreira, além do acesso ao painel: se a permissão for revogada
+     * com a sessão aberta, a tela deixa de responder na hora.
+     */
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->can(User::PERMISSION_KEYS) ?? false;
+    }
 
     /** O cadastro de chaves é da supervisão; a portaria opera o quadro. */
     public static function canCreate(): bool

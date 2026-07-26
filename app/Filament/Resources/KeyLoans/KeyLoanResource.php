@@ -6,6 +6,7 @@ use App\Filament\Concerns\ScopedToUnit;
 use App\Filament\Portaria\Resources\KeyLoans\Tables\KeyLoansTable;
 use App\Filament\Resources\KeyLoans\Pages\ListKeyLoans;
 use App\Models\KeyLoan;
+use App\Models\User;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
@@ -32,6 +33,11 @@ class KeyLoanResource extends Resource
     protected static ?string $pluralModelLabel = 'retiradas de chave';
 
     protected static ?int $navigationSort = 4;
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->can(User::PERMISSION_KEYS) ?? false;
+    }
 
     public static function canCreate(): bool
     {

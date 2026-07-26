@@ -6,9 +6,11 @@ use App\Models\User;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class UsersTable
 {
@@ -51,6 +53,11 @@ class UsersTable
                     ->label('Matrícula')
                     ->placeholder('—')
                     ->description(fn (User $record) => $record->securityGuard ? null : 'sem cadastro de vigilante'),
+                TextColumn::make('permissions')
+                    ->label('Módulos')
+                    ->badge()
+                    ->state(fn (User $record) => $record->grantedPermissionLabels() ?: ['—'])
+                    ->color(fn (User $record) => $record->grantedPermissionLabels() ? 'info' : 'gray'),
                 IconColumn::make('active')
                     ->label('Ativo')
                     ->boolean(),
@@ -60,6 +67,11 @@ class UsersTable
                 SelectFilter::make('role')
                     ->label('Perfil')
                     ->options(User::ROLES),
+                Filter::make('keys')
+                    ->label('Com controle de chaves')
+                    ->query(fn (Builder $query) => $query
+                        ->where('role', User::ROLE_ADMIN)
+                        ->orWhereJsonContains('permissions', User::PERMISSION_KEYS)),
                 TernaryFilter::make('active')->label('Ativo'),
             ])
             ->recordActions([

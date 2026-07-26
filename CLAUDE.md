@@ -75,6 +75,9 @@ Não reabrir sem o usuário pedir:
 - **Controle de chaves opera no painel `/portaria`** (login por matrícula), separado do
   administrativo de propósito. Situação da chave é derivada do empréstimo em aberto, nunca uma
   coluna (ver `docs/13-controle-de-chaves.md`).
+- **O módulo de chaves é liberado por permissão individual** (`keys.manage`), não por perfil.
+  Nada é concedido automaticamente; só o administrador tem tudo por definição. Nova permissão =
+  constante em `User::PERMISSIONS` + Gate já registrado automaticamente.
 - **Pânico não passa pela fila** e sua notificação **não** é `ShouldQueue` — depender do worker
   tornaria o botão inútil. A fila é só contingência, com o mesmo uuid. Inatividade vigia
   **rondas**, não turnos (ver `docs/12-seguranca-do-vigilante.md`).

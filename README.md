@@ -60,7 +60,10 @@ O painel fica em <http://127.0.0.1:8010/admin> e a PWA do vigilante em
 |---|---|---|
 | Administrador | `admin@notreguard.local` | `admin1234` |
 | Supervisão | `supervisao@notreguard.local` | `super1234` |
-| Vigilante (sem acesso ao painel) | `vigilante@notreguard.local` | `vigilante1234` |
+| Vigilante / porteiro (só `/portaria`) | `vigilante@notreguard.local` | `vigilante1234` |
+
+No painel da portaria o login é por **matrícula** (`VIG-001`), não por e-mail. Administração e
+supervisão do seed já vêm com a permissão de chaves concedida.
 
 O seed cria a "Unidade Sede" com 2 postos, 6 pontos de controle, 1 roteiro com duas janelas
 noturnas, um checklist de perímetro e a taxonomia inicial de ocorrências.
@@ -117,7 +120,9 @@ Turnos, rondas e leituras são imutáveis: nascem em campo e o painel só consul
 
 - Quadro de chaves com entrega e devolução, cadastro de solicitante na hora da retirada
 - Livro de retiradas com prazo por retirada e aviso diário de chaves não devolvidas
-- Painel separado do administrativo: o vigilante entra aqui, e não na operação das unidades
+- Painel separado do administrativo: o porteiro entra aqui, e não na operação das unidades
+- Acesso por **permissão individual** (`keys.manage`), concedida usuário por usuário — não é
+  liberado por perfil
 
 ## Documentação
 

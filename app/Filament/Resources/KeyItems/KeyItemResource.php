@@ -5,6 +5,7 @@ namespace App\Filament\Resources\KeyItems;
 use App\Filament\Concerns\ScopedToUnit;
 use App\Filament\Resources\KeyItems\Pages\ListKeyItems;
 use App\Models\KeyItem;
+use App\Models\User;
 use BackedEnum;
 use Filament\Actions\CreateAction;
 use Filament\Actions\EditAction;
@@ -42,6 +43,12 @@ class KeyItemResource extends Resource
     protected static ?string $pluralModelLabel = 'chaves';
 
     protected static ?int $navigationSort = 6;
+
+    /** Mesma permissão da portaria: quem não opera chaves não as cadastra. */
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->can(User::PERMISSION_KEYS) ?? false;
+    }
 
     public static function form(Schema $schema): Schema
     {

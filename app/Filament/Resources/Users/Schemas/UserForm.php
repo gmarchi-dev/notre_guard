@@ -3,9 +3,11 @@
 namespace App\Filament\Resources\Users\Schemas;
 
 use App\Models\User;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Placeholder;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
@@ -69,6 +71,26 @@ class UserForm
                         ->label('Ativo')
                         ->default(true)
                         ->helperText('Usuário inativo não entra no painel nem no aplicativo.'),
+                ]),
+
+            Section::make('Permissões')
+                ->description('O perfil diz o que a pessoa é na operação; a permissão diz o que ela pode operar.')
+                ->schema([
+                    CheckboxList::make('permissions')
+                        ->label('Módulos liberados')
+                        ->options(User::PERMISSIONS)
+                        ->descriptions([
+                            User::PERMISSION_KEYS => 'Libera o painel da portaria em /portaria: quadro de chaves, retiradas e solicitantes.',
+                        ])
+                        // O administrador tem tudo por definição; oferecer a
+                        // caixa sugeriria que desmarcar faria diferença.
+                        ->visible(fn (Get $get) => $get('role') !== User::ROLE_ADMIN)
+                        ->helperText('Nenhuma permissão é concedida automaticamente.'),
+
+                    Placeholder::make('admin_note')
+                        ->label('Permissões')
+                        ->content('Administrador tem acesso a todos os módulos por definição.')
+                        ->visible(fn (Get $get) => $get('role') === User::ROLE_ADMIN),
                 ]),
         ]);
     }

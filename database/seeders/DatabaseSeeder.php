@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Supervisão',
                 'password' => Hash::make('super1234'),
                 'role' => User::ROLE_SUPERVISOR,
+                'permissions' => [User::PERMISSION_KEYS],
             ],
         );
 

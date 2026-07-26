@@ -5,6 +5,7 @@ namespace App\Filament\Portaria\Resources\KeyLoans;
 use App\Filament\Portaria\Resources\KeyLoans\Pages\ListKeyLoans;
 use App\Filament\Portaria\Resources\KeyLoans\Tables\KeyLoansTable;
 use App\Models\KeyLoan;
+use App\Models\User;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
@@ -21,6 +22,11 @@ class KeyLoanResource extends Resource
     protected static ?string $pluralModelLabel = 'livro de retiradas';
 
     protected static ?int $navigationSort = 2;
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->can(User::PERMISSION_KEYS) ?? false;
+    }
 
     public static function canCreate(): bool
     {

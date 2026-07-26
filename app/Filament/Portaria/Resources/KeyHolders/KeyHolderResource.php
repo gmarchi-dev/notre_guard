@@ -4,6 +4,7 @@ namespace App\Filament\Portaria\Resources\KeyHolders;
 
 use App\Filament\Portaria\Resources\KeyHolders\Pages\ListKeyHolders;
 use App\Models\KeyHolder;
+use App\Models\User;
 use BackedEnum;
 use Filament\Actions\CreateAction;
 use Filament\Actions\EditAction;
@@ -31,6 +32,11 @@ class KeyHolderResource extends Resource
     protected static ?string $pluralModelLabel = 'solicitantes';
 
     protected static ?int $navigationSort = 3;
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->can(User::PERMISSION_KEYS) ?? false;
+    }
 
     public static function form(Schema $schema): Schema
     {

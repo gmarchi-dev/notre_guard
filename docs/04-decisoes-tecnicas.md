@@ -231,6 +231,26 @@ Repetição de armadilha já vista: `KeyHolder` e `KeyItem` criados em código f
 nulo e a liberação era recusada. **Default de boolean vai no `$attributes` do model**, não só no
 banco — mesma correção feita antes em `User`.
 
+## 2026-07-26 — Módulo de chaves liberado por permissão individual
+
+A pedido do usuário: o acesso ao controle de chaves não vem do perfil, vem de uma permissão
+concedida usuário por usuário (`keys.manage`).
+
+- **Nada é concedido automaticamente**, nem pelo perfil nem pela migração. Permissão que se ganha
+  por migração é permissão que ninguém decidiu dar.
+- **Administrador tem tudo por definição.** Sem essa exceção seria possível revogar a própria
+  capacidade de conceder permissões e travar o sistema.
+- A permissão **não é hierárquica**: supervisor sem ela perde as telas de chave.
+- Conceder chaves a um vigilante **não** abre o painel administrativo.
+- Coluna JSON `users.permissions` + um `Gate` por permissão. JSON porque são poucas e fixas no
+  código: a próxima é uma constante mais uma caixa de seleção, sem migração nem pacote.
+- Verificação em dois níveis: `canAccessPanel()` para o painel e `canAccess()` em cada resource,
+  para que revogar com a sessão aberta tenha efeito imediato.
+
+**Atenção na implantação:** o banco de desenvolvimento já tinha usuários, e a migração
+deliberadamente não concede nada — foi preciso conceder a permissão manualmente à supervisão e ao
+porteiro. Numa instalação nova isso vem do seeder.
+
 ## Pendências conhecidas
 
 - A autenticação Google está pronta mas **desligada** — falta criar as credenciais OAuth no

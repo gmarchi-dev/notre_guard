@@ -14,7 +14,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-#[Fillable(['name', 'email', 'password', 'role', 'active', 'unit_id', 'google_id', 'google_linked_at'])]
+#[Fillable(['name', 'email', 'password', 'role', 'active', 'unit_id', 'permissions', 'google_id', 'google_linked_at'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements FilamentUser
 {
@@ -34,6 +34,19 @@ class User extends Authenticatable implements FilamentUser
     ];
 
     /**
+     * Permissões concedidas individualmente, independentes do perfil.
+     *
+     * O perfil diz o que a pessoa é na operação; a permissão diz o que ela pode
+     * operar. Não é todo vigilante que fica na portaria mexendo no quadro de
+     * chaves, e não é todo supervisor que precisa disso.
+     */
+    public const PERMISSION_KEYS = 'keys.manage';
+
+    public const PERMISSIONS = [
+        self::PERMISSION_KEYS => 'Controle de chaves (portaria)',
+    ];
+
+    /**
      * Defaults no model, não só no banco: sem isto um User criado em código
      * fica com active nulo até ser recarregado e é barrado no painel.
      */
@@ -48,8 +61,39 @@ class User extends Authenticatable implements FilamentUser
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'active' => 'boolean',
+            'permissions' => 'array',
             'google_linked_at' => 'datetime',
         ];
+    }
+
+    /**
+     * O administrador tem tudo por definição — do contrário seria possível
+     * revogar a própria capacidade de conceder permissões e travar o sistema.
+     */
+    public function hasPermission(string $permission): bool
+    {
+        if (! $this->active) {
+            return false;
+        }
+
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        return in_array($permission, $this->permissions ?? [], true);
+    }
+
+    /** @return list<string> */
+    public function grantedPermissionLabels(): array
+    {
+        if ($this->isAdmin()) {
+            return ['todas (administrador)'];
+        }
+
+        return array_values(array_map(
+            fn (string $p) => self::PERMISSIONS[$p] ?? $p,
+            array_intersect($this->permissions ?? [], array_keys(self::PERMISSIONS)),
+        ));
     }
 
     public function securityGuard(): HasOne
@@ -73,8 +117,11 @@ class User extends Authenticatable implements FilamentUser
 
     /**
      * O vigilante não entra no painel administrativo — lá está a operação
-     * inteira das duas unidades. Ele entra apenas no painel da portaria, que
-     * só tem controle de chaves.
+     * inteira das duas unidades.
+     *
+     * O painel da portaria não é liberado por perfil, e sim pela permissão de
+     * controle de chaves: quem não opera o quadro não entra, seja vigilante ou
+     * supervisor.
      */
     public function canAccessPanel(Panel $panel): bool
     {
@@ -82,13 +129,15 @@ class User extends Authenticatable implements FilamentUser
             return false;
         }
 
-        $management = [self::ROLE_ADMIN, self::ROLE_SUPERVISOR, self::ROLE_UNIT_MANAGER];
-
         if ($panel->getId() === 'portaria') {
-            return in_array($this->role, [...$management, self::ROLE_GUARD], true);
+            return $this->hasPermission(self::PERMISSION_KEYS);
         }
 
-        return in_array($this->role, $management, true);
+        return in_array($this->role, [
+            self::ROLE_ADMIN,
+            self::ROLE_SUPERVISOR,
+            self::ROLE_UNIT_MANAGER,
+        ], true);
     }
 
     public function isAdmin(): bool

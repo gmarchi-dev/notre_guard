@@ -117,6 +117,9 @@ class DemoUnitSeeder extends Seeder
                 'name' => 'Vigilante Demonstração',
                 'password' => Hash::make('vigilante1234'),
                 'role' => User::ROLE_GUARD,
+                // Vigilante de demonstração fica na portaria, então recebe a
+                // permissão de chaves. Em produção isso é concedido caso a caso.
+                'permissions' => [User::PERMISSION_KEYS],
             ],
         );
 

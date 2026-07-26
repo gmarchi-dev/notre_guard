@@ -7,12 +7,44 @@ retiradas** dessa operação: quem levou, quando, com que prazo, e se devolveu.
 > diferentes: aquele acontece duas vezes por turno com a mesma pessoa; este acontece dezenas de
 > vezes por dia com pessoas de fora da segurança.
 
+## Quem pode operar
+
+**Permissão individual, concedida usuário por usuário** — não é liberado por perfil. Não é todo
+vigilante que fica na portaria mexendo no quadro, e não é todo supervisor que precisa disso.
+
+A permissão se chama `keys.manage` e é concedida em Configuração → Usuários, na seção
+**Permissões**. Ela controla três coisas ao mesmo tempo:
+
+1. o acesso ao painel `/portaria`;
+2. as telas de quadro, retiradas e solicitantes dentro dele;
+3. o cadastro de chaves no painel administrativo.
+
+**Nada é concedido automaticamente**, nem pelo perfil nem pela migração que criou a coluna:
+permissão que se ganha por migração é permissão que ninguém decidiu dar. A única exceção é o
+**administrador**, que tem todos os módulos por definição — do contrário seria possível revogar a
+própria capacidade de conceder permissões e travar o sistema.
+
+Usuário inativo perde todas as permissões, inclusive o administrador.
+
+Conceder chaves a um vigilante **não** abre o painel administrativo: são coisas independentes, e
+há teste para isso.
+
+### Como está implementado
+
+Coluna `users.permissions` (JSON) com a lista de permissões nomeadas, e um `Gate` do Laravel por
+permissão registrado em `AppServiceProvider`. A verificação é a idiomática — `$user->can('keys.manage')` —
+em telas, políticas ou middleware, sem espalhar leitura do array pelo código.
+
+JSON em vez de tabela de permissões porque são poucas e fixas no código: adicionar a próxima é
+uma constante em `User::PERMISSIONS` mais uma caixa de seleção, sem migração nem pacote de
+terceiros.
+
 ## Onde se opera
 
 **Painel próprio da portaria, em `/portaria`** — computador do balcão, teclado de verdade. Digitar
 nome de solicitante dezenas de vezes por dia no celular seria lento.
 
-O painel existe separado do administrativo porque o vigilante precisa entrar nele, e o
+O painel existe separado do administrativo porque o porteiro precisa entrar nele, e o
 administrativo tem a operação inteira das duas unidades. **Separar é a diferença entre dar uma
 tela e dar acesso ao sistema** — verificado: o vigilante logado na portaria recebe 403 em
 `/admin`.
