@@ -11,6 +11,7 @@ use App\Models\Patrol;
 use App\Models\PatrolRoute;
 use App\Models\PatrolScan;
 use App\Models\Post;
+use App\Models\SafetyAlert;
 use App\Models\Shift;
 use App\Services\IncidentNumberAllocator;
 use Illuminate\Database\Eloquent\Model;
@@ -31,6 +32,9 @@ class EventProcessor
         'patrol.scan',
         'patrol.end',
         'incident.report',
+        // Caminho de contingência do botão de pânico: o app tenta o endpoint
+        // dedicado primeiro e só cai aqui se estiver sem rede.
+        'panic.alert',
     ];
 
     public function __construct(
@@ -51,6 +55,7 @@ class EventProcessor
             'patrol.scan' => $this->recordScan($uuid, $payload, $occurredAt, $context),
             'patrol.end' => $this->endPatrol($payload, $occurredAt, $context),
             'incident.report' => $this->reportIncident($uuid, $payload, $occurredAt, $context),
+            'panic.alert' => $this->raisePanic($uuid, $payload, $occurredAt, $context),
             default => throw SyncEventException::permanent("Tipo de evento desconhecido: {$event['type']}", 'unknown_type'),
         };
     }
@@ -253,6 +258,33 @@ class EventProcessor
         $this->reserveAttachments($incident, $payload['attachments'] ?? []);
 
         return $incident;
+    }
+
+    /**
+     * Pânico que chegou pela fila, e não pelo endpoint dedicado — o aparelho
+     * estava sem rede na hora do acionamento. O alerta é criado com a hora
+     * original, e a diferença até received_at mostra quanto tempo se passou.
+     */
+    private function raisePanic(string $uuid, array $payload, Carbon $occurredAt, SyncContext $context): SafetyAlert
+    {
+        $shift = filled($payload['shift_uuid'] ?? null)
+            ? Shift::where('uuid', $payload['shift_uuid'])->first()
+            : $context->guard->openShift();
+
+        return SafetyAlert::create([
+            'uuid' => $uuid,
+            'kind' => SafetyAlert::KIND_PANIC,
+            'security_guard_id' => $context->guard->id,
+            'unit_id' => $shift?->unit_id ?? $context->guard->default_unit_id,
+            'shift_id' => $shift?->id,
+            'patrol_id' => $shift?->patrols()->where('status', 'in_progress')->value('id'),
+            'occurred_at' => $occurredAt,
+            'received_at' => $context->receivedAt,
+            'latitude' => $payload['latitude'] ?? null,
+            'longitude' => $payload['longitude'] ?? null,
+            'accuracy_m' => $payload['accuracy_m'] ?? null,
+            'device_id' => $context->deviceId(),
+        ]);
     }
 
     private function storeChecklist(PatrolScan $scan, array $responses): void

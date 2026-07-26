@@ -401,6 +401,67 @@ textarea:focus {
     margin-left: auto;
 }
 
+/* --- emergência ---
+   Vermelho reservado: nada mais na interface usa esta cor de fundo, para que o
+   botão não se confunda com nenhuma outra ação. */
+.panic-trigger {
+    background: var(--danger);
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    min-height: 52px;
+    border: 2px solid #7f1d1d;
+}
+
+.panic-trigger:active {
+    background: #b91c1c;
+}
+
+.panic-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(4, 8, 16, 0.94);
+    display: grid;
+    place-items: center;
+    padding: 24px;
+}
+
+.panic-box {
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    text-align: center;
+}
+
+.panic-title {
+    font-size: 26px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.panic-text {
+    color: var(--muted);
+    font-size: 16px;
+    margin: 0 0 8px;
+}
+
+/* Alvo grande: acionado sob estresse, possivelmente correndo. */
+.panic-confirm {
+    background: var(--danger);
+    color: #fff;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    min-height: 84px;
+}
+
+.panic-confirm:active {
+    background: #b91c1c;
+}
+
 /* --- rodapé fixo --- */
 footer {
     position: sticky;

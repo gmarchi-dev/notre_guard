@@ -84,6 +84,18 @@ export function bootstrap() {
     return request('bootstrap')
 }
 
+/**
+ * Pânico vai direto, fora da fila. Timeout curto de propósito: se o servidor
+ * não responder rápido, o app não pode ficar esperando — enfileira e segue.
+ */
+export function sendPanic(payload, timeoutMs = 6000) {
+    return request('panic', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(timeoutMs),
+    })
+}
+
 export function pushEvents(events) {
     return request('sync/events', {
         method: 'POST',

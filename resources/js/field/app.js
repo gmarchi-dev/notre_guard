@@ -45,6 +45,9 @@ function fieldApp() {
         incident: { incident_type_id: '', severity: 'medium', classification: 'prevention', description: '', location: '', actions_taken: '' },
         incidentPhoto: null,
 
+        // Pânico: confirmando (tela cheia) → enviando → entregue/na fila
+        panic: { confirming: false, sending: false, state: null, at: null },
+
         handoverNotes: '',
 
         // --- ciclo de vida ---
@@ -436,6 +439,65 @@ function fieldApp() {
             } finally {
                 this.busy = false
             }
+        },
+
+        // --- pânico ---
+
+        /**
+         * Duas etapas: abrir a confirmação e confirmar. Um toque só disparia
+         * alarme com o celular no bolso; três etapas custariam segundos que
+         * importam.
+         */
+        askPanic() {
+            this.panic.confirming = true
+        },
+
+        cancelPanic() {
+            this.panic.confirming = false
+        },
+
+        async firePanic() {
+            this.panic.sending = true
+
+            const uuid = crypto.randomUUID()
+            const occurredAt = new Date().toISOString()
+
+            // GPS com prazo curto: se demorar, envia sem coordenada. Alerta sem
+            // localização chega; alerta que não chega não serve para nada.
+            const position = await currentPosition({ timeout: 4000 })
+            const payload = { uuid, occurred_at: occurredAt, ...position }
+
+            let delivered = false
+
+            try {
+                await api.sendPanic(payload)
+                delivered = true
+            } catch {
+                // Sem rede ou servidor lento: entra na fila com o MESMO uuid,
+                // então a entrega tardia não cria um segundo alerta.
+                await enqueue(
+                    'panic.alert',
+                    { shift_uuid: this.shift?.uuid ?? null, ...position },
+                    occurredAt,
+                    uuid,
+                )
+                await refreshPending()
+                sync()
+            }
+
+            this.panic = {
+                confirming: false,
+                sending: false,
+                state: delivered ? 'delivered' : 'queued',
+                at: occurredAt,
+            }
+
+            // Vibração longa: confirma o acionamento sem exigir que ele leia.
+            navigator.vibrate?.([200, 100, 200, 100, 200])
+        },
+
+        dismissPanicState() {
+            this.panic.state = null
         },
 
         // --- fila ---

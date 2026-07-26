@@ -41,11 +41,40 @@
         </template>
     </div>
 
+    {{-- ================== CONFIRMAÇÃO DE EMERGÊNCIA ================== --}}
+    <template x-if="panic.confirming">
+        <div class="panic-overlay" role="alertdialog" aria-modal="true" aria-label="Confirmar emergência">
+            <div class="panic-box">
+                <p class="panic-title">Acionar emergência?</p>
+                <p class="panic-text">
+                    A supervisão será avisada agora, com sua localização.
+                    Use somente em situação real.
+                </p>
+                <button type="button" class="panic-confirm" :disabled="panic.sending"
+                        @click="firePanic()"
+                        x-text="panic.sending ? 'Enviando…' : 'SIM, ACIONAR'"></button>
+                <button type="button" class="ghost" @click="cancelPanic()" :disabled="panic.sending">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </template>
+
     <main>
         <template x-if="message">
             <div class="message" :class="message.kind">
                 <span x-text="message.text"></span>
                 <button type="button" @click="dismissMessage()" aria-label="Fechar aviso">&times;</button>
+            </div>
+        </template>
+
+        {{-- Estado do acionamento: o vigilante precisa saber se o pedido saiu --}}
+        <template x-if="panic.state">
+            <div class="message" :class="panic.state === 'delivered' ? 'ok' : 'warn'">
+                <span x-text="panic.state === 'delivered'
+                    ? 'Emergência recebida pela supervisão às ' + formatTime(panic.at) + '.'
+                    : 'Sem rede. O acionamento está salvo no aparelho e sobe assim que houver sinal. Use o rádio.'"></span>
+                <button type="button" @click="dismissPanicState()" aria-label="Fechar aviso">&times;</button>
             </div>
         </template>
 
@@ -347,6 +376,12 @@
 
     {{-- ======================= AÇÕES ======================= --}}
     <footer x-show="screen !== 'login' && screen !== 'loading'">
+        {{-- Sempre presente, em qualquer tela: emergência não espera navegação. --}}
+        <button type="button" class="panic-trigger" @click="askPanic()"
+                aria-label="Acionar emergência">
+            <span aria-hidden="true">⚠</span> Emergência
+        </button>
+
         <template x-if="screen === 'home' && shift">
             <div class="actions">
                 <button type="button" class="ghost" @click="openIncident()">Registrar ocorrência</button>

@@ -45,24 +45,9 @@ class IncidentNotifier
         return (bool) $incident->loadMissing('type')->type?->notify_supervision;
     }
 
-    /**
-     * Administração e supervisão recebem tudo; gestor de unidade recebe o que
-     * é da unidade dele. Vigilante nunca recebe: ele está em campo, não em
-     * posição de tratar.
-     *
-     * @return Collection<int, User>
-     */
+    /** @return Collection<int, User> */
     public function recipientsFor(Incident $incident): Collection
     {
-        return User::query()
-            ->where('active', true)
-            ->where(function ($query) use ($incident) {
-                $query
-                    ->whereIn('role', [User::ROLE_ADMIN, User::ROLE_SUPERVISOR])
-                    ->orWhere(fn ($q) => $q
-                        ->where('role', User::ROLE_UNIT_MANAGER)
-                        ->where('unit_id', $incident->unit_id));
-            })
-            ->get();
+        return app(SupervisionAudience::class)->for($incident->unit_id);
     }
 }

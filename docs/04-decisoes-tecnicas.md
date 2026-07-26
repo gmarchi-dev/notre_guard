@@ -194,6 +194,23 @@ de ativação em [11-autenticacao-google.md](11-autenticacao-google.md).
 - O aplicativo de campo **não** usa Google: matrícula e senha no aparelho corporativo, para não
   deixar sessão Google aberta entre turnos.
 
+## 2026-07-26 — Pânico e inatividade (Fase 5, parte 1)
+
+Detalhes em [12-seguranca-do-vigilante.md](12-seguranca-do-vigilante.md). As decisões que
+sustentam o funcionamento:
+
+- **Pânico não passa pela fila de sincronização.** Endpoint dedicado, entrega imediata; a fila é
+  só contingência, com o mesmo uuid para não duplicar.
+- **A notificação de pânico não é `ShouldQueue`.** Depender do worker estar no ar tornaria o
+  botão inútil justamente quando importa.
+- **Falha no aviso não desfaz o alerta.** O acionamento fica gravado e visível na tela.
+- **Inatividade vigia rondas, não turnos.** Portaria sem leitura por horas é normal; alertar
+  nisso geraria ruído e mataria a credibilidade do alerta.
+- **Um alerta de inatividade por ronda**, por índice único `(kind, patrol_id)` — senão o
+  agendador criaria um a cada 5 minutos.
+- Silêncio medido por `occurred_at`, não `received_at`: leitura atrasada por falta de rede não é
+  inatividade.
+
 ## Pendências conhecidas
 
 - A autenticação Google está pronta mas **desligada** — falta criar as credenciais OAuth no
@@ -211,7 +228,9 @@ de ativação em [11-autenticacao-google.md](11-autenticacao-google.md).
 - ~~O escopo por unidade cobre só a leitura.~~ **Deixou de ser pendência em 26/07/2026:** a
   supervisão é central (ver a seção de estrutura organizacional abaixo), então não existe um
   gestor restrito a uma unidade para quem essa brecha importe.
-- Botão de pânico, alerta de inatividade e controle de recursos seguem fora (Fase 5).
+- **Alertas de segurança sem escalonamento**: se ninguém reconhecer, não há segundo aviso nem
+  contato alternativo. A lacuna mais séria da Fase 5.
+- Controle de recursos (armamento, rádio, chaves, fardamento) ainda não implementado.
 - **A Fase 0 (levantamento com a equipe) continua pendente.** Unidades, postos, rotas e a
   taxonomia de ocorrências que estão no sistema são um ponto de partida, não o levantamento
   real.

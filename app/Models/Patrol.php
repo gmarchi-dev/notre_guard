@@ -50,6 +50,11 @@ class Patrol extends Model
         return $this->hasMany(Incident::class);
     }
 
+    public function safetyAlerts(): HasMany
+    {
+        return $this->hasMany(SafetyAlert::class);
+    }
+
     public function completionRate(): float
     {
         if ($this->expected_checkpoints === 0) {

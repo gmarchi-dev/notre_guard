@@ -6,6 +6,7 @@ use App\Models\Attachment;
 use App\Models\Incident;
 use App\Models\Patrol;
 use App\Models\PatrolScan;
+use App\Models\SafetyAlert;
 use App\Models\Shift;
 use App\Models\SyncBatch;
 use Illuminate\Support\Facades\DB;
@@ -26,6 +27,7 @@ class SyncService
         'patrol.start' => Patrol::class,
         'patrol.scan' => PatrolScan::class,
         'incident.report' => Incident::class,
+        'panic.alert' => SafetyAlert::class,
     ];
 
     public function __construct(private readonly EventProcessor $processor) {}

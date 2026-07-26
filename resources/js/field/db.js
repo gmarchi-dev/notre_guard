@@ -42,11 +42,15 @@ export async function clearAll() {
 }
 
 /**
- * Enfileira um evento. O uuid nasce aqui, no aparelho: é o que garante que
- * reenviar o mesmo registro nunca duplica no servidor.
+ * Enfileira um evento. O uuid nasce no aparelho: é o que garante que reenviar o
+ * mesmo registro nunca duplica no servidor.
+ *
+ * `knownUuid` existe para o botão de pânico, que tenta a entrega direta antes de
+ * enfileirar — os dois caminhos precisam usar o MESMO uuid, senão um pedido de
+ * socorro entregue e depois sincronizado criaria dois alertas.
  */
-export async function enqueue(type, payload, occurredAt = null) {
-    const uuid = crypto.randomUUID()
+export async function enqueue(type, payload, occurredAt = null, knownUuid = null) {
+    const uuid = knownUuid ?? crypto.randomUUID()
 
     await db.queue.add({
         uuid,

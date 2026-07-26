@@ -69,6 +69,9 @@ Não reabrir sem o usuário pedir:
   com `whereDate()` (ver `docs/07-rdo.md`).
 - **Nos indicadores, ausência de dado é `null`, nunca zero** — "não houve ronda" e "as rondas
   falharam" levam a decisões diferentes (ver `docs/08-dashboard.md`).
+- **Pânico não passa pela fila** e sua notificação **não** é `ShouldQueue` — depender do worker
+  tornaria o botão inútil. A fila é só contingência, com o mesmo uuid. Inatividade vigia
+  **rondas**, não turnos (ver `docs/12-seguranca-do-vigilante.md`).
 - **Só ocorrência grave notifica.** Não ampliar o gatilho sem o usuário pedir: ruído constante
   faz a supervisão ignorar o sistema (ver `docs/09-notificacoes.md`).
 - **Login Google está pronto e desligado** (`GOOGLE_AUTH_ENABLED=false`), por decisão do

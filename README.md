@@ -88,6 +88,8 @@ php artisan test
 - Consulta de turnos, rondas (com aderência e desvios de cada leitura) e ocorrências
 - **RDO** por unidade e data, com fechamento selado por SHA-256, PDF para envio e detecção de
   registros que chegaram depois do fechamento
+- **Alertas de segurança do vigilante**: botão de pânico (entrega imediata, fora da fila) e
+  alerta de inatividade em ronda, com tela de plantão e ciclo de atendimento
 - **Notificações** de ocorrência grave por e-mail e sino no painel, respeitando a unidade do
   destinatário
 - **Retenção de dados (LGPD)**: expurgo diário automatizado com prazos configuráveis e
@@ -105,6 +107,7 @@ php artisan test
   justificativa, ocorrência com foto, encerramento de ronda e de turno
 - **Funciona offline**: os registros ficam no aparelho e sobem sozinhos quando há rede
 - Tela de fila mostrando o que está pendente e o que o servidor recusou, com o motivo
+- **Botão de emergência** sempre visível, com confirmação em duas etapas e contingência offline
 - Desvios (fora do raio, sem GPS, fora da janela, fora de ordem, relógio divergente) são
   marcados pelo servidor — o app nunca recusa um registro
 
@@ -125,6 +128,7 @@ Turnos, rondas e leituras são imutáveis: nascem em campo e o painel só consul
 | [09 — Notificações](docs/09-notificacoes.md) | Quando dispara, quem recebe, canais e fila |
 | [10 — LGPD e retenção](docs/10-lgpd-e-retencao.md) | Prazos, regras do expurgo e prestação de contas |
 | [11 — Autenticação Google](docs/11-autenticacao-google.md) | Regras de aceite e roteiro de ativação |
+| [12 — Segurança do vigilante](docs/12-seguranca-do-vigilante.md) | Botão de pânico, inatividade e atendimento |
 
 ## Relação com o Portal de Segurança Digital
 
