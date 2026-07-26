@@ -130,7 +130,8 @@ O fator decisivo é o stack já existente e em produção no Portal de Seguranç
 
 - Botão de pânico com escalonamento de notificação
 - Alerta de inatividade / vigilante sem movimento por N minutos
-- Controle de recursos: armamento, rádio, chaves, fardamento (entrega, devolução, divergência)
+- Controle de chaves: guarda na portaria, liberação a solicitante, devolução
+  (**armamento removido do escopo em 26/07/2026** — não se aplica a este contexto)
 - Notificações push (PWA) e e-mail para supervisão em ocorrência de severidade alta
 - Análise de recorrência: mapa de calor por local × horário × tipo
 - Portal de consulta para gestores da unidade (visão restrita à própria unidade)
@@ -229,7 +230,7 @@ attachments                      ── anexável (polimórfico), path, mime, ha
                                     exif_lat, exif_lng, capturado_em
 daily_reports (RDO)              ── unit_id, data, status (rascunho|fechado),
                                     fechado_por, fechado_em, pdf_path, hash
-resources / resource_handovers   ── armamento, rádio, chave, fardamento
+chaves / liberações              ── guarda na portaria, solicitante, devolução
 panic_alerts                     ── guard_id, occurred_at, lat, lng,
                                     status, atendido_por
 audit_logs                       ── ator, ação, entidade, antes/depois, ip, ua

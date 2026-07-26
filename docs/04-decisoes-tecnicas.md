@@ -230,7 +230,8 @@ sustentam o funcionamento:
   gestor restrito a uma unidade para quem essa brecha importe.
 - **Alertas de segurança sem escalonamento**: se ninguém reconhecer, não há segundo aviso nem
   contato alternativo. A lacuna mais séria da Fase 5.
-- Controle de recursos (armamento, rádio, chaves, fardamento) ainda não implementado.
+- Controle de chaves ainda não implementado. **Armamento está fora do escopo** (informado em
+  26/07/2026: não se aplica a este contexto) e rádio depende de decisão.
 - **A Fase 0 (levantamento com a equipe) continua pendente.** Unidades, postos, rotas e a
   taxonomia de ocorrências que estão no sistema são um ponto de partida, não o levantamento
   real.
