@@ -42,7 +42,9 @@ class DailyReportBuilder
             ]);
 
         // RDO fechado não se recalcula: ele é o registro do que foi fechado.
-        if ($report->exists && $report->isClosed()) {
+        // Idem para rascunho cuja data já foi expurgada — recalcular só zeraria
+        // os números de um período que não existe mais.
+        if ($report->exists && ($report->isClosed() || $report->dataWasPurged())) {
             return $report;
         }
 
@@ -100,6 +102,12 @@ class DailyReportBuilder
     public function hasLateRecords(DailyReport $report): bool
     {
         if (! $report->isClosed() || blank($report->content_hash)) {
+            return false;
+        }
+
+        // Data já expurgada pela retenção: recalcular daria vazio e acusaria
+        // divergência para sempre. O documento segue selado como está.
+        if ($report->dataWasPurged()) {
             return false;
         }
 

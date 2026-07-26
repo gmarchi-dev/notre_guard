@@ -41,6 +41,13 @@ As notificações são enfileiradas, então é preciso um worker rodando em para
 php artisan queue:work
 ```
 
+Em produção, o expurgo de dados vencidos depende do agendador. Para conferir a política sem
+apagar nada:
+
+```bash
+php artisan notre-guard:purge-data --dry-run
+```
+
 O painel fica em <http://127.0.0.1:8010/admin> e a PWA do vigilante em
 <http://127.0.0.1:8010/campo>.
 
@@ -83,6 +90,8 @@ php artisan test
   registros que chegaram depois do fechamento
 - **Notificações** de ocorrência grave por e-mail e sino no painel, respeitando a unidade do
   destinatário
+- **Retenção de dados (LGPD)**: expurgo diário automatizado com prazos configuráveis e
+  histórico das execuções para prestação de contas
 - Gestão de usuários e perfis (só administrador), com criação do login direto no cadastro
   de vigilante
 - **Escopo por unidade**: o gestor de unidade enxerga apenas a própria unidade
@@ -112,6 +121,7 @@ Turnos, rondas e leituras são imutáveis: nascem em campo e o painel só consul
 | [07 — RDO](docs/07-rdo.md) | Ciclo do relatório diário, selo de integridade, PDF |
 | [08 — Painel operacional](docs/08-dashboard.md) | Indicadores, gráficos e como ler os números |
 | [09 — Notificações](docs/09-notificacoes.md) | Quando dispara, quem recebe, canais e fila |
+| [10 — LGPD e retenção](docs/10-lgpd-e-retencao.md) | Prazos, regras do expurgo e prestação de contas |
 
 ## Relação com o Portal de Segurança Digital
 

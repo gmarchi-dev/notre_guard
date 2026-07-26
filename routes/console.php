@@ -1,8 +1,12 @@
 <?php
 
-use Illuminate\Foundation\Inspiring;
-use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Schedule;
 
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote');
+// Expurgo diário conforme config/retention.php. De madrugada porque apagar
+// arquivo de evidência é I/O e não deve competir com a ronda noturna.
+//
+// Exige o agendador do Laravel ativo (cron chamando `schedule:run`).
+Schedule::command('notre-guard:purge-data')
+    ->dailyAt('03:30')
+    ->onOneServer()
+    ->withoutOverlapping();

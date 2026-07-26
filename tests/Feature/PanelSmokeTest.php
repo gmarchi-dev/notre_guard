@@ -36,6 +36,7 @@ class PanelSmokeTest extends TestCase
             'ocorrências' => ['incidents'],
             'usuários' => ['users'],
             'RDOs' => ['daily-reports'],
+            'retenção de dados' => ['retention-runs'],
         ];
     }
 

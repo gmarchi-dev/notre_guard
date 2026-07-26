@@ -9,7 +9,8 @@ Notre Dame Campinas. Ver [README.md](README.md) e
 indicadores e notificações; API de sincronização e PWA de campo offline-first. 78 testes
 passando. Próximo passo é o rollout (Fase 4), que depende do levantamento com a equipe.
 
-As notificações são enfileiradas: sem `php artisan queue:work` os avisos ficam parados.
+As notificações são enfileiradas: sem `php artisan queue:work` os avisos ficam parados. O
+expurgo de dados vencidos depende do agendador (`schedule:run` no cron).
 
 Antes de mexer no modelo de dados ou em resources, ler `docs/03-modelo-de-dados.md` e
 `docs/04-decisoes-tecnicas.md` — há duas renomeações obrigatórias (`PatrolRoute`,
@@ -66,3 +67,7 @@ Não reabrir sem o usuário pedir:
   falharam" levam a decisões diferentes (ver `docs/08-dashboard.md`).
 - **Só ocorrência grave notifica.** Não ampliar o gatilho sem o usuário pedir: ruído constante
   faz a supervisão ignorar o sistema (ver `docs/09-notificacoes.md`).
+- **Retenção:** evidência vencida perde o binário, não a linha (o hash fica como prova); turno
+  aberto nunca é expurgado; toda execução é registrada em `retention_runs`. Prazos em
+  `config/retention.php` — alterar é decisão de negócio, documentar o motivo em
+  `docs/10-lgpd-e-retencao.md`.

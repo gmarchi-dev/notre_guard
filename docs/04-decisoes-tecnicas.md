@@ -143,6 +143,23 @@ com tipo é erro fatal de composição de trait), e a ação da notificação do
 
 **Exige worker de fila rodando.** Sem `queue:work`, os avisos ficam parados na tabela `jobs`.
 
+## 2026-07-26 — Retenção e expurgo automatizados
+
+Detalhes em [10-lgpd-e-retencao.md](10-lgpd-e-retencao.md). As decisões que não podem ser
+afrouxadas:
+
+- **Evidência vencida perde o binário, não a linha.** O hash SHA-256 fica: prova o que existiu
+  sem guardar o conteúdo.
+- **Turno aberto nunca é expurgado**, mesmo antigo. É sintoma de problema, não dado vencido.
+- **Cada execução é registrada em `retention_runs`**, inclusive simulação. A LGPD exige poder
+  demonstrar a eliminação, e sem histórico isso é afirmação sem prova.
+- Evidências são polimórficas e **não têm cascata**: precisam ser removidas antes do turno, ou
+  sobram linhas apontando para ids inexistentes.
+
+Interação sutil: o expurgo quebraria a verificação de selo do RDO, que recalcula o conteúdo e
+compararia com vazio. Daí a coluna `daily_reports.data_purged_at`, respeitada por
+`hasLateRecords()` e por `buildOrUpdate()`.
+
 ## Pendências conhecidas
 
 - Não há autenticação Google Workspace ainda: login do painel é e-mail/senha local.
@@ -151,6 +168,10 @@ com tipo é erro fatal de composição de trait), e a ação da notificação do
 - O RDO é gerado sob demanda. Não há job agendado criando o rascunho do dia anterior
   automaticamente.
 - Não há worker de fila configurado como serviço; em produção isso precisa ser supervisionado.
+- O expurgo depende do agendador do Laravel ativo (`schedule:run` no cron). Sem ele, os prazos
+  de retenção não são cumpridos.
+- Falta o **aceite registrado** do termo de transparência na primeira instalação do aplicativo
+  (o aviso aparece, mas o aceite não é gravado).
 - O dashboard não tem exportação. Levar os números para fora exige o PDF do RDO.
 - O escopo por unidade cobre a **leitura**. Um gestor de unidade ainda consegue criar registros
   para outra unidade escolhendo-a no formulário — falta restringir as opções dos selects.
