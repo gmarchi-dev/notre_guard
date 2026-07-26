@@ -57,9 +57,12 @@ Não reabrir sem o usuário pedir:
   perdido não afeta contas.
 - Tudo que entra no IndexedDB passa por `plain()` em `db.js`: o Alpine entrega `Proxy` e o
   IndexedDB não consegue cloná-los.
-- Escopo por unidade: usar o trait `ScopedToUnit` e sobrescrever `applyUnitScope()`. **Nunca**
-  sobrescrever `getEloquentQuery()` chamando `Resource::getEloquentQuery()` — perde o late
-  static binding e quebra a listagem com erro 500.
+- **A supervisão de segurança é central** (matriz + filial, mesma gerência). O perfil
+  `unit_manager` e o trait `ScopedToUnit` existem e funcionam, mas não estão em uso — não
+  investir em escopo de escrita por unidade sem o usuário pedir.
+- Se precisar de escopo por unidade: usar o trait `ScopedToUnit` e sobrescrever
+  `applyUnitScope()`. **Nunca** sobrescrever `getEloquentQuery()` chamando
+  `Resource::getEloquentQuery()` — perde o late static binding e quebra a listagem com erro 500.
 - Criar login e trocar perfil é só de administrador (`UserResource::canAccess()`).
 - **RDO em rascunho é espelho do banco; fechado é fotografia selada.** Não recalcular RDO
   fechado, não editar o conteúdo — a saída para registro atrasado é reabrir. Consultar sempre

@@ -2,6 +2,25 @@
 
 Registro de decisões tomadas durante a implementação, com o motivo. Ordem cronológica.
 
+## Estrutura organizacional (informada em 26/07/2026)
+
+**A supervisão de segurança é central.** Existem duas unidades — matriz e filial — e a
+supervisão/gerência é a mesma para ambas.
+
+Isso tem consequências diretas no que faz e no que não faz sentido construir:
+
+- **Não há necessidade de escopo de escrita por unidade.** O `ScopedToUnit` continua no código e
+  testado, mas hoje é uma válvula de segurança adormecida: nenhum usuário em operação usa o
+  perfil `unit_manager`. Não investir em restringir os selects dos formulários enquanto esse
+  arranjo se mantiver.
+- O filtro de unidade do painel é **ferramenta de comparação** entre matriz e filial, não
+  fronteira de acesso.
+- O RDO é por unidade e data, então a supervisão fecha **dois RDOs por dia**. Se isso virar
+  atrito na rotina, a saída é um fechamento em lote ou uma visão consolidada — nenhuma das duas
+  existe hoje.
+- Notificação de ocorrência grave chega para a supervisão independentemente da unidade, que é o
+  comportamento correto neste arranjo.
+
 ## 2026-07-25 — Filament 4 em vez de Filament 3
 
 O plano previa Filament 3 para manter paridade com o Portal de Segurança Digital. Não é
@@ -189,8 +208,9 @@ de ativação em [11-autenticacao-google.md](11-autenticacao-google.md).
 - Falta o **aceite registrado** do termo de transparência na primeira instalação do aplicativo
   (o aviso aparece, mas o aceite não é gravado).
 - O dashboard não tem exportação. Levar os números para fora exige o PDF do RDO.
-- O escopo por unidade cobre a **leitura**. Um gestor de unidade ainda consegue criar registros
-  para outra unidade escolhendo-a no formulário — falta restringir as opções dos selects.
+- ~~O escopo por unidade cobre só a leitura.~~ **Deixou de ser pendência em 26/07/2026:** a
+  supervisão é central (ver a seção de estrutura organizacional abaixo), então não existe um
+  gestor restrito a uma unidade para quem essa brecha importe.
 - Botão de pânico, alerta de inatividade e controle de recursos seguem fora (Fase 5).
 - **A Fase 0 (levantamento com a equipe) continua pendente.** Unidades, postos, rotas e a
   taxonomia de ocorrências que estão no sistema são um ponto de partida, não o levantamento
