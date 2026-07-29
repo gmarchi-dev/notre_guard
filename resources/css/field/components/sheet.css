@@ -64,6 +64,18 @@
         margin-top: var(--space-4);
     }
 
+    /* Lista de seleção. O sheet inteiro já rola; aqui o limite serve para que a
+       lista nunca empurre o botão de cancelar para fora do alcance do polegar. */
+    .sheet__list {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-5);
+        margin-top: var(--space-4);
+        max-height: 56dvh;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+
     /* Ações empilhadas, confirmar em cima: o polegar alcança primeiro o que é
        mais provável. */
     .sheet__actions {

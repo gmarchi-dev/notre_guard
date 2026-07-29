@@ -100,6 +100,30 @@ class FieldAppTest extends TestCase
         }
     }
 
+    public function test_no_native_select_survives_in_the_field_app(): void
+    {
+        // A roda nativa do celular não é estilizável, ignora o tema, some sob o
+        // teclado em PWA instalada e transformava dezessete tipos de ocorrência
+        // em dezessete linhas iguais. Escolha em lista é a única forma aqui.
+        $this->assertStringNotContainsString(
+            '<select',
+            $this->fieldHtml(),
+            'seleção nativa reintroduzida — use o sheet de escolha em lista.',
+        );
+    }
+
+    public function test_the_severity_scale_does_not_borrow_the_emergency_red(): void
+    {
+        // "Crítica" é o extremo da escala, mas um segundo bloco vermelho cheio
+        // na tela rouba do botão de emergência exatamente o significado que ele
+        // precisa ter. A distinção vem do contorno e do sinal.
+        $css = File::get(resource_path('css/field/components/segmented.css'));
+
+        $this->assertStringContainsString('.segmented__option--sev-critical', $css);
+        $this->assertStringNotContainsString('background: var(--emergency)', $css);
+        $this->assertStringNotContainsString('background: var(--critical-text)', $css);
+    }
+
     // ------------------------------------------------- disciplina do CSS
 
     public function test_only_the_token_file_holds_literal_colours(): void

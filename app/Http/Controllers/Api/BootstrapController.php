@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Checkpoint;
+use App\Models\Incident;
 use App\Models\IncidentType;
 use App\Models\PatrolRoute;
 use App\Models\Post;
@@ -51,6 +52,7 @@ class BootstrapController extends Controller
             'checkpoints' => $this->checkpoints($unit->id),
             'routes' => $this->routes($unit->id),
             'incident_types' => $this->incidentTypes(),
+            'frequent_incident_type_ids' => $this->frequentIncidentTypes($unit->id),
         ]);
     }
 
@@ -156,10 +158,37 @@ class BootstrapController extends Controller
             ->map(fn (IncidentType $type) => [
                 'id' => $type->id,
                 'label' => $type->fullName(),
+                // Grupo e folha separados: o aparelho monta a escolha em duas
+                // etapas. Achatado num rótulo só, viravam 17 linhas iguais numa
+                // roda nativa, e a hierarquia existia apenas como um caractere.
+                'group' => $type->parent?->name ?? 'Outros',
+                'name' => $type->name,
                 'default_severity' => $type->default_severity,
                 'default_classification' => $type->default_classification,
             ])
             ->values()
+            ->all();
+    }
+
+    /**
+     * Tipos mais registrados nesta unidade nos últimos 90 dias.
+     *
+     * Atalho medido, não adivinhado: numa instalação nova a lista vem vazia e a
+     * seção simplesmente não aparece, em vez de sugerir o que ninguém usa.
+     *
+     * @return list<int>
+     */
+    private function frequentIncidentTypes(int $unitId): array
+    {
+        return Incident::query()
+            ->where('unit_id', $unitId)
+            ->where('occurred_at', '>=', now()->subDays(90))
+            ->selectRaw('incident_type_id, count(*) as total')
+            ->groupBy('incident_type_id')
+            ->orderByDesc('total')
+            ->limit(4)
+            ->pluck('incident_type_id')
+            ->map(fn ($id) => (int) $id)
             ->all();
     }
 }

@@ -417,6 +417,14 @@ function fieldApp() {
             })
         },
 
+        /** Seleção numa lista com seções. Escolher já resolve. */
+        pick(options) {
+            return new Promise((resolve) => {
+                this.sheet = { kind: 'pick', sections: [], ...options, resolve }
+                this.openLayer()
+            })
+        },
+
         openLayer() {
             this.$nextTick(() => this.$refs.sheetTitle?.focus({ preventScroll: true }))
         },
@@ -1127,6 +1135,143 @@ function fieldApp() {
             if (type?.default_classification) this.incident.classification = type.default_classification
 
             delete this.incidentErrors.incident_type_id
+        },
+
+        /** O tipo escolhido, ou null. */
+        get incidentType() {
+            return (
+                this.data?.incident_types.find(
+                    (t) => t.id === Number(this.incident.incident_type_id),
+                ) ?? null
+            )
+        },
+
+        /** Tipos agrupados pelo pai, na ordem em que o servidor mandou. */
+        get incidentGroups() {
+            const groups = new Map()
+
+            for (const type of this.data?.incident_types ?? []) {
+                if (!groups.has(type.group)) groups.set(type.group, [])
+                groups.get(type.group).push(type)
+            }
+
+            return [...groups.entries()].map(([label, types]) => ({ label, types }))
+        },
+
+        /**
+         * Escolha do tipo, em duas etapas.
+         *
+         * Antes eram dezessete opções achatadas numa roda nativa, na tela que se
+         * usa logo depois de encontrar um portão arrombado. Agora: grupo, depois
+         * tipo — com atalho para os mais registrados nesta unidade, que é dado
+         * medido, não palpite. Voltar da segunda etapa devolve à primeira em vez
+         * de cancelar tudo.
+         */
+        async pickIncidentType() {
+            const frequentIds = this.data?.frequent_incident_type_ids ?? []
+            const frequent = frequentIds
+                .map((id) => this.data.incident_types.find((t) => t.id === id))
+                .filter(Boolean)
+
+            const sections = []
+
+            if (frequent.length > 0) {
+                sections.push({
+                    label: 'Mais registrados aqui',
+                    items: frequent.map((type) => ({
+                        value: `t:${type.id}`,
+                        title: type.name,
+                        meta: type.group,
+                        leaf: true,
+                    })),
+                })
+            }
+
+            sections.push({
+                label: frequent.length > 0 ? 'Todos os tipos' : 'Escolha o grupo',
+                items: this.incidentGroups.map((group) => ({
+                    value: `g:${group.label}`,
+                    title: group.label,
+                    meta: `${group.types.length} tipos`,
+                })),
+            })
+
+            const choice = await this.pick({
+                title: 'Tipo de ocorrência',
+                sections,
+                cancelLabel: 'Cancelar',
+            })
+
+            if (!choice) return
+
+            // `String()` porque o sheet devolve o valor cru do item, e o atalho
+            // e o grupo se distinguem pelo prefixo.
+            const value = String(choice)
+
+            if (value.startsWith('t:')) {
+                this.setIncidentType(Number(value.slice(2)))
+                return
+            }
+
+            await this.pickIncidentTypeInGroup(value.slice(2))
+        },
+
+        async pickIncidentTypeInGroup(groupLabel) {
+            const group = this.incidentGroups.find((g) => g.label === groupLabel)
+
+            if (!group) return
+
+            const choice = await this.pick({
+                title: groupLabel,
+                sections: [
+                    {
+                        label: 'Tipo',
+                        items: group.types.map((type) => ({
+                            value: type.id,
+                            title: type.name,
+                            meta: this.severityLabel(type.default_severity),
+                            leaf: true,
+                        })),
+                    },
+                ],
+                cancelLabel: 'Voltar aos grupos',
+            })
+
+            // Cancelar aqui volta um passo, não zera a escolha inteira.
+            if (!choice) {
+                await this.pickIncidentType()
+                return
+            }
+
+            this.setIncidentType(choice)
+        },
+
+        setIncidentType(id) {
+            this.incident.incident_type_id = id
+            this.applyIncidentDefaults()
+        },
+
+        severities: [
+            { value: 'low', label: 'Baixa', mark: '·' },
+            { value: 'medium', label: 'Média', mark: '–' },
+            { value: 'high', label: 'Alta', mark: '▲' },
+            { value: 'critical', label: 'Crítica', mark: '!' },
+        ],
+
+        severityLabel(value) {
+            return this.severities.find((s) => s.value === value)?.label ?? '—'
+        },
+
+        setSeverity(value) {
+            this.incident.severity = value
+        },
+
+        /** Setas do radiogroup de gravidade. */
+        moveSeverity(step) {
+            const index = this.severities.findIndex((s) => s.value === this.incident.severity)
+            const next = (index + step + this.severities.length) % this.severities.length
+
+            this.incident.severity = this.severities[next].value
         },
 
         async submitIncident() {

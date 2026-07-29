@@ -45,6 +45,36 @@
                 </div>
             </template>
 
+            {{-- Variante de seleção: lista rolável de linhas, não pilha de
+                 botões. Um seletor de tipo de ocorrência tem dezessete opções
+                 em cinco grupos — como botões empilhados viraria uma parede. --}}
+            <template x-if="sheet.kind === 'pick'">
+                <div class="sheet__list">
+                    <template x-for="section in sheet.sections" :key="section.label">
+                        <section class="section">
+                            <div class="section__head">
+                                <h3 class="section__title" x-text="section.label"></h3>
+                            </div>
+
+                            <div class="group">
+                                <template x-for="item in section.items" :key="item.value">
+                                    <button type="button" class="choice" @click="resolveSheet(item.value)">
+                                        <span class="choice__body">
+                                            <span class="choice__title" x-text="item.title"></span>
+                                            <template x-if="item.meta">
+                                                <span class="choice__meta" x-text="item.meta"></span>
+                                            </template>
+                                        </span>
+                                        <span class="choice__chevron" aria-hidden="true"
+                                              x-text="item.leaf ? '' : '›'"></span>
+                                    </button>
+                                </template>
+                            </div>
+                        </section>
+                    </template>
+                </div>
+            </template>
+
             <div class="sheet__actions">
                 {{-- Escolha entre vários caminhos (menu do ponto, conflito de
                      ronda). Sem opções, cai no par confirmar/cancelar. --}}
@@ -59,7 +89,9 @@
                     </div>
                 </template>
 
-                <template x-if="!sheet.options?.length">
+                {{-- Na lista, escolher JÁ é confirmar: um botão a mais só
+                     acrescentaria um toque sem decisão nenhuma. --}}
+                <template x-if="!sheet.options?.length && sheet.kind !== 'pick'">
                     <button type="button"
                             :class="'btn ' + (sheet.destructive ? 'btn--critical' : 'btn--primary')"
                             :disabled="sheet.kind === 'text' && !sheet.value?.trim()"

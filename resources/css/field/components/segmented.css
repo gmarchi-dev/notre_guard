@@ -10,9 +10,12 @@
  */
 
 @layer components {
+    /* Colunas iguais, sem fixar a quantidade: o checklist tem três respostas e
+       a gravidade tem quatro. `repeat(3, 1fr)` estourava a segunda. */
     .segmented {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-auto-flow: column;
+        grid-auto-columns: 1fr;
         gap: var(--space-2);
     }
 
@@ -52,6 +55,35 @@
     .segmented__option--na[aria-checked='true'] {
         background: var(--border-strong);
         color: var(--bg);
+    }
+
+    /*
+     * Gravidade da ocorrência: rampa de intensidade em quatro passos.
+     *
+     * "Crítica" NÃO recebe bloco vermelho preenchido, apesar de ser o extremo
+     * da escala. Vermelho cheio é do botão de emergência, e um segundo bloco
+     * vermelho na tela roubaria dele exatamente o significado que ele precisa
+     * ter. A distinção aqui vem do contorno grosso mais o sinal "!".
+     */
+    .segmented__option--sev-low[aria-checked='true'] {
+        background: var(--border-strong);
+        color: var(--bg);
+    }
+
+    .segmented__option--sev-medium[aria-checked='true'] {
+        background: var(--accent);
+        color: var(--accent-on);
+    }
+
+    .segmented__option--sev-high[aria-checked='true'] {
+        background: var(--warning);
+        color: var(--warning-on);
+    }
+
+    .segmented__option--sev-critical[aria-checked='true'] {
+        background: var(--critical-quiet);
+        box-shadow: inset 0 0 0 2px var(--critical-text);
+        color: var(--critical-text);
     }
 
     /* Os itens vivem dentro de um `group`, que já desenha o fio entre irmãos. */

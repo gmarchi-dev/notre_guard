@@ -15,19 +15,28 @@
             </div>
 
             <div class="fieldset">
+                {{-- Tipo: seleção em duas etapas por sheet, no lugar da roda
+                     nativa com dezessete opções achatadas. A linha mostra a
+                     escolha e o grupo a que ela pertence. --}}
                 <div class="field">
-                    <label class="field__label" for="incident-type">
+                    <span class="field__label" id="incident-type-label">
                         Tipo <span class="field__required">— obrigatório</span>
-                    </label>
-                    <select class="field__control" id="incident-type" x-model="incident.incident_type_id"
-                            @change="applyIncidentDefaults()"
+                    </span>
+
+                    <button type="button" class="choice" id="incident-type"
+                            @click="pickIncidentType()"
+                            aria-labelledby="incident-type-label incident-type-value"
                             :aria-invalid="incidentErrors.incident_type_id ? 'true' : 'false'"
                             aria-describedby="err-type">
-                        <option value="">Selecione…</option>
-                        <template x-for="type in (data?.incident_types ?? [])" :key="type.id">
-                            <option :value="type.id" x-text="type.label"></option>
-                        </template>
-                    </select>
+                        <span class="choice__body">
+                            <span class="choice__title" id="incident-type-value"
+                                  x-text="incidentType?.name ?? 'Escolher o tipo'"></span>
+                            <span class="choice__meta"
+                                  x-text="incidentType?.group ?? 'Cinco grupos, do patrimônio ao operacional'"></span>
+                        </span>
+                        <span class="choice__chevron" aria-hidden="true">›</span>
+                    </button>
+
                     <p class="field__error" id="err-type" x-show="incidentErrors.incident_type_id"
                        x-text="incidentErrors.incident_type_id"></p>
                 </div>
@@ -44,14 +53,55 @@
                        x-text="incidentErrors.description"></p>
                 </div>
 
+                {{-- A foto pertence ao relato, não ao fim da rolagem: quem
+                     acabou de ver a cena fotografa antes de escrever o resto. --}}
                 <div class="field">
-                    <label class="field__label" for="incident-severity">Gravidade</label>
-                    <select class="field__control" id="incident-severity" x-model="incident.severity">
-                        <option value="low">Baixa</option>
-                        <option value="medium">Média</option>
-                        <option value="high">Alta</option>
-                        <option value="critical">Crítica</option>
-                    </select>
+                    <span class="field__label">Foto</span>
+
+                    <template x-if="!incidentPhotoUrl">
+                        <div>
+                            <input class="field__file" id="incident-photo" type="file" accept="image/*"
+                                   capture="environment" @change="capturePhoto($event, 'incidentPhoto')">
+                            <label class="btn btn--secondary" for="incident-photo">
+                                <span aria-hidden="true">◎</span> Tirar foto
+                            </label>
+                        </div>
+                    </template>
+
+                    <template x-if="incidentPhotoUrl">
+                        <div class="photo">
+                            <img class="photo__thumb" :src="incidentPhotoUrl" alt="Foto anexada à ocorrência">
+                            <div class="photo__body">
+                                <p class="card__meta">Foto anexada.</p>
+                                <button type="button" class="btn btn--secondary btn--md mt-2"
+                                        @click="clearPhoto('incidentPhoto')">Remover</button>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                {{-- Gravidade é o mesmo tipo de escolha que o checklist faz, e
+                     agora tem o mesmo desenho. O tipo já preenche um padrão;
+                     isto é o ajuste, não a decisão principal. --}}
+                <div class="field">
+                    <span class="field__label" id="incident-severity-label">Gravidade</span>
+
+                    <div class="segmented" role="radiogroup" aria-labelledby="incident-severity-label">
+                        <template x-for="level in severities" :key="level.value">
+                            <button type="button" role="radio"
+                                    class="segmented__option"
+                                    :class="'segmented__option--sev-' + level.value"
+                                    :aria-checked="incident.severity === level.value"
+                                    :tabindex="incident.severity === level.value ? 0 : -1"
+                                    @click="setSeverity(level.value)"
+                                    @keydown.arrow-right.prevent="moveSeverity(1)"
+                                    @keydown.arrow-left.prevent="moveSeverity(-1)">
+                                <span class="segmented__mark" aria-hidden="true" x-text="level.mark"></span>
+                                <span x-text="level.label"></span>
+                            </button>
+                        </template>
+                    </div>
+
                     <p class="field__hint">Alta e crítica avisam a supervisão na hora.</p>
                 </div>
             </div>
@@ -72,32 +122,9 @@
                 <h2 class="section__title">O que você fez</h2>
             </div>
 
-            <div class="fieldset">
-                <textarea class="field__control" id="incident-actions" x-model="incident.actions_taken"
-                          aria-label="Providências tomadas"
-                          placeholder="Comunicou pelo rádio, isolou a área…"></textarea>
-
-                <template x-if="!incidentPhotoUrl">
-                    <div>
-                        <input class="field__file" id="incident-photo" type="file" accept="image/*"
-                               capture="environment" @change="capturePhoto($event, 'incidentPhoto')">
-                        <label class="btn btn--secondary" for="incident-photo">
-                            <span aria-hidden="true">◎</span> Tirar foto
-                        </label>
-                    </div>
-                </template>
-
-                <template x-if="incidentPhotoUrl">
-                    <div class="photo">
-                        <img class="photo__thumb" :src="incidentPhotoUrl" alt="Foto anexada à ocorrência">
-                        <div class="photo__body">
-                            <p class="card__meta">Foto anexada.</p>
-                            <button type="button" class="btn btn--secondary btn--md mt-2"
-                                    @click="clearPhoto('incidentPhoto')">Remover</button>
-                        </div>
-                    </div>
-                </template>
-            </div>
+            <textarea class="field__control" id="incident-actions" x-model="incident.actions_taken"
+                      aria-label="Providências tomadas"
+                      placeholder="Comunicou pelo rádio, isolou a área…"></textarea>
         </section>
     </div>
 </template>

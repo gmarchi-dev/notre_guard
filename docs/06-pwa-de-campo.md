@@ -154,6 +154,27 @@ item. Estado nunca é comunicado só por cor: o selecionado tem preenchimento **
   `@supports`, e ele é o tema **escuro** — o cenário degradado tem de ser o seguro para a ronda.
 - A tela de fila lista os eventos, mas não as fotos individualmente — só o total pendente.
 
+## Registro de ocorrência
+
+Era a única tela que ainda parecia formulário web: `<select>` nativo com os **17 tipos achatados**
+num rótulo só (`"Patrimônio › Furto ou tentativa"`), gravidade em outro `<select>` — apesar de o
+checklist já ter um `segmented` para exatamente esse tipo de escolha — e a foto no fim da rolagem.
+É a tela que se usa logo depois de encontrar um portão arrombado, ou seja, o pior lugar para pedir
+precisão de dedo numa roda nativa.
+
+O bootstrap passou a entregar `group` e `name` separados, além do `label` completo que o RDO usa. A
+escolha virou **duas etapas** por sheet — grupo, depois tipo — com atalho para os mais registrados
+naquela unidade nos últimos 90 dias (`frequent_incident_type_ids`). O atalho é **medido**: em
+instalação nova a lista vem vazia e a seção some, em vez de sugerir o que ninguém usa. Cancelar na
+segunda etapa volta aos grupos, não zera a escolha.
+
+Gravidade virou `segmented`, o mesmo controle do checklist. **"Crítica" não recebe bloco vermelho
+preenchido**, apesar de ser o extremo da escala: vermelho cheio pertence ao botão de emergência, e
+um segundo bloco vermelho na tela rouba dele o significado. A distinção vem do contorno grosso e do
+sinal `!`. Há teste para isso.
+
+Nenhum `<select>` nativo sobrevive no app de campo — também virou invariante de teste.
+
 ## Retorno ao vigilante
 
 Três informações que o servidor já tinha e o aparelho não mostrava.
