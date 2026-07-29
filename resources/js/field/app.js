@@ -35,6 +35,29 @@ const SUBFLOWS = ['scan', 'checklist']
 
 const REASONS = ['Área interditada', 'Sem acesso / chave', 'Risco no local']
 
+/**
+ * Resolve uma cor CSS qualquer para `#rrggbb`.
+ *
+ * Pinta num canvas 1×1 e lê o pixel: é o navegador que faz a conversão de
+ * espaço de cor, então oklch(), color-mix() e o que vier funcionam igual.
+ */
+function toSrgb(color) {
+    try {
+        const canvas = document.createElement('canvas')
+        canvas.width = canvas.height = 1
+
+        const ctx = canvas.getContext('2d', { willReadFrequently: true })
+        ctx.fillStyle = color
+        ctx.fillRect(0, 0, 1, 1)
+
+        const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data
+
+        return '#' + [r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('')
+    } catch {
+        return null
+    }
+}
+
 function fieldApp() {
     return {
         // ------------------------------------------------------------ estado
@@ -108,6 +131,8 @@ function fieldApp() {
         handoverNotes: '',
         exitArmed: false,
 
+        theme: 'system',
+
         // ------------------------------------------------------ ciclo de vida
         async init() {
             window.addEventListener('online', () => {
@@ -128,7 +153,72 @@ function fieldApp() {
 
             window.addEventListener('popstate', (event) => this.onPopState(event))
 
+            this.theme = localStorage.getItem('ng.theme') ?? 'system'
+
             await this.boot()
+        },
+
+        // ------------------------------------------------------------- tema
+        themes: [
+            { value: 'system', label: 'Sistema', mark: '◐' },
+            { value: 'light', label: 'Claro', mark: '☀' },
+            { value: 'dark', label: 'Escuro', mark: '☾' },
+            { value: 'night', label: 'Noturno', mark: '●' },
+        ],
+
+        /**
+         * A troca é manual e permanente, nunca automática por horário: mudar a
+         * tela sozinho no meio do turno assusta e faz o vigilante achar que o
+         * aplicativo travou.
+         */
+        setTheme(value) {
+            this.theme = value
+
+            if (value === 'system') {
+                delete document.documentElement.dataset.theme
+                localStorage.removeItem('ng.theme')
+            } else {
+                document.documentElement.dataset.theme = value
+                localStorage.setItem('ng.theme', value)
+            }
+
+            this.syncThemeColor()
+        },
+
+        moveTheme(step) {
+            const index = this.themes.findIndex((t) => t.value === this.theme)
+
+            this.setTheme(this.themes[(index + step + this.themes.length) % this.themes.length].value)
+        },
+
+        /**
+         * A barra do sistema acompanha o tema escolhido.
+         *
+         * Os dois `<meta theme-color>` do HTML respondem a prefers-color-scheme,
+         * que não sabe nada de uma escolha explícita — sem isto, o modo noturno
+         * conviveria com uma barra de status clara no topo.
+         */
+        syncThemeColor() {
+            const explicit = this.theme !== 'system'
+            let tag = document.querySelector('meta[name="theme-color"]:not([media])')
+
+            if (!explicit) {
+                tag?.remove()
+                return
+            }
+
+            if (!tag) {
+                tag = document.createElement('meta')
+                tag.name = 'theme-color'
+                document.head.appendChild(tag)
+            }
+
+            const bg = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()
+
+            // Convertido para sRGB antes de sair: os tokens são oklch(), e a
+            // barra de status do iOS ignora `theme-color` que não saiba ler —
+            // o resultado seria uma faixa branca no topo do modo noturno.
+            tag.content = toSrgb(bg) ?? bg
         },
 
         /**

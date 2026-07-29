@@ -124,6 +124,91 @@ class FieldAppTest extends TestCase
         $this->assertStringNotContainsString('background: var(--critical-text)', $css);
     }
 
+    // ------------------------------------------------------------- temas
+
+    /** Nomes dos tokens declarados dentro de um bloco. */
+    private function tokensIn(string $css, string $selector): array
+    {
+        $start = strpos($css, $selector);
+        $this->assertNotFalse($start, "bloco {$selector} não encontrado em tokens.css");
+
+        $open = strpos($css, '{', $start);
+        $depth = 0;
+        $end = $open;
+
+        for ($i = $open; $i < strlen($css); $i++) {
+            if ($css[$i] === '{') {
+                $depth++;
+            } elseif ($css[$i] === '}') {
+                $depth--;
+                if ($depth === 0) {
+                    $end = $i;
+                    break;
+                }
+            }
+        }
+
+        preg_match_all('/(--[\w-]+)\s*:/', substr($css, $open, $end - $open), $matches);
+
+        return array_unique($matches[1]);
+    }
+
+    public function test_the_webview_fallback_covers_every_themed_token(): void
+    {
+        // Em WebView sem light-dark() um token esquecido não vira o valor
+        // escuro: ele fica sem valor nenhum, e a regra que o usa é descartada.
+        // Foi assim que --divider sumiu — junto com os fios de todo agrupamento.
+        $css = File::get(resource_path('css/field/tokens.css'));
+
+        preg_match_all('/(--[\w-]+)\s*:\s*light-dark\(/', $css, $matches);
+        $themed = array_unique($matches[1]);
+
+        $this->assertNotEmpty($themed);
+
+        $fallback = $this->tokensIn($css, '@supports not (color: light-dark(');
+
+        foreach ($themed as $token) {
+            $this->assertContains(
+                $token,
+                $fallback,
+                "{$token} não tem valor no fallback: em WebView antiga fica sem valor algum.",
+            );
+        }
+    }
+
+    public function test_night_mode_redefines_everything_except_the_emergency(): void
+    {
+        // Um token esquecido no modo noturno mantém o valor do tema escuro —
+        // ou seja, volta a acender exatamente o que este tema existe para
+        // apagar. A emergência é a única exceção, e é deliberada.
+        $css = File::get(resource_path('css/field/tokens.css'));
+
+        $night = $this->tokensIn($css, ":root[data-theme='night']");
+        $dark = $this->tokensIn($css, '@supports not (color: light-dark(');
+
+        foreach ($dark as $token) {
+            if (str_starts_with($token, '--emergency')) {
+                $this->assertNotContains(
+                    $token,
+                    $night,
+                    'a emergência não escurece: é a única coisa que continua acesa à noite.',
+                );
+
+                continue;
+            }
+
+            $this->assertContains($token, $night, "{$token} não foi redefinido no modo noturno.");
+        }
+    }
+
+    public function test_the_blocking_theme_script_knows_the_night_mode(): void
+    {
+        // O script roda antes do @vite de propósito. Se ele não reconhecer o
+        // valor gravado, o aparelho abre no tema errado e só corrige depois que
+        // o Alpine carrega — um flash claro na madrugada.
+        $this->assertStringContainsString("t === 'night'", $this->fieldHtml());
+    }
+
     // ------------------------------------------------- disciplina do CSS
 
     public function test_only_the_token_file_holds_literal_colours(): void

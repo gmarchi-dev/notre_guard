@@ -21,7 +21,7 @@
         (function () {
             try {
                 var t = localStorage.getItem('ng.theme');
-                if (t === 'light' || t === 'dark') {
+                if (t === 'light' || t === 'dark' || t === 'night') {
                     document.documentElement.dataset.theme = t;
                 }
             } catch (e) {

@@ -29,7 +29,10 @@
            ao sol. Aqui borda é estrutura, não decoração — e por isso é usada
            com parcimônia: só onde separa de fato. */
         --border: light-dark(oklch(0.704 0.04 256.788), oklch(0.372 0.044 257.287));
-        --border-strong: light-dark(oklch(0.554 0.046 257.417), oklch(0.446 0.043 257.281));
+        /* Slate-500 nos dois temas. No escuro era Slate-600, que dava 2.66:1
+           contra o fundo — abaixo dos 3:1 que a WCAG 1.4.11 pede para o
+           contorno de um controle. Medido, não estimado. */
+        --border-strong: light-dark(oklch(0.554 0.046 257.417), oklch(0.554 0.046 257.417));
 
         /* Fio interno de um agrupamento. Mais leve que --border: separa itens
            irmãos sem desenhar uma caixa em volta de cada um. */
@@ -160,6 +163,64 @@
     }
 
     /*
+     * Modo noturno — terceiro tema, não um "escuro mais escuro".
+     *
+     * O tema escuro comum é de alto contraste: texto Slate-50 sobre Slate-950,
+     * botão primário em Blue-400 preenchido, disco do próximo ponto em azul
+     * cheio. Isso se lê muito bem — e às duas da manhã, no pátio, custa a visão
+     * escotópica de quem volta a olhar para o escuro. A recuperação leva
+     * minutos, e é o vigilante que paga.
+     *
+     * O que mais emite luz não é o texto, que é traço fino: são as ÁREAS
+     * PREENCHIDAS. Por isso aqui os preenchimentos de acento, sucesso e aviso
+     * se invertem — fundo escuro, rótulo colorido — em vez de o texto
+     * simplesmente escurecer.
+     *
+     * A emergência é a única coisa que NÃO escurece. No modo noturno ela passa
+     * a ser, de longe, o objeto mais claro da tela — que é exatamente o que se
+     * quer dela.
+     *
+     * Contraste continua medido, não estimado: >= 7:1 no texto principal,
+     * >= 4.5:1 no texto secundário e nos rótulos sobre preenchimento.
+     */
+    :root[data-theme='night'] {
+        color-scheme: dark;
+
+        --bg: oklch(0.11 0.03 264);
+        --surface: oklch(0.16 0.035 265);
+        --surface-2: oklch(0.21 0.038 260);
+        --border: oklch(0.3 0.04 257);
+        --border-strong: oklch(0.5 0.043 257);
+        --divider: oklch(0.21 0.038 260);
+
+        --text: oklch(0.704 0.04 256.788);
+        --text-muted: oklch(0.62 0.04 257);
+        --text-faint: oklch(0.52 0.042 257);
+
+        --accent: oklch(0.3 0.1 267);
+        --accent-on: oklch(0.78 0.11 252);
+        --accent-text: oklch(0.72 0.11 252);
+        --accent-quiet: oklch(0.21 0.07 268);
+
+        --focus: oklch(0.72 0.1 230);
+
+        --success: oklch(0.32 0.09 152);
+        --success-on: oklch(0.8 0.14 154);
+        --success-quiet: oklch(0.19 0.05 153);
+        --success-text: oklch(0.78 0.14 154);
+
+        --warning: oklch(0.34 0.1 60);
+        --warning-on: oklch(0.84 0.15 91);
+        --warning-quiet: oklch(0.21 0.06 46);
+        --warning-text: oklch(0.8 0.15 91);
+
+        --critical-text: oklch(0.72 0.11 20);
+        --critical-quiet: oklch(0.2 0.08 26);
+
+        --shadow-color: oklch(0 0 0 / 0.6);
+    }
+
+    /*
      * WebView sem light-dark() (anterior a Chrome 123 / Safari 17.5) não
      * resolveria nenhum token e o app renderizaria sem estilo. O fallback é
      * o tema ESCURO, nunca o claro: o cenário degradado tem de ser o seguro
@@ -171,7 +232,8 @@
             --surface: oklch(0.208 0.042 265.755);
             --surface-2: oklch(0.279 0.041 260.031);
             --border: oklch(0.372 0.044 257.287);
-            --border-strong: oklch(0.446 0.043 257.281);
+            --border-strong: oklch(0.554 0.046 257.417);
+            --divider: oklch(0.279 0.041 260.031);
             --text: oklch(0.984 0.003 247.858);
             --text-muted: oklch(0.869 0.022 252.894);
             --text-faint: oklch(0.704 0.04 256.788);

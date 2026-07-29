@@ -43,8 +43,39 @@ legibilidade é luminância absoluta, e a borda "discreta" padrão simplesmente 
 No escuro o botão primário **inverte** — azul claro com texto quase preto. Isso levou o contraste
 de 3,6:1 para 5,5:1; escurecer o azul original teria piorado.
 
-**Contraste verificado por número**, não por olhômetro: todos os pares de token passam de 4,5:1
-nos dois temas, medidos no navegador (ver seção de verificação).
+**Modo noturno — um terceiro tema, não um "escuro mais escuro".** O tema escuro comum é de alto
+contraste: texto Slate-50 sobre Slate-950, botão primário em Blue-400 preenchido, disco do próximo
+ponto em azul cheio. Lê-se muito bem, e às duas da manhã custa a visão escotópica de quem volta a
+olhar o pátio — a recuperação leva minutos.
+
+O que emite luz não é o texto, que é traço fino: são as **áreas preenchidas**. Por isso aqui os
+preenchimentos se invertem (fundo escuro, rótulo colorido) em vez de o texto simplesmente escurecer.
+Medido no navegador, em luminância absoluta:
+
+| | escuro | noturno | redução |
+|---|---|---|---|
+| preenchimento de acento | 0,348 | 0,025 | **−93 %** |
+| preenchimento de sucesso | 0,540 | 0,036 | **−93 %** |
+| texto | 0,954 | 0,349 | −63 % |
+| **emergência** | 0,170 | 0,170 | **0 %** |
+
+A medição expôs algo que ninguém tinha notado: **no tema escuro o botão de pânico é um dos
+elementos preenchidos mais escuros da tela** — três vezes mais escuro que o marcador de um ponto
+já registrado. No modo noturno ele passa a ser, de longe, o mais claro, com quase sete vezes a
+luminância do preenchimento seguinte. Não foi efeito colateral: a emergência é o único token que o
+modo noturno **não** redefine, e há teste garantindo isso.
+
+A troca é manual e permanente (`Sistema / Claro / Escuro / Noturno` na tela inicial), nunca
+automática por horário: mudar a tela sozinho no meio do turno faz o vigilante achar que o
+aplicativo travou. O `<meta theme-color>` acompanha a escolha, convertido para sRGB — os tokens são
+`oklch()`, que a barra de status do iOS não lê.
+
+**Contraste verificado por número**, não por olhômetro: todos os pares de token passam de 4,5:1 nos
+três temas, medidos no navegador (ver seção de verificação). Essa medição também encontrou dois
+defeitos antigos: `--border-strong` dava **2,66:1** no escuro, abaixo dos 3:1 que a WCAG 1.4.11 pede
+para contorno de controle (agora 4,23), e `--divider` **não existia no fallback** para WebView sem
+`light-dark()` — lá os fios internos de todo agrupamento simplesmente não eram desenhados. Ambos
+viraram teste.
 
 **Vermelho preenchido é exclusivo da emergência**, e isso é teste, não comentário. "Encerrar
 turno" é uma ação destrutiva de contorno, com rótulo em vermelho — antes era um bloco vermelho da
