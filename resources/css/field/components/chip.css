@@ -1,0 +1,65 @@
+/*
+ * Pastilhas.
+ *
+ * A da barra de topo mostra o estado da sincronização e abre a fila. Antes
+ * tinha ~26px de altura — metade do mínimo — e era o ÚNICO acesso à fila num
+ * aplicativo declaradamente usado de luva. Agora tem 48px, e a fila também é
+ * alcançável por uma linha na tela inicial.
+ */
+
+@layer components {
+    .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-2);
+        min-height: var(--tap-md);
+        padding-inline: var(--space-3);
+        border-radius: var(--radius-pill);
+        background: var(--surface-2);
+        color: var(--text);
+        font-size: var(--text-sm);
+        font-weight: var(--weight-semibold);
+        white-space: nowrap;
+    }
+
+    .chip--offline {
+        background: var(--warning-quiet);
+        color: var(--warning-text);
+    }
+
+    .chip--pending {
+        background: var(--accent-quiet);
+        color: var(--accent-text);
+    }
+
+    .chip--clean {
+        background: var(--success-quiet);
+        color: var(--success-text);
+    }
+
+    .chip--rejected {
+        background: var(--critical-quiet);
+        color: var(--critical-text);
+    }
+
+    /* Estado também por forma, não só por cor. */
+    .chip__dot {
+        width: var(--space-2);
+        height: var(--space-2);
+        flex: none;
+        border-radius: 50%;
+        background: currentColor;
+    }
+
+    .chip--reason {
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        color: var(--text);
+    }
+
+    .chip--reason[aria-pressed='true'] {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: var(--accent-on);
+    }
+}

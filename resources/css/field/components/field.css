@@ -1,0 +1,103 @@
+/*
+ * Campos de formulário.
+ *
+ * Dois cuidados que valem como requisito:
+ *
+ * 1. O rótulo é --text, não --text-muted. Rótulo apagado a 14px era um
+ *    problema de contraste travestido de estética.
+ * 2. Todo controle tem font-size >= 16px. Sem `maximum-scale` no viewport, o
+ *    iOS dá zoom ao focar um campo com fonte menor — e o layout salta.
+ */
+
+@layer components {
+    .field + .field {
+        margin-top: var(--space-4);
+    }
+
+    .field__label {
+        display: block;
+        margin-bottom: var(--space-2);
+        font-size: var(--text-sm);
+        font-weight: var(--weight-semibold);
+        color: var(--text);
+    }
+
+    /* "obrigatório" por extenso: asterisco não é lido nem entendido por todo
+       mundo. */
+    .field__required {
+        font-weight: var(--weight-regular);
+        color: var(--text-muted);
+    }
+
+    .field__control {
+        width: 100%;
+        min-height: var(--tap-lg);
+        padding: var(--space-3) var(--space-4);
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        color: var(--text);
+        font-family: inherit;
+        font-size: var(--text-base);
+        line-height: var(--leading-normal);
+    }
+
+    textarea.field__control {
+        min-height: 108px;
+        resize: vertical;
+    }
+
+    .field__control::placeholder {
+        color: var(--text-faint);
+    }
+
+    .field__control[aria-invalid='true'] {
+        border-color: var(--critical-text);
+        border-left-width: 4px;
+    }
+
+    .field__hint {
+        margin-top: var(--space-2);
+        font-size: var(--text-sm);
+        color: var(--text-muted);
+    }
+
+    .field__error {
+        margin-top: var(--space-2);
+        font-size: var(--text-sm);
+        font-weight: var(--weight-semibold);
+        color: var(--critical-text);
+    }
+
+    /* Arquivo: o controle nativo dentro de uma caixa de 56px fica estranho e
+       muda de aparência entre iOS e Android. Aqui o input é escondido e o
+       rótulo vira o botão. */
+    .field__file {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .photo {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+    }
+
+    .photo__thumb {
+        width: 88px;
+        height: 88px;
+        flex: none;
+        object-fit: cover;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border);
+        background: var(--surface-2);
+    }
+
+    .photo__body {
+        flex: 1;
+        min-width: 0;
+    }
+}

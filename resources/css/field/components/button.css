@@ -1,0 +1,123 @@
+/*
+ * Botões.
+ *
+ * Todo botão declara sua intenção: .btn + variante + tamanho. Tudo em
+ * especificidade (0,1,0), e nenhum seletor descendente define tamanho — é o
+ * que impede a cascata de correções que existia antes.
+ *
+ * Em operação demorada usamos aria-disabled com guarda em JS, e não o atributo
+ * disabled: o botão continua focável e a mudança é anunciada pelo leitor de
+ * tela. `disabled` de verdade fica só para pré-condição não atendida, como
+ * foto obrigatória ainda não anexada.
+ */
+
+@layer components {
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-2);
+        width: 100%;
+        min-height: var(--tap-lg);
+        padding-inline: var(--space-5);
+        border-radius: var(--radius-lg);
+        background: var(--surface-2);
+        color: var(--text);
+        font-size: var(--text-base);
+        font-weight: var(--weight-semibold);
+        line-height: var(--leading-tight);
+        text-align: center;
+        text-decoration: none;
+        transition: background var(--dur-fast) var(--ease-out),
+            transform var(--dur-fast) var(--ease-out);
+    }
+
+    .btn:active {
+        transform: scale(0.985);
+    }
+
+    .btn[disabled],
+    .btn[aria-disabled='true'] {
+        opacity: 0.55;
+    }
+
+    .btn[aria-disabled='true'] {
+        cursor: default;
+    }
+
+    /* --- variantes --- */
+    .btn--primary {
+        background: var(--accent);
+        color: var(--accent-on);
+    }
+
+    .btn--secondary {
+        background: transparent;
+        border: 1px solid var(--border-strong);
+        color: var(--text);
+    }
+
+    /* Ação destrutiva. Deliberadamente NÃO usa fundo vermelho: no rodapé ela
+       aparece logo abaixo do botão de emergência, e dois blocos vermelhos da
+       mesma largura, a 8px um do outro, é um erro esperando acontecer. */
+    .btn--critical {
+        background: transparent;
+        border: 1px solid var(--border-strong);
+        color: var(--critical-text);
+    }
+
+    .btn--critical:active {
+        background: var(--critical-quiet);
+    }
+
+    /* Vermelho preenchido existe aqui e no overlay de pânico. Em nenhum outro
+       lugar — ver tokens.css e o teste que garante a exclusividade. */
+    .btn--emergency {
+        background: var(--emergency);
+        color: var(--emergency-on);
+        border: 2px solid var(--emergency-edge);
+        font-weight: var(--weight-bold);
+        letter-spacing: 0.03em;
+    }
+
+    .btn--ghost {
+        background: transparent;
+        color: var(--text-muted);
+    }
+
+    /* --- tamanhos --- */
+    .btn--md {
+        min-height: var(--tap-md);
+        width: auto;
+        padding-inline: var(--space-4);
+        font-size: var(--text-sm);
+        border-radius: var(--radius-md);
+    }
+
+    .btn--icon {
+        width: var(--tap-md);
+        min-width: var(--tap-md);
+        min-height: var(--tap-md);
+        padding: 0;
+        border-radius: var(--radius-md);
+        font-size: var(--text-lg);
+    }
+
+    .btn--block {
+        width: 100%;
+    }
+
+    /* Acionado sob estresse, possivelmente correndo. */
+    .btn--confirm-emergency {
+        min-height: 84px;
+        font-size: var(--text-xl);
+        font-weight: var(--weight-black);
+        letter-spacing: 0.04em;
+    }
+
+    /* Rótulo secundário dentro do botão: "Ler QR" + "P-04". */
+    .btn__hint {
+        font-weight: var(--weight-regular);
+        opacity: 0.85;
+    }
+}

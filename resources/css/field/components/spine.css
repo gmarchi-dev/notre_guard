@@ -1,0 +1,225 @@
+/*
+ * Cartão "agora" + trilho do roteiro.
+ *
+ * Quem caminha às duas da manhã, de luva, olhando de relance, responde a uma
+ * pergunta só: PARA ONDE EU VOU AGORA. Uma lista uniforme de pontos obriga a
+ * varrer tudo atrás do primeiro item não concluído — por isso o próximo ponto
+ * sai da lista e vira um cartão no topo, com o nome completo em corpo grande.
+ *
+ * O trilho abaixo continua existindo porque ronda real não é sempre
+ * sequencial: o vigilante precisa poder ir a um ponto fora de ordem, e forçar
+ * a sequência seria uma regressão funcional.
+ *
+ * O conector é pseudo-elemento DO ITEM, nunca uma linha absoluta única — esta
+ * desalinha assim que um rótulo ocupa três linhas.
+ */
+
+@layer components {
+    /* --- progresso segmentado --- */
+    .progress {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+    }
+
+    .progress__track {
+        display: flex;
+        gap: 3px;
+        flex: 1;
+    }
+
+    .progress__segment {
+        flex: 1;
+        height: 6px;
+        border-radius: var(--radius-pill);
+        background: var(--border);
+        transition: background var(--dur-base) var(--ease-out);
+    }
+
+    .progress__segment[data-state='done'] {
+        background: var(--success);
+    }
+
+    .progress__segment[data-state='current'] {
+        background: var(--accent);
+    }
+
+    .progress__count {
+        flex: none;
+        font-size: var(--text-sm);
+        font-weight: var(--weight-semibold);
+        color: var(--text-muted);
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* --- cartão do próximo ponto --- */
+    .now {
+        display: flex;
+        gap: var(--space-4);
+        padding: var(--space-5) var(--space-4);
+        background: var(--accent-quiet);
+        border: 1px solid var(--accent);
+        border-radius: var(--radius-lg);
+    }
+
+    .now__position {
+        width: var(--tap-lg);
+        height: var(--tap-lg);
+        flex: none;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: var(--accent);
+        color: var(--accent-on);
+        font-size: var(--text-xl);
+        font-weight: var(--weight-bold);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .now__body {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .now__eyebrow {
+        font-size: var(--text-sm);
+        font-weight: var(--weight-semibold);
+        color: var(--accent-text);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+
+    .now__code {
+        font-size: var(--text-3xl);
+        font-weight: var(--weight-bold);
+        line-height: var(--leading-tight);
+        letter-spacing: -0.02em;
+    }
+
+    /* O nome completo, quebrando. Era ele que se perdia com as reticências. */
+    .now__name {
+        margin-top: var(--space-1);
+        font-size: var(--text-lg);
+        line-height: var(--leading-snug);
+        overflow-wrap: anywhere;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        overflow: hidden;
+    }
+
+    .now__instruction {
+        margin-top: var(--space-3);
+        padding-top: var(--space-3);
+        border-top: 1px solid var(--accent);
+        font-size: var(--text-base);
+        color: var(--text);
+    }
+
+    /* Roteiro completo, ou sem pontos restantes. */
+    .now--done {
+        background: var(--success-quiet);
+        border-color: var(--success);
+    }
+
+    .now--done .now__position {
+        background: var(--success);
+        color: var(--success-on);
+    }
+
+    .now--done .now__eyebrow {
+        color: var(--success-text);
+    }
+
+    /* --- trilho --- */
+    .spine {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .spine__item {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        min-height: var(--tap-row);
+        width: 100%;
+        padding: var(--space-2) var(--space-2) var(--space-2) 0;
+        text-align: left;
+    }
+
+    /* Conector: pertence ao item, vai do seu disco até a base. Sem isto,
+       qualquer rótulo de duas ou três linhas desalinha a linha vertical. */
+    .spine__item:not(:last-child)::before {
+        content: '';
+        position: absolute;
+        left: calc(var(--space-5) - 1px);
+        top: calc(50% + var(--space-4));
+        bottom: 0;
+        width: 2px;
+        background: var(--border);
+    }
+
+    .spine__item[data-state='done']::before {
+        background: var(--success);
+    }
+
+    .spine__marker {
+        width: var(--space-10);
+        height: var(--space-10);
+        flex: none;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        border: 2px solid var(--border);
+        background: var(--bg);
+        font-size: var(--text-sm);
+        font-weight: var(--weight-bold);
+        font-variant-numeric: tabular-nums;
+        transition: background var(--dur-base) var(--ease-out);
+    }
+
+    .spine__item[data-state='done'] .spine__marker {
+        background: var(--success);
+        border-color: var(--success);
+        color: var(--success-on);
+    }
+
+    .spine__item[aria-current='step'] .spine__marker {
+        border-color: var(--accent);
+        color: var(--accent-text);
+    }
+
+    .spine__body {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .spine__code {
+        font-size: var(--text-base);
+        font-weight: var(--weight-semibold);
+    }
+
+    .spine__name {
+        font-size: var(--text-sm);
+        color: var(--text-muted);
+        line-height: var(--leading-snug);
+        overflow-wrap: anywhere;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        overflow: hidden;
+    }
+
+    .spine__item[data-state='done'] .spine__code {
+        color: var(--text-muted);
+        font-weight: var(--weight-regular);
+    }
+
+    .spine__item[data-state='skipped'] .spine__marker {
+        border-color: var(--warning);
+        color: var(--warning-text);
+    }
+}

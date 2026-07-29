@@ -1,0 +1,47 @@
+/*
+ * Emergência.
+ *
+ * Usa as mesmas primitivas do sheet (foco preso, Escape, inert no fundo), com
+ * duas diferenças deliberadas: não fecha por toque no scrim e não fecha pelo
+ * botão voltar sem confirmar o cancelamento. Um acionamento cancelado por
+ * engano é pior que um cancelamento que custou um toque a mais.
+ *
+ * Fica acima de tudo, inclusive de um sheet aberto.
+ */
+
+@layer components {
+    .panic {
+        position: fixed;
+        inset: 0;
+        z-index: var(--z-panic);
+        display: grid;
+        place-items: center;
+        padding: var(--space-6);
+        background: light-dark(oklch(1 0 0 / 0.97), oklch(0.129 0.042 264.695 / 0.97));
+    }
+
+    .panic__box {
+        width: 100%;
+        max-width: 420px;
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-4);
+        text-align: center;
+    }
+
+    .panic__title {
+        font-size: var(--text-2xl);
+        font-weight: var(--weight-bold);
+        line-height: var(--leading-snug);
+    }
+
+    .panic__title:focus {
+        outline: none;
+    }
+
+    .panic__text {
+        color: var(--text-muted);
+        font-size: var(--text-base);
+        line-height: var(--leading-normal);
+    }
+}

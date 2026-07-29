@@ -115,22 +115,5 @@ class PanelSmokeTest extends TestCase
             ->assertSee('Período');
     }
 
-    public function test_field_app_is_reachable_without_authentication(): void
-    {
-        // A PWA precisa abrir antes de existir qualquer token — inclusive
-        // offline, servida pelo service worker.
-        $this->get('/campo')->assertOk()->assertSee('Notre Guard');
-    }
-
-    public function test_pwa_assets_exist_in_public_root(): void
-    {
-        // Servidos como arquivo estático, não por rota. O service worker precisa
-        // estar na raiz: em subdiretório ele não controla /campo.
-        $this->assertFileExists(public_path('sw.js'));
-        $this->assertFileExists(public_path('manifest.webmanifest'));
-
-        foreach (['192', '512', 'maskable'] as $variant) {
-            $this->assertFileExists(public_path("icons/notre-guard-{$variant}.png"));
-        }
-    }
+    // A PWA de campo tem suíte própria: tests/Feature/FieldAppTest.php.
 }

@@ -6,8 +6,37 @@
  * cache, porque uma resposta velha de /bootstrap faria o vigilante rondar com um
  * roteiro desatualizado.
  */
-const CACHE = 'notre-guard-shell-v1'
+const CACHE = 'notre-guard-shell-v2'
 const SHELL = ['/campo', '/manifest.webmanifest']
+
+/**
+ * Assets de build antigos ficavam no cache para sempre: nada os removia, e a
+ * cada deploy o aparelho acumulava mais um conjunto de hashes. Depois de
+ * dezenas de publicações isso vira dezenas de megabytes por celular.
+ *
+ * A poda roda no activate, quando a casca nova já está no ar: mantém o que a
+ * página atual referencia e descarta o resto.
+ */
+async function pruneBuildAssets() {
+    const cache = await caches.open(CACHE)
+    const shell = await cache.match('/campo')
+
+    if (!shell) return
+
+    const html = await shell.text()
+    const inUse = new Set(html.match(/\/build\/assets\/[^"'\s)]+/g) ?? [])
+    const requests = await cache.keys()
+
+    await Promise.all(
+        requests
+            .filter((request) => {
+                const path = new URL(request.url).pathname
+
+                return path.startsWith('/build/') && ! inUse.has(path)
+            })
+            .map((request) => cache.delete(request)),
+    )
+}
 
 self.addEventListener('install', (event) => {
     event.waitUntil(
@@ -23,6 +52,7 @@ self.addEventListener('activate', (event) => {
         caches
             .keys()
             .then((keys) => Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key))))
+            .then(() => pruneBuildAssets())
             .then(() => self.clients.claim()),
     )
 })

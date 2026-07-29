@@ -1,0 +1,151 @@
+/*
+ * Reset e fundação.
+ *
+ * Regra que sustenta toda a camada de componentes: AQUI NÃO SE ESTILIZA
+ * `button`. A base apenas neutraliza a aparência do agente de usuário. Sem
+ * tamanho, sem cor, sem raio — nada que precise ser desfeito depois.
+ *
+ * Foi a ausência dessa regra que produziu a cascata anterior: `button` definia
+ * 56px, `button.small` desfazia para 44, `.answers button` para 48,
+ * `.message button` zerava, e o Blade ainda anulava com style inline. Cinco
+ * camadas de correção para uma decisão que nunca foi tomada.
+ */
+
+@layer base {
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    * {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+        /* O scroll pertence ao <main>, não ao documento. */
+        height: 100%;
+        overflow: hidden;
+    }
+
+    body {
+        margin: 0;
+        height: 100%;
+        overflow: hidden;
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font);
+        font-size: var(--text-base);
+        line-height: var(--leading-normal);
+        font-optical-sizing: auto;
+        overscroll-behavior: none;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    h1,
+    h2,
+    h3,
+    p,
+    figure {
+        margin: 0;
+    }
+
+    h1 {
+        font-size: var(--text-xl);
+        line-height: var(--leading-snug);
+        font-weight: var(--weight-bold);
+        letter-spacing: -0.01em;
+    }
+
+    h2 {
+        font-size: var(--text-lg);
+        line-height: var(--leading-snug);
+        font-weight: var(--weight-semibold);
+    }
+
+    /* Neutralização pura — ver o comentário do topo. */
+    button {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        background: none;
+        color: inherit;
+        font: inherit;
+        text-align: inherit;
+        cursor: pointer;
+    }
+
+    a {
+        color: var(--accent-text);
+    }
+
+    img,
+    svg,
+    video {
+        display: block;
+        max-width: 100%;
+    }
+
+    /* Números que não dançam quando o valor muda: contadores, horários e
+       progresso são lidos de relance. */
+    time,
+    [data-numeric] {
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* Foco visível em tudo. Antes existia só em campos de formulário, o que
+       deixava a navegação por teclado invisível em todos os botões. */
+    :focus-visible {
+        outline: 3px solid var(--focus);
+        outline-offset: 2px;
+        border-radius: var(--radius-sm);
+    }
+
+    :focus:not(:focus-visible) {
+        outline: none;
+    }
+
+    [hidden] {
+        display: none !important;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+
+    .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        :root {
+            --dur-fast: 0ms;
+            --dur-base: 0ms;
+            --dur-sheet: 0ms;
+        }
+
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
+    }
+
+    @media (prefers-contrast: more) {
+        :root {
+            --border: var(--border-strong);
+            --text-muted: var(--text);
+        }
+    }
+}

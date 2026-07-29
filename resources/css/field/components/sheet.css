@@ -1,0 +1,96 @@
+/*
+ * Bottom sheet — substitui confirm() e prompt() nativos.
+ *
+ * Os diálogos do navegador some sob o teclado em PWA instalada, não são
+ * estilizáveis, não dizem o contexto e, no caso do prompt(), capturavam a
+ * justificativa de ponto pulado — campo obrigatório de auditoria — numa caixa
+ * de uma linha.
+ *
+ * Sobe da base da tela: é onde o polegar está.
+ */
+
+@layer components {
+    .scrim {
+        position: fixed;
+        inset: 0;
+        z-index: var(--z-scrim);
+        background: light-dark(oklch(0.129 0.042 264.695 / 0.5), oklch(0 0 0 / 0.72));
+        animation: scrim-in var(--dur-base) var(--ease-out);
+    }
+
+    .sheet {
+        position: fixed;
+        inset-inline: 0;
+        bottom: 0;
+        z-index: var(--z-sheet);
+        max-width: 620px;
+        margin-inline: auto;
+        padding: var(--space-5) var(--space-4);
+        padding-bottom: calc(var(--space-5) + env(safe-area-inset-bottom));
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+        box-shadow: var(--shadow-sheet);
+        max-height: 88dvh;
+        overflow-y: auto;
+        animation: sheet-in var(--dur-sheet) var(--ease-spring);
+    }
+
+    .sheet__handle {
+        width: 40px;
+        height: 4px;
+        margin: 0 auto var(--space-4);
+        border-radius: var(--radius-pill);
+        background: var(--border-strong);
+    }
+
+    .sheet__title {
+        font-size: var(--text-xl);
+        font-weight: var(--weight-bold);
+        line-height: var(--leading-snug);
+    }
+
+    .sheet__title:focus {
+        outline: none;
+    }
+
+    .sheet__text {
+        margin-top: var(--space-2);
+        color: var(--text-muted);
+        line-height: var(--leading-normal);
+    }
+
+    .sheet__body {
+        margin-top: var(--space-4);
+    }
+
+    /* Ações empilhadas, confirmar em cima: o polegar alcança primeiro o que é
+       mais provável. */
+    .sheet__actions {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+        margin-top: var(--space-5);
+    }
+
+    /* Motivos rápidos que preenchem a justificativa com um toque. */
+    .reasons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-2);
+        margin-top: var(--space-3);
+    }
+
+    @keyframes sheet-in {
+        from {
+            transform: translateY(12%);
+            opacity: 0;
+        }
+    }
+
+    @keyframes scrim-in {
+        from {
+            opacity: 0;
+        }
+    }
+}

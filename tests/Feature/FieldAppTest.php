@@ -1,0 +1,218 @@
+<?php
+
+namespace Tests\Feature;
+
+use Illuminate\Support\Facades\File;
+use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\TestCase;
+
+/**
+ * A PWA de campo.
+ *
+ * Boa parte destes testes não verifica comportamento: verifica **disciplina**.
+ * São invariantes que já foram violadas uma vez e que ninguém percebe ao
+ * revisar um diff — zoom bloqueado, alvo de toque encolhido por estilo inline,
+ * vermelho de emergência reaproveitado numa ação comum.
+ */
+class FieldAppTest extends TestCase
+{
+    private function fieldHtml(): string
+    {
+        return $this->get('/campo')->assertOk()->getContent();
+    }
+
+    /** @return list<string> */
+    private function fieldStylesheets(): array
+    {
+        return array_map(
+            fn (\SplFileInfo $file) => $file->getPathname(),
+            File::allFiles(resource_path('css/field')),
+        );
+    }
+
+    // ------------------------------------------------------------ a página
+
+    public function test_field_app_opens_without_authentication(): void
+    {
+        // Precisa abrir antes de existir qualquer token — inclusive offline,
+        // servida pelo service worker.
+        $this->get('/campo')->assertOk()->assertSee('Notre Guard');
+    }
+
+    public function test_zoom_is_not_blocked(): void
+    {
+        // maximum-scale=1 viola a WCAG 1.4.4 num aplicativo operado por adultos
+        // com pouca luz. Já esteve lá; este teste impede que volte.
+        $this->assertStringNotContainsString('maximum-scale', $this->fieldHtml());
+    }
+
+    public function test_theme_is_applied_before_the_app_loads(): void
+    {
+        $html = $this->fieldHtml();
+
+        // O script tem de ser inline e bloqueante: o Alpine carrega diferido, e
+        // um flash branco de madrugada custa a visão noturna do vigilante.
+        $this->assertStringContainsString("localStorage.getItem('ng.theme')", $html);
+        $this->assertStringContainsString('prefers-color-scheme: light', $html);
+        $this->assertStringContainsString('prefers-color-scheme: dark', $html);
+    }
+
+    public static function screens(): array
+    {
+        return [
+            ['boot'], ['login'], ['home'], ['patrol'],
+            ['scan'], ['checklist'], ['incident'], ['queue'],
+        ];
+    }
+
+    #[DataProvider('screens')]
+    public function test_every_screen_partial_is_included(string $screen): void
+    {
+        // Regressão barata contra um partial esquecido na divisão do Blade.
+        $this->assertStringContainsString("screen === '{$screen}'", $this->fieldHtml());
+    }
+
+    public function test_markup_carries_no_inline_style(): void
+    {
+        // Eram 31 atributos style=, com cinco escalas de espaçamento diferentes,
+        // e foi por eles que os alvos de toque encolheram.
+        $this->assertDoesNotMatchRegularExpression('/\sstyle="/', $this->fieldHtml());
+    }
+
+    public function test_every_button_declares_a_component_class(): void
+    {
+        $html = $this->fieldHtml();
+
+        preg_match_all('/<button\b[^>]*>/', $html, $matches);
+
+        $this->assertNotEmpty($matches[0]);
+
+        // Componentes que definem alvo de toque. Um botão fora desta lista não
+        // tem tamanho garantido por nada.
+        $sized = 'btn|chip|segmented__option|choice|spine__item|now';
+
+        foreach ($matches[0] as $button) {
+            $this->assertMatchesRegularExpression(
+                '/class="[^"]*\b(' . $sized . ')\b/',
+                $button,
+                "Botão sem classe de componente — o tamanho do alvo depende dela: {$button}",
+            );
+        }
+    }
+
+    // ------------------------------------------------- disciplina do CSS
+
+    public function test_only_the_token_file_holds_literal_colours(): void
+    {
+        foreach ($this->fieldStylesheets() as $path) {
+            if (str_ends_with($path, 'tokens.css')) {
+                continue;
+            }
+
+            $css = File::get($path);
+            $name = basename($path);
+
+            // Cores literais fora de tokens.css significam um valor que não
+            // participa dos temas claro e escuro.
+            $this->assertDoesNotMatchRegularExpression(
+                '/#[0-9a-fA-F]{3,8}\b/',
+                $css,
+                "{$name} contém cor hexadecimal literal.",
+            );
+        }
+    }
+
+    public function test_filled_red_is_reserved_for_the_emergency(): void
+    {
+        // A regra existia como comentário e foi violada: "Encerrar turno" usava
+        // o mesmo vermelho, na mesma largura, logo abaixo do botão de pânico.
+        foreach ($this->fieldStylesheets() as $path) {
+            $name = basename($path);
+
+            if (in_array($name, ['tokens.css', 'button.css', 'panic.css'], true)) {
+                continue;
+            }
+
+            $this->assertStringNotContainsString(
+                'background: var(--emergency)',
+                File::get($path),
+                "{$name} usa o vermelho de emergência como preenchimento.",
+            );
+        }
+
+        $button = File::get(resource_path('css/field/components/button.css'));
+
+        $this->assertStringContainsString('.btn--emergency', $button);
+        $this->assertStringContainsString('.btn--critical', $button);
+    }
+
+    public function test_form_controls_are_large_enough_to_avoid_ios_zoom(): void
+    {
+        // Sem maximum-scale, o iOS dá zoom ao focar campo com fonte < 16px.
+        $tokens = File::get(resource_path('css/field/tokens.css'));
+        $field = File::get(resource_path('css/field/components/field.css'));
+
+        $this->assertStringContainsString('--text-base: 17px', $tokens);
+        $this->assertStringContainsString('font-size: var(--text-base)', $field);
+    }
+
+    public function test_touch_target_tokens_have_no_44px_tier(): void
+    {
+        $tokens = File::get(resource_path('css/field/tokens.css'));
+
+        $this->assertStringContainsString('--tap-lg: 56px', $tokens);
+        $this->assertStringContainsString('--tap-md: 48px', $tokens);
+
+        // Declaração, não menção: o comentário que explica por que o degrau de
+        // 44px foi extinto é legítimo e deve continuar existindo.
+        $this->assertDoesNotMatchRegularExpression('/:\s*44px\s*;/', $tokens);
+    }
+
+    public function test_dark_theme_is_the_fallback_when_light_dark_is_unsupported(): void
+    {
+        // Em WebView antiga o degradado tem de ser o tema seguro para a ronda
+        // noturna, nunca o claro.
+        $tokens = File::get(resource_path('css/field/tokens.css'));
+
+        $this->assertStringContainsString('@supports not (color: light-dark(', $tokens);
+        $this->assertStringContainsString('--bg: oklch(0.129 0.042 264.695)', $tokens);
+    }
+
+    // ------------------------------------------------------------- assets
+
+    public function test_the_font_is_self_hosted(): void
+    {
+        // Nada pode ser buscado de fora: o aplicativo roda offline.
+        $this->assertFileExists(resource_path('fonts/inter/inter-latin-wght-normal.woff2'));
+
+        $fonts = File::get(resource_path('css/field/fonts.css'));
+
+        $this->assertStringContainsString('inter-latin-wght-normal.woff2', $fonts);
+        $this->assertStringContainsString('font-display: swap', $fonts);
+        // block deixaria o texto invisível se a fonte falhasse.
+        $this->assertStringNotContainsString('font-display: block', $fonts);
+    }
+
+    public function test_service_worker_covers_the_build_assets_and_prunes_them(): void
+    {
+        $sw = File::get(public_path('sw.js'));
+
+        $this->assertStringContainsString("startsWith('/build/')", $sw);
+        $this->assertStringContainsString('pruneBuildAssets', $sw);
+        // O cache precisa mudar de nome, senão o aparelho segue com a casca
+        // antiga apontando para assets que não existem mais.
+        $this->assertStringContainsString('notre-guard-shell-v2', $sw);
+    }
+
+    public function test_pwa_assets_exist_in_public_root(): void
+    {
+        // Servidos como arquivo estático. O service worker precisa estar na
+        // raiz: em subdiretório ele não controla /campo.
+        $this->assertFileExists(public_path('sw.js'));
+        $this->assertFileExists(public_path('manifest.webmanifest'));
+
+        foreach (['192', '512', 'maskable'] as $variant) {
+            $this->assertFileExists(public_path("icons/notre-guard-{$variant}.png"));
+        }
+    }
+}

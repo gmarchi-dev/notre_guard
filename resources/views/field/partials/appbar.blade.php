@@ -1,0 +1,25 @@
+{{--
+    Barra de topo: marca, contexto do turno e UMA pastilha de sincronização.
+
+    A pastilha abre a fila e tem 48px. Antes tinha ~26px e era o único caminho
+    até a fila — num aplicativo declaradamente usado de luva.
+--}}
+<header class="appbar">
+    <div class="appbar__identity">
+        <span class="appbar__brand">Notre Guard</span>
+        <span class="appbar__context" x-show="shift && post" x-text="contextLine()"></span>
+    </div>
+
+    {{-- Uma pastilha por vez, nesta ordem de prioridade: recusado, sem rede,
+         enviando, pendente, em dia. --}}
+    <template x-if="screen !== 'boot' && screen !== 'login'">
+        <button type="button"
+                class="chip"
+                :class="syncChip().variant"
+                @click="openQueue()"
+                :aria-label="'Registros no aparelho: ' + syncChip().label">
+            <span class="chip__dot" aria-hidden="true"></span>
+            <span x-text="syncChip().label"></span>
+        </button>
+    </template>
+</header>

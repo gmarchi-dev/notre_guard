@@ -1,0 +1,31 @@
+/*
+ * Inter variável, subset latin.
+ *
+ * Cópia própria em resources/fonts/, e não um link para
+ * public/fonts/filament/**: `filament:upgrade` republica aquele arquivo com
+ * outro hash, e o aparelho offline ficaria com um CSS em cache apontando para
+ * um arquivo que não existe mais — a fonte quebraria justamente quando
+ * houvesse rede.
+ *
+ * Só o subset latin (48 KB): o português inteiro cabe em U+0000-00FF. O
+ * latin-ext custaria mais 85 KB de casca offline para cobrir polonês e turco.
+ *
+ * O Vite reescreve este url() para /build/assets/, que já é coberto pela
+ * regra de cache do service worker (public/sw.js).
+ *
+ * font-display: swap, nunca block — se o arquivo não estiver em cache, texto
+ * em fonte errada é infinitamente melhor que texto ausente numa ronda.
+ */
+
+@layer tokens {
+    @font-face {
+        font-family: 'Inter Variable';
+        font-style: normal;
+        font-weight: 100 900;
+        font-display: swap;
+        src: url('../../fonts/inter/inter-latin-wght-normal.woff2') format('woff2-variations');
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+            U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+            U+FEFF, U+FFFD;
+    }
+}

@@ -6,65 +6,125 @@ Acesso: `/campo`. Instalável na tela inicial. Aparelho corporativo, um por post
 
 | Arquivo | Papel |
 |---|---|
-| `resources/views/field/app.blade.php` | Telas (Alpine.js) |
-| `resources/css/field.css` | Estilo de campo, escrito à mão |
-| `resources/js/field/app.js` | Estado e fluxo |
-| `resources/js/field/db.js` | IndexedDB via Dexie: cache do turno e fila |
-| `resources/js/field/sync.js` | Motor de sincronização |
-| `resources/js/field/api.js` | Cliente HTTP |
-| `resources/js/field/scanner.js` | Leitor de QR |
-| `resources/js/field/geo.js` | Posição pontual |
+| `resources/views/field/app.blade.php` | Casca (~50 linhas) |
+| `resources/views/field/screens/*.blade.php` | Uma tela por arquivo |
+| `resources/views/field/partials/*.blade.php` | Barra de topo, rodapé, toasts, sheet, pânico, faixas |
+| `resources/css/field.css` | Índice de `@layer` e `@import` |
+| `resources/css/field/tokens.css` | **Único** arquivo com valor literal de cor ou medida |
+| `resources/css/field/components/*.css` | Um componente por arquivo |
+| `resources/js/field/app.js` | Estado, navegação e fluxo |
+| `resources/js/field/{db,sync,api,scanner,geo}.js` | Lógica, sem acoplamento visual |
+| `resources/fonts/inter/` | Inter variável, subset latin (48 KB) |
 | `public/sw.js` | Service worker (casca offline) |
-| `scripts/generate-icons.php` | Gera os ícones da PWA |
 
 ## Fluxo
 
-Login por matrícula → assumir posto → iniciar ronda → ler pontos (QR, manual ou pular com
-justificativa) → checklist por ponto → encerrar ronda → encerrar turno. Ocorrência pode ser
-aberta a qualquer momento, dentro ou fora da ronda.
+Login por matrícula → assumir posto → iniciar ronda → ler pontos (QR ou manual, ou pular com
+justificativa) → checklist por ponto → encerrar ronda → encerrar turno. Ocorrência e emergência
+ficam disponíveis a qualquer momento.
 
-O indicador da barra de estado abre a **tela de fila**, que lista o que está no aparelho:
-aguardando envio, tentando de novo e recusado. Os recusados mostram o motivo devolvido pelo
-servidor e têm ação de tentar de novo ou descartar.
+O indicador da barra de topo e uma linha na tela inicial abrem a **fila**, que lista o que está
+no aparelho: aguardando envio, tentando de novo e recusado, com o motivo devolvido pelo servidor.
 
-## Decisões da interface
+## Sistema visual
 
-Tratadas como requisito, não como acabamento:
+**Alinhado ao painel administrativo.** A tipografia é a Inter, e as cores saem das mesmas escalas
+OKLCH do Filament (`vendor/filament/support/src/Colors/Color.php`) — o painel e o aplicativo têm a
+mesma paleta, não "um azul parecido".
 
-- **Tema escuro fixo.** A tela é usada de madrugada; branco cega e destrói a visão noturna.
-- **Alvo de toque de 56 px** e ações principais na base da tela: operação com uma mão, de luva.
-- **Fila sempre visível** na barra de estado. Esconder pendência é o que faz o vigilante
-  desconfiar do sistema e voltar para o papel.
-- **Feedback tátil e sonoro** na leitura: confirma sem exigir que ele olhe para a tela.
-- **Nenhuma tela crítica depende de rede.** "Sem rede" é estado normal, não erro.
+**Claro e escuro.** A ronda é noturna, mas a portaria trabalha ao sol. Os dois temas convivem em
+`light-dark()`, declarados uma vez só; o interruptor é o `color-scheme` do `:root`, com override
+manual persistido em `localStorage['ng.theme']` e aplicado por script inline **antes** do bundle —
+o Alpine carrega diferido, e um flash branco de madrugada custa a visão noturna do vigilante.
+
+O claro usa **branco puro** e bordas mais escuras que o habitual: sob sol direto quem decide
+legibilidade é luminância absoluta, e a borda "discreta" padrão simplesmente desaparece.
+
+No escuro o botão primário **inverte** — azul claro com texto quase preto. Isso levou o contraste
+de 3,6:1 para 5,5:1; escurecer o azul original teria piorado.
+
+**Contraste verificado por número**, não por olhômetro: todos os pares de token passam de 4,5:1
+nos dois temas, medidos no navegador (ver seção de verificação).
+
+**Vermelho preenchido é exclusivo da emergência**, e isso é teste, não comentário. "Encerrar
+turno" é uma ação destrutiva de contorno, com rótulo em vermelho — antes era um bloco vermelho da
+mesma largura, 4px abaixo do botão de pânico.
+
+**Alvos de toque:** 56px na ação primária, 48px no restante, 64px em linha de lista. O degrau de
+44px foi extinto.
+
+## Decisões de interface
+
+- **O próximo ponto sai da lista e vira cartão**, com o código em corpo grande e o nome completo
+  quebrando em até três linhas. Quem caminha de madrugada, de luva, responde a uma pergunta só:
+  para onde eu vou agora. Antes o nome era truncado com reticências — o dado que diz aonde ir era
+  o primeiro a se perder.
+- **A ação primária nomeia o alvo**: "Ler QR — PC-04". Sozinha, elimina boa parte da necessidade
+  de consultar a lista.
+- **O trilho continua listando todos os pontos**, porque ronda real não é sempre sequencial:
+  forçar a ordem seria regressão funcional.
+- **Sem diálogos nativos.** `confirm()` e `prompt()` somem sob o teclado em PWA instalada e não
+  dizem contexto. Tudo passa por bottom sheet, que sobe da base porque é onde o polegar está.
+- **A justificativa de ponto pulado** mostra qual ponto, tem campo rotulado, três motivos rápidos
+  e botão travado enquanto estiver vazia. Cancelar é cancelar: gravar "pulado" sem justificativa
+  seria furo de auditoria.
+- **Toasts em vez de avisos no topo**: o aviso antigo empurrava o layout e, numa tela rolada, o
+  vigilante não via. Sucesso some em 4s; erro persiste até ser fechado.
+- **O botão voltar do Android navega** dentro do aplicativo (History API). Com turno aberto, o
+  primeiro toque na raiz só avisa — sair sem querer no meio de um turno é caro.
+- **Zoom liberado.** `maximum-scale=1` violava a WCAG 1.4.4. Todos os campos têm 17px, que é o que
+  impede o iOS de dar zoom sozinho ao focar.
 
 ## Offline
 
 O evento nasce no IndexedDB com uuid gerado no aparelho e só sai da fila quando o servidor
-confirma aquele uuid. A sincronização roda a cada 30 s, ao voltar a rede (`online`) e ao trazer
-o app para frente.
+confirma aquele uuid. A sincronização roda a cada 30 s, ao voltar a rede e ao trazer o app para
+frente.
 
 O service worker cacheia **só a casca** — nunca respostas da API. Uma resposta velha de
-`/bootstrap` faria o vigilante rondar com roteiro desatualizado, que é pior do que não abrir.
+`/bootstrap` faria o vigilante rondar com roteiro desatualizado, o que é pior que não abrir.
 
-Se o aparelho for trocado no meio do turno, o novo recebe `open_shift` no bootstrap e assume o
-turno em curso.
+Se o bootstrap falhar mas houver cache, o aplicativo continua funcionando e mostra uma **faixa
+persistente** dizendo há quanto tempo o roteiro foi carregado. Antes esse erro era engolido em
+silêncio.
+
+A tela de abertura tem recuperação própria: leitura do IndexedDB com prazo de 6 s e, se falhar,
+as saídas "Tentar de novo" e "Entrar de novo". Antes o aplicativo abria em branco e ficava preso
+para sempre.
+
+## Acessibilidade
+
+Foco visível em tudo, foco movido ao título a cada troca de tela, foco preso dentro de sheet e
+pânico, `Escape` fecha. O checklist é um `radiogroup` de verdade, com o rótulo do item associado —
+antes eram três botões soltos, e o leitor de tela anunciava "Conforme, botão" sem dizer de qual
+item. Estado nunca é comunicado só por cor: o selecionado tem preenchimento **e** ícone.
 
 ## Limitações conhecidas
 
-- **HTTPS é obrigatório.** Câmera, geolocalização e service worker não funcionam em HTTP, nem
-  em `localhost` do celular. Em desenvolvimento, usar `herd secure` ou túnel.
-- **NFC não está implementado.** Web NFC só existe em Chrome/Android; o QR é o mecanismo
-  primário e o campo `nfc_uid` já está no modelo para quando isso for necessário.
-- **Notificação push exige o app instalado na tela inicial** no iOS (16.4+). Entra no roteiro
-  de preparação do aparelho.
-- A tela de fila lista os eventos, mas **não as fotos individualmente** — só o total pendente.
+- **HTTPS é obrigatório.** Câmera, geolocalização e service worker não funcionam em HTTP, nem em
+  `localhost` do celular. Em desenvolvimento, usar `herd secure` ou túnel.
+- **NFC não está implementado.** Web NFC só existe em Chrome/Android; o QR é o mecanismo primário.
+- **Notificação push exige o app instalado na tela inicial** no iOS (16.4+).
+- **`light-dark()` exige Chrome 123+ / Safari 17.5+.** Em WebView anterior existe fallback via
+  `@supports`, e ele é o tema **escuro** — o cenário degradado tem de ser o seguro para a ronda.
+- A tela de fila lista os eventos, mas não as fotos individualmente — só o total pendente.
 
 ## Privacidade
 
-A localização é lida **pontualmente**, no momento de cada registro, via
-`navigator.geolocation.getCurrentPosition`. Não há watch, nem polling, nem coleta fora da ronda.
-O aviso na tela de login diz isso ao vigilante e deixa explícito que o app **não é registro de
-ponto** e não substitui a marcação de jornada.
+A localização é lida **pontualmente**, no momento de cada registro. Não há watch, nem polling, nem
+coleta fora da ronda. O aviso na tela de login diz isso e deixa explícito que o app **não é
+registro de ponto**.
 
 Negar a permissão de localização não bloqueia nada: o registro entra com a marca `no_gps`.
+
+## Verificação
+
+`tests/Feature/FieldAppTest.php` cobre as invariantes que ninguém percebe num diff: ausência de
+`maximum-scale`, ausência de estilo inline, todo botão com classe de componente, cores literais só
+em `tokens.css`, vermelho de emergência reservado, fonte auto-hospedada com `font-display: swap`,
+e o service worker com poda de assets.
+
+No navegador, via MCP: varredura de todos os interativos medindo `getBoundingClientRect()` contra
+o mínimo exigido, e cálculo da razão WCAG a partir do que o navegador **efetivamente resolveu** —
+pintando a cor num canvas, porque o Chrome devolve `oklch()` computado e uma leitura ingênua dos
+números daria resultado errado.

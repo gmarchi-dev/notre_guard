@@ -1,0 +1,40 @@
+/*
+ * Utilitários.
+ *
+ * Existem para eliminar os 31 atributos style= que havia no Blade, cada um com
+ * seu próprio valor de espaçamento. Ficam na última camada, então vencem os
+ * componentes sem precisar de !important nem de seletor mais específico.
+ *
+ * A lista é curta de propósito: utilitário demais é folha de estilo escrita no
+ * HTML.
+ */
+
+@layer utilities {
+    .mt-2 {
+        margin-top: var(--space-2);
+    }
+
+    .mt-3 {
+        margin-top: var(--space-3);
+    }
+
+    .mt-4 {
+        margin-top: var(--space-4);
+    }
+
+    .mt-6 {
+        margin-top: var(--space-6);
+    }
+
+    .flex-1 {
+        flex: 1;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .numeric {
+        font-variant-numeric: tabular-nums;
+    }
+}

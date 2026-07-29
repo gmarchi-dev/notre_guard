@@ -1,0 +1,68 @@
+/* Cartões e faixas de aviso persistentes. */
+
+@layer components {
+    .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: var(--space-4);
+    }
+
+    .card--quiet {
+        background: transparent;
+    }
+
+    .card--accent {
+        background: var(--accent-quiet);
+        border-color: var(--accent);
+    }
+
+    .card__title {
+        font-size: var(--text-base);
+        font-weight: var(--weight-semibold);
+    }
+
+    .card__meta {
+        font-size: var(--text-sm);
+        color: var(--text-muted);
+    }
+
+    /*
+     * Faixa persistente, dentro do conteúdo, para o que NÃO pode desaparecer
+     * sozinho: estado do acionamento de emergência e aviso de dado velho.
+     * Diferente do toast, que some.
+     */
+    .banner {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--space-3);
+        padding: var(--space-3) var(--space-4);
+        border-radius: var(--radius-lg);
+        border-left: 4px solid;
+        font-size: var(--text-base);
+        line-height: var(--leading-normal);
+    }
+
+    .banner--ok {
+        background: var(--success-quiet);
+        border-color: var(--success);
+        color: var(--success-text);
+    }
+
+    .banner--warn {
+        background: var(--warning-quiet);
+        border-color: var(--warning);
+        color: var(--warning-text);
+    }
+
+    .banner--error {
+        background: var(--critical-quiet);
+        border-color: var(--critical-text);
+        color: var(--critical-text);
+    }
+
+    .banner__body {
+        flex: 1;
+        min-width: 0;
+    }
+}

@@ -1,0 +1,72 @@
+/*
+ * Toasts.
+ *
+ * O aviso antigo ficava no topo do conteúdo e empurrava o layout — numa tela
+ * rolada, o vigilante nem via. Agora flutua acima do rodapé, onde o olho já
+ * está, e não desloca nada.
+ *
+ * Sucesso some sozinho em 4s (role=status). Erro e alerta PERSISTEM até serem
+ * fechados (role=alert): informação de falha não pode evaporar.
+ */
+
+@layer components {
+    .toasts {
+        position: fixed;
+        inset-inline: 0;
+        bottom: 0;
+        z-index: var(--z-toast);
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+        max-width: 620px;
+        margin-inline: auto;
+        padding: var(--space-4);
+        /* A pilha não deve bloquear o rodapé que está atrás dela. */
+        pointer-events: none;
+    }
+
+    .toast {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--space-3);
+        padding: var(--space-3) var(--space-4);
+        border-radius: var(--radius-lg);
+        border: 1px solid;
+        box-shadow: var(--shadow-md);
+        font-size: var(--text-base);
+        font-weight: var(--weight-medium);
+        line-height: var(--leading-normal);
+        pointer-events: auto;
+        animation: toast-in var(--dur-base) var(--ease-spring);
+    }
+
+    .toast--ok {
+        background: var(--success-quiet);
+        border-color: var(--success);
+        color: var(--success-text);
+    }
+
+    .toast--warn {
+        background: var(--warning-quiet);
+        border-color: var(--warning);
+        color: var(--warning-text);
+    }
+
+    .toast--error {
+        background: var(--critical-quiet);
+        border-color: var(--critical-text);
+        color: var(--critical-text);
+    }
+
+    .toast__body {
+        flex: 1;
+        min-width: 0;
+    }
+
+    @keyframes toast-in {
+        from {
+            transform: translateY(8px);
+            opacity: 0;
+        }
+    }
+}

@@ -1,0 +1,192 @@
+/*
+ * Casca do aplicativo.
+ *
+ * Três linhas de grade, altura fixa da viewport, e o <main> como ÚNICA região
+ * de rolagem. Isso resolve de uma vez: o rodapé deixa de cobrir o último item
+ * de listas longas, o 100dvh passa a se comportar no Safari móvel, e a barra
+ * de topo dispensa position:sticky.
+ *
+ * `min-height: 0` no main é obrigatório — sem ele o filho de grid não encolhe
+ * e o overflow simplesmente não acontece.
+ */
+
+@layer layout {
+    .app {
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        height: 100dvh;
+        max-width: 620px;
+        margin-inline: auto;
+        padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
+        background: var(--bg);
+    }
+
+    /* --- barra de topo --- */
+    .appbar {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        min-height: var(--tap-lg);
+        padding: var(--space-2) var(--space-4);
+        padding-top: calc(var(--space-2) + env(safe-area-inset-top));
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+    }
+
+    .appbar__identity {
+        min-width: 0;
+        flex: 1;
+    }
+
+    .appbar__brand {
+        font-size: var(--text-sm);
+        font-weight: var(--weight-bold);
+        letter-spacing: 0.02em;
+    }
+
+    .appbar__context {
+        display: block;
+        font-size: var(--text-sm);
+        color: var(--text-muted);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* --- conteúdo --- */
+    .view {
+        min-height: 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+        padding: var(--space-4);
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-4);
+    }
+
+    .view:focus {
+        outline: none;
+    }
+
+    /* --- rodapé de ações --- */
+    /*
+     * Fundo sólido e borda, em vez do gradiente parcialmente transparente
+     * anterior: com o scroll no main, não há mais nada passando por baixo, e o
+     * gradiente só deixava o último item ilegível.
+     */
+    .actionbar {
+        z-index: var(--z-footer);
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+        padding: var(--space-3) var(--space-4);
+        padding-bottom: calc(var(--space-3) + env(safe-area-inset-bottom));
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+    }
+
+    /* A emergência fica numa faixa própria, separada fisicamente das ações da
+       tela — não basta ser de outra cor. */
+    .actionbar__emergency {
+        padding-bottom: var(--space-3);
+        border-bottom: 1px solid var(--border);
+    }
+
+    .actionbar__actions {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+    }
+
+    .actionbar__actions--row {
+        flex-direction: row;
+    }
+
+    .actionbar__actions--row > * {
+        flex: 1;
+    }
+
+    /* --- utilidades de composição --- */
+    .stack {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-4);
+    }
+
+    .stack--tight {
+        gap: var(--space-2);
+    }
+
+    .cluster {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        flex-wrap: wrap;
+    }
+
+    .section-label {
+        font-size: var(--text-sm);
+        font-weight: var(--weight-semibold);
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+
+    .muted {
+        color: var(--text-muted);
+        font-size: var(--text-sm);
+    }
+
+    .notice {
+        font-size: var(--text-sm);
+        line-height: var(--leading-normal);
+        color: var(--text-muted);
+    }
+
+    /* --- adaptações de viewport --- */
+
+    /* Em tablet e desktop a coluna precisa se ler como um aparelho, não como
+       conteúdo perdido no meio da tela. */
+    @media (min-width: 640px) {
+        body {
+            background: var(--surface-2);
+        }
+
+        .app {
+            border-inline: 1px solid var(--border);
+        }
+    }
+
+    /* Celular em suporte, ou virado sem querer. */
+    @media (orientation: landscape) and (max-height: 480px) {
+        .appbar {
+            min-height: var(--tap-md);
+            padding-block: var(--space-1);
+        }
+
+        .appbar__context {
+            display: none;
+        }
+
+        .view {
+            padding: var(--space-3);
+            gap: var(--space-3);
+        }
+
+        .actionbar__actions {
+            flex-direction: row;
+        }
+
+        .actionbar__actions > * {
+            flex: 1;
+        }
+    }
+
+    /* Pior caso de largura. */
+    @media (max-width: 359px) {
+        .view {
+            padding: var(--space-3);
+        }
+    }
+}
