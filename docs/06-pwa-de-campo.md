@@ -154,6 +154,30 @@ item. Estado nunca é comunicado só por cor: o selecionado tem preenchimento **
   `@supports`, e ele é o tema **escuro** — o cenário degradado tem de ser o seguro para a ronda.
 - A tela de fila lista os eventos, mas não as fotos individualmente — só o total pendente.
 
+## Retorno ao vigilante
+
+Três informações que o servidor já tinha e o aparelho não mostrava.
+
+**Reconhecimento do pânico.** Depois do acionamento, o app consulta `GET /api/v1/panic/{uuid}` a
+cada 10 segundos, por até 15 minutos, e para assim que alguém reconhece. A faixa muda de
+"Acionamento recebido às 02:11. Aguardando a supervisão reconhecer" para "Ana reconheceu às 02:14",
+com vibração curta — padrão diferente do acionamento, porque é resposta, não alarme. A distinção é
+o ponto: *o servidor gravou* nunca foi *alguém está indo*, e até aqui o aparelho só dizia a
+primeira coisa. A rota só devolve alerta do próprio vigilante autenticado; acionamento ainda na
+fila responde 404, que o app trata como "continua tentando".
+
+**Aviso de desvio na hora da leitura.** Ao abrir um ponto, o app mede a distância até a coordenada
+cadastrada (Haversine em `resources/js/field/geo.js`, mesma fórmula de `App\Support\Geo`) e, se
+passar do `radius_m`, mostra faixa de aviso no checklist e pede confirmação antes de gravar. O
+servidor continua marcando `out_of_radius` como sempre — a diferença é que agora o vigilante fica
+sabendo enquanto ainda dá para andar até o ponto, em vez de o desvio aparecer só no RDO do dia
+seguinte. **Nada é bloqueado:** recusar a confirmação apenas não grava, e a pessoa volta ao ponto.
+
+**Distância até o próximo ponto.** O cartão AGORA mostra "a ~80 m · medido agora". Deliberadamente
+não é tempo real: a distância vem da **última leitura de GPS que já teria acontecido de qualquer
+forma** (uma leitura de ponto, um acionamento, o início do turno), e por isso o rótulo sempre diz
+quando foi medida. Um botão ao lado faz uma medida nova a pedido.
+
 ## Privacidade
 
 A localização é lida **pontualmente**, no momento de cada registro. Não há watch, nem polling, nem
@@ -161,6 +185,11 @@ coleta fora da ronda. O aviso na tela de login diz isso e deixa explícito que o
 registro de ponto**.
 
 Negar a permissão de localização não bloqueia nada: o registro entra com a marca `no_gps`.
+
+A distância até o próximo ponto **não abre exceção a isso**: ela reaproveita a última medida já
+feita, guardada só em memória e nunca transmitida sozinha. Mostrar distância em tempo real exigiria
+`watchPosition` durante o turno inteiro, que é exatamente o rastreamento que este aplicativo
+promete não fazer — e o preço seria pago em bateria e em confiança da equipe, não em código.
 
 ## Verificação
 

@@ -24,6 +24,12 @@ Route::prefix('v1')->group(function () {
             ->middleware('throttle:20,1')
             ->name('api.panic');
 
+        // O aparelho consulta esta rota enquanto espera atendimento, para
+        // devolver ao vigilante o momento em que a supervisão reconheceu.
+        Route::get('panic/{uuid}', [PanicController::class, 'show'])
+            ->whereUuid('uuid')
+            ->name('api.panic.show');
+
         Route::post('sync/events', [SyncController::class, 'events'])->name('api.sync.events');
         Route::post('sync/attachments/{uuid}', [SyncController::class, 'attachment'])
             ->whereUuid('uuid')

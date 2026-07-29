@@ -13,7 +13,7 @@ import {
 import * as api from './api'
 import { sync, startSyncLoop, onSyncChange, refreshPending } from './sync'
 import { QrScanner, confirmFeedback } from './scanner'
-import { currentPosition } from './geo'
+import { currentPosition, distanceMeters, formatDistance } from './geo'
 
 /** Telas que empilham histórico — ver navigate() e o tratamento de popstate. */
 const SCREENS = ['boot', 'login', 'home', 'patrol', 'scan', 'checklist', 'incident', 'queue']
@@ -63,6 +63,8 @@ function fieldApp() {
         scanStatus: 'Abrindo a câmera…',
 
         activeCheckpoint: null,
+        /** Distância medida ao abrir o ponto, em metros. `null` = sem medida. */
+        checkpointDistance: null,
         checklistAnswers: [],
         checklistPhoto: null,
         checklistPhotoUrl: null,
@@ -79,7 +81,29 @@ function fieldApp() {
         incidentPhoto: null,
         incidentPhotoUrl: null,
 
-        panic: { confirming: false, sending: false, state: null, at: null },
+        panic: {
+            confirming: false,
+            sending: false,
+            state: null,
+            at: null,
+            uuid: null,
+            acknowledgedAt: null,
+            acknowledgedBy: null,
+        },
+        panicPoll: null,
+
+        /**
+         * Última posição conhecida, medida nos momentos em que já lemos GPS de
+         * qualquer forma (uma leitura, uma assunção de posto). Fica só na
+         * memória e nunca é transmitida sozinha.
+         *
+         * É deliberadamente pontual: mostrar distância em tempo real exigiria
+         * ler o GPS continuamente, que é rastreamento — exatamente o que este
+         * aplicativo promete não fazer.
+         */
+        lastPosition: null,
+        lastPositionAt: null,
+        locating: false,
 
         handoverNotes: '',
         exitArmed: false,
@@ -569,7 +593,7 @@ function fieldApp() {
             this.busy = true
 
             try {
-                const position = await currentPosition()
+                const position = await this.measurePosition()
                 const uuid = await enqueue('shift.start', { post_id: postId, ...position })
 
                 this.shift = { uuid, post_id: postId, started_at: new Date().toISOString() }
@@ -713,6 +737,80 @@ function fieldApp() {
             return this.nextItem?.position ?? ''
         },
 
+        // ------------------------------------------------------------ distância
+        /**
+         * Lê o GPS e guarda a medida.
+         *
+         * Todo lugar que já lia posição passa por aqui: assim a distância até o
+         * próximo ponto sai de graça, sem uma única leitura extra de GPS.
+         */
+        async measurePosition(options = {}) {
+            const position = await currentPosition(options)
+
+            if (position.latitude !== null) {
+                this.lastPosition = position
+                this.lastPositionAt = new Date().toISOString()
+            }
+
+            return position
+        },
+
+        /** Distância da última posição conhecida até um ponto, em metros. */
+        distanceTo(checkpoint, from = this.lastPosition) {
+            if (!checkpoint || !from) return null
+
+            // Ponto sem coordenada cadastrada não tem distância. Converter com
+            // Number() sem esta guarda transformaria null em 0 e mostraria uma
+            // distância inventada até a costa da África.
+            if (checkpoint.latitude === null || checkpoint.longitude === null) return null
+            if (from.latitude === null || from.longitude === null) return null
+
+            return distanceMeters(
+                from.latitude,
+                from.longitude,
+                Number(checkpoint.latitude),
+                Number(checkpoint.longitude),
+            )
+        },
+
+        /** Rótulo do cartão AGORA: "a ~80 m", ou nada se não houver medida. */
+        get nextDistanceLabel() {
+            return formatDistance(this.distanceTo(this.nextCheckpoint))
+        },
+
+        /**
+         * Há quanto tempo a medida foi feita. A distância é de quando o GPS foi
+         * lido pela última vez, não de agora — dizer isso evita que o vigilante
+         * confie num número velho.
+         */
+        get lastPositionAgeLabel() {
+            if (!this.lastPositionAt) return ''
+
+            const minutes = Math.floor((Date.now() - Date.parse(this.lastPositionAt)) / 60000)
+
+            if (minutes < 1) return 'agora'
+            if (minutes < 60) return `há ${minutes} min`
+
+            return 'há mais de 1 h'
+        },
+
+        /** Botão "atualizar": leitura pontual, a pedido. */
+        async locate() {
+            if (this.locating) return
+
+            this.locating = true
+
+            try {
+                const position = await this.measurePosition()
+
+                if (position.latitude === null) {
+                    this.toast('Sem sinal de GPS no momento.', 'warn', 4000)
+                }
+            } finally {
+                this.locating = false
+            }
+        },
+
         progressLabel() {
             const done = this.routeCheckpoints.length - this.remainingCount
 
@@ -815,6 +913,7 @@ function fieldApp() {
 
         openCheckpoint(checkpoint, method) {
             this.activeCheckpoint = { ...checkpoint, method }
+            this.checkpointDistance = null
             this.clearPhoto('checklistPhoto')
             this.checklistAnswers = (checkpoint.checklist ?? []).map((item) => ({
                 checklist_item_id: item.id,
@@ -824,10 +923,44 @@ function fieldApp() {
             }))
 
             this.navigate('checklist')
+
+            // Mede em paralelo: a tela abre na hora e o aviso de distância
+            // aparece quando o GPS responder. Esperar o GPS para mostrar o
+            // checklist seria trocar um problema por outro.
+            this.measureCheckpointDistance(checkpoint)
+        },
+
+        async measureCheckpointDistance(checkpoint) {
+            const position = await this.measurePosition()
+            const distance = this.distanceTo(checkpoint, position)
+
+            // Se o ponto ainda estiver aberto quando a medida chegar.
+            if (this.activeCheckpoint?.id === checkpoint.id) {
+                this.checkpointDistance = distance
+            }
+        },
+
+        /**
+         * Longe demais do ponto para a leitura ser plausível.
+         *
+         * O servidor já marca `out_of_radius`, mas só o supervisor vê, no dia
+         * seguinte. Avisar aqui é o que permite ao vigilante andar mais vinte
+         * metros e registrar certo — ou saber que aquele registro vai constar
+         * como desvio, em vez de descobrir depois.
+         */
+        get checkpointTooFar() {
+            if (this.checkpointDistance === null) return false
+
+            return this.checkpointDistance > (this.activeCheckpoint?.radius_m ?? 50)
+        },
+
+        get checkpointDistanceLabel() {
+            return formatDistance(this.checkpointDistance)
         },
 
         leaveChecklist() {
             this.activeCheckpoint = null
+            this.checkpointDistance = null
             this.clearPhoto('checklistPhoto')
             this.navigate('patrol')
         },
@@ -838,7 +971,33 @@ function fieldApp() {
             this.busy = true
 
             try {
-                const position = await currentPosition()
+                const position = await this.measurePosition()
+
+                // Medida do momento da gravação: é ela que o servidor vai
+                // avaliar, então é ela que precisa ser confirmada.
+                if (!skipped) {
+                    const distance = this.distanceTo(this.activeCheckpoint, position)
+                    const radius = this.activeCheckpoint.radius_m ?? 50
+
+                    if (distance !== null && distance > radius) {
+                        this.checkpointDistance = distance
+
+                        const ok = await this.ask({
+                            title: 'Você está longe deste ponto',
+                            text:
+                                `O aparelho indica ${formatDistance(distance)} de ` +
+                                `${this.activeCheckpoint.code}. Registrar assim marca a leitura ` +
+                                'como desvio no relatório do dia.',
+                            confirmLabel: 'Registrar mesmo assim',
+                            cancelLabel: 'Voltar e me aproximar',
+                        })
+
+                        // O registro nunca é recusado — só confirmado. Mas se a
+                        // pessoa preferir andar até o ponto, não gravamos nada.
+                        if (!ok) return
+                    }
+                }
+
                 const attachments = []
 
                 if (this.checklistPhoto) {
@@ -991,7 +1150,7 @@ function fieldApp() {
             this.busy = true
 
             try {
-                const position = await currentPosition()
+                const position = await this.measurePosition()
                 const attachments = []
 
                 if (this.incidentPhoto) {
@@ -1049,7 +1208,7 @@ function fieldApp() {
 
             // GPS com prazo curto: se demorar, envia sem coordenada. Alerta sem
             // localização chega; alerta que não chega não serve para nada.
-            const position = await currentPosition({ timeout: 4000 })
+            const position = await this.measurePosition({ timeout: 4000 })
             const payload = { uuid, occurred_at: occurredAt, ...position }
 
             let delivered = false
@@ -1075,14 +1234,82 @@ function fieldApp() {
                 sending: false,
                 state: delivered ? 'delivered' : 'queued',
                 at: occurredAt,
+                uuid,
+                acknowledgedAt: null,
+                acknowledgedBy: null,
             }
 
             // Vibração longa: confirma o acionamento sem exigir que ele leia.
             navigator.vibrate?.([200, 100, 200, 100, 200])
+
+            this.watchPanic()
+        },
+
+        /**
+         * Espera o reconhecimento humano.
+         *
+         * "Entregue" só diz que o servidor gravou. Quem apertou o botão precisa
+         * saber que alguém viu — é a diferença entre esperar sozinho e saber que
+         * há resposta a caminho. Consulta de 10 em 10 segundos, por até 15
+         * minutos, e para assim que alguém reconhece.
+         */
+        watchPanic() {
+            this.stopPanicWatch()
+
+            if (!this.panic.uuid) return
+
+            const uuid = this.panic.uuid
+            const deadline = Date.now() + 15 * 60 * 1000
+
+            this.panicPoll = setInterval(async () => {
+                if (this.panic.uuid !== uuid || Date.now() > deadline) {
+                    this.stopPanicWatch()
+                    return
+                }
+
+                try {
+                    const status = await api.panicStatus(uuid)
+
+                    if (!status.acknowledged_at) return
+
+                    this.panic.state = 'acknowledged'
+                    this.panic.acknowledgedAt = status.acknowledged_at
+                    this.panic.acknowledgedBy = status.acknowledged_by
+                    this.stopPanicWatch()
+
+                    // Padrão curto, diferente do acionamento: é resposta, não alarme.
+                    navigator.vibrate?.([80, 60, 80])
+                } catch {
+                    // Sem rede ou alerta ainda na fila: tenta de novo no próximo ciclo.
+                }
+            }, 10000)
+        },
+
+        stopPanicWatch() {
+            if (this.panicPoll) {
+                clearInterval(this.panicPoll)
+                this.panicPoll = null
+            }
+        },
+
+        /** "Supervisão reconheceu às 02:14" — o dado que faltava no aparelho. */
+        get panicAcknowledgedLabel() {
+            if (!this.panic.acknowledgedAt) return ''
+
+            const time = new Date(this.panic.acknowledgedAt).toLocaleTimeString('pt-BR', {
+                hour: '2-digit',
+                minute: '2-digit',
+            })
+
+            return this.panic.acknowledgedBy
+                ? `${this.panic.acknowledgedBy} reconheceu às ${time}`
+                : `Supervisão reconheceu às ${time}`
         },
 
         dismissPanicState() {
+            this.stopPanicWatch()
             this.panic.state = null
+            this.panic.uuid = null
         },
 
         // --------------------------------------------------------------- fila

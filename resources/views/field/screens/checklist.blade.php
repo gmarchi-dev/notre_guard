@@ -15,6 +15,19 @@
             <p class="muted mt-2" x-text="activeCheckpoint?.name"></p>
         </div>
 
+        {{--
+            Aviso de distância. Aparece assim que o GPS responde, antes de o
+            checklist ser preenchido, porque é aí que ainda dá para andar até o
+            ponto. O registro nunca é bloqueado — só informado.
+        --}}
+        <template x-if="checkpointTooFar">
+            <div class="banner banner--warn" role="status">
+                <div class="banner__body">
+                    <span x-text="'O aparelho indica ' + checkpointDistanceLabel + ' deste ponto. Aproxime-se antes de registrar, ou a leitura constará como desvio.'"></span>
+                </div>
+            </div>
+        </template>
+
         <template x-if="activeCheckpoint?.instruction">
             <div class="card card--accent">
                 <p x-text="activeCheckpoint.instruction"></p>

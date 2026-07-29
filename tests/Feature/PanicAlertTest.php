@@ -154,6 +154,71 @@ class PanicAlertTest extends SyncTestCase
         $this->assertSame(1, SafetyAlert::count());
     }
 
+    private function panicStatus(string $uuid, ?string $token = null): \Illuminate\Testing\TestResponse
+    {
+        return $this->withHeaders([
+            'Authorization' => 'Bearer '.($token ?? $this->login()),
+            'X-Device-Id' => $this->deviceId,
+        ])->getJson(route('api.panic.show', ['uuid' => $uuid]));
+    }
+
+    public function test_device_learns_when_a_human_acknowledged(): void
+    {
+        // A informação que faltava no aparelho: "o servidor gravou" não é
+        // "alguém está indo". Quem apertou o botão espera sozinho até saber.
+        Notification::fake();
+
+        $uuid = (string) Str::uuid7();
+        $token = $this->login();
+
+        $this->panic(['uuid' => $uuid], $token)->assertCreated();
+
+        $this->panicStatus($uuid, $token)
+            ->assertOk()
+            ->assertJsonPath('status', 'open')
+            ->assertJsonPath('acknowledged_at', null);
+
+        $supervisor = User::factory()->create(['role' => User::ROLE_SUPERVISOR, 'name' => 'Ana Supervisão']);
+
+        SafetyAlert::firstOrFail()->update([
+            'status' => 'acknowledged',
+            'acknowledged_by_user_id' => $supervisor->id,
+            'acknowledged_at' => now(),
+        ]);
+
+        $response = $this->panicStatus($uuid, $token)->assertOk();
+
+        $this->assertSame('acknowledged', $response->json('status'));
+        $this->assertSame('Ana Supervisão', $response->json('acknowledged_by'));
+        $this->assertNotNull($response->json('acknowledged_at'));
+    }
+
+    public function test_a_guard_cannot_read_someone_elses_alert(): void
+    {
+        Notification::fake();
+
+        $uuid = (string) Str::uuid7();
+
+        $this->panic(['uuid' => $uuid])->assertCreated();
+
+        $other = \App\Models\SecurityGuard::create([
+            'user_id' => User::factory()->create(['role' => User::ROLE_GUARD])->id,
+            'registration' => 'VIG-999',
+            'default_unit_id' => $this->unit->id,
+        ]);
+
+        SafetyAlert::firstOrFail()->update(['security_guard_id' => $other->id]);
+
+        $this->panicStatus($uuid)->assertNotFound();
+    }
+
+    public function test_status_of_an_alert_still_in_the_queue_is_not_found(): void
+    {
+        // Acionamento offline: o uuid existe no aparelho, mas ainda não no
+        // servidor. O app trata isso como "continua tentando", não como erro.
+        $this->panicStatus((string) Str::uuid7())->assertNotFound();
+    }
+
     public function test_panic_requires_authentication(): void
     {
         $this->postJson(route('api.panic'), ['uuid' => (string) Str::uuid7(), 'occurred_at' => now()->toIso8601String()])

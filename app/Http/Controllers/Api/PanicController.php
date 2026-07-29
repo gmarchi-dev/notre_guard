@@ -21,6 +21,37 @@ use Illuminate\Http\Request;
  */
 class PanicController extends Controller
 {
+    /**
+     * Situação de um acionamento.
+     *
+     * Existe para devolver ao vigilante a informação que faltava: saber que o
+     * servidor gravou não é saber que alguém está indo. Num momento de medo, a
+     * diferença entre "recebido" e "a supervisão reconheceu às 02:14" é o que
+     * dá para fazer.
+     */
+    public function show(Request $request, string $uuid): JsonResponse
+    {
+        /** @var SecurityGuard $guard */
+        $guard = $request->attributes->get('security_guard');
+
+        $alert = SafetyAlert::query()
+            ->where('uuid', $uuid)
+            // Cada um só consulta o próprio acionamento.
+            ->where('security_guard_id', $guard->id)
+            ->with('acknowledgedBy')
+            ->first();
+
+        if (! $alert) {
+            return response()->json(['message' => 'Acionamento não encontrado.'], 404);
+        }
+
+        return response()->json([
+            'status' => $alert->status,
+            'acknowledged_at' => $alert->acknowledged_at?->toIso8601String(),
+            'acknowledged_by' => $alert->acknowledgedBy?->name,
+        ]);
+    }
+
     public function store(Request $request): JsonResponse
     {
         $data = $request->validate([

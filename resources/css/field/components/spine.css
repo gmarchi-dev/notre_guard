@@ -120,6 +120,23 @@
         color: var(--text);
     }
 
+    /* Distância até o ponto, com o botão de nova medida na mesma linha. */
+    .now__distance {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-2);
+        margin-top: var(--space-3);
+        font-size: var(--text-base);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .now__distance-age {
+        font-size: var(--text-sm);
+        color: var(--text-muted);
+        font-variant-numeric: normal;
+    }
+
     /* Roteiro completo, ou sem pontos restantes. */
     .now--done {
         background: var(--success-quiet);

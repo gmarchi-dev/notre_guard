@@ -96,6 +96,10 @@ export function sendPanic(payload, timeoutMs = 6000) {
     })
 }
 
+export function panicStatus(uuid) {
+    return request(`panic/${uuid}`)
+}
+
 export function pushEvents(events) {
     return request('sync/events', {
         method: 'POST',
