@@ -1,86 +1,35 @@
 {{--
-    Rodapé de ações.
+    Dock: uma ação principal por tela, e a barra de abas embaixo.
 
-    x-if e não x-show: com x-show o rodapé existia no DOM e era tabulável até na
-    tela de login.
-
-    A emergência fica numa faixa própria, separada por borda das ações da tela —
-    antes o botão de encerrar turno aparecia logo abaixo dela, mesmo vermelho e
-    mesma largura, a 4px de distância.
+    Antes eram até três botões empilhados de largura total mais a emergência —
+    cerca de um quarto da altura da tela só de rodapé. Agora navegar e agir não
+    disputam mais o mesmo espaço: as ações secundárias vivem no conteúdo, e o
+    retorno é a seta do cabeçalho.
 --}}
 <template x-if="screen !== 'boot' && screen !== 'login'">
-    <footer class="actionbar">
-        <div class="actionbar__emergency">
-            <button type="button" class="btn btn--emergency" @click="askPanic()">
-                <span aria-hidden="true">⚠</span> Emergência
-            </button>
-        </div>
+    <div class="dock">
+        {{-- Emergência: único elemento circular e único vermelho preenchido da
+             interface. Ancorado ao dock, sobe junto com a faixa de ação. --}}
+        <button type="button" class="fab" @click="askPanic()" aria-label="Acionar emergência">
+            <span class="fab__glyph" aria-hidden="true">⚠</span>
+            <span class="fab__label" aria-hidden="true">SOS</span>
+        </button>
 
-        <template x-if="screen === 'home' && shift">
-            <div class="actionbar__actions">
-                <button type="button" class="btn btn--secondary" @click="openIncident()">
-                    Registrar ocorrência
-                </button>
-                <button type="button" class="btn btn--critical" @click="endShift()">
-                    Encerrar turno
-                </button>
-            </div>
-        </template>
-
-        <template x-if="screen === 'home' && !shift">
-            <div class="actionbar__actions">
-                <button type="button" class="btn btn--ghost" @click="doLogout()">Sair</button>
-            </div>
-        </template>
-
-        <template x-if="screen === 'patrol'">
-            <div class="actionbar__actions">
-                {{-- A ação nomeia o alvo: sozinha, essa mudança elimina boa
-                     parte da necessidade de consultar a lista. --}}
-                <button type="button" class="btn btn--primary" @click="openScanner()">
-                    <span x-text="nextCheckpoint ? 'Ler QR' : 'Ler QR do ponto'"></span>
-                    <span class="btn__hint" x-show="nextCheckpoint" x-text="nextCheckpoint?.code"></span>
-                </button>
-                <div class="actionbar__actions actionbar__actions--row">
-                    <button type="button" class="btn btn--secondary" @click="openIncident()">Ocorrência</button>
-                    <button type="button" class="btn btn--secondary" @click="endPatrol()">Encerrar ronda</button>
-                </div>
-            </div>
-        </template>
-
-        <template x-if="screen === 'scan'">
-            <div class="actionbar__actions">
-                <button type="button" class="btn btn--secondary" @click="closeScanner()">Voltar</button>
-            </div>
-        </template>
-
-        <template x-if="screen === 'checklist'">
-            <div class="actionbar__actions">
+        <template x-if="primaryAction()">
+            <div class="actionslot">
                 <button type="button" class="btn btn--primary"
-                        :disabled="photoRequired && !checklistPhoto"
-                        :aria-disabled="busy"
-                        @click="confirmCheckpoint()"
-                        x-text="busy ? 'Registrando…' : 'Confirmar ponto'"></button>
-                <button type="button" class="btn btn--secondary" @click="leaveChecklist()">Voltar</button>
+                        :disabled="primaryAction().disabled"
+                        :aria-disabled="busy || syncing"
+                        @click="runPrimaryAction()">
+                    <span x-text="primaryAction().label"></span>
+                    <span class="btn__hint" x-show="primaryAction().hint"
+                          x-text="primaryAction().hint"></span>
+                </button>
             </div>
         </template>
 
-        <template x-if="screen === 'incident'">
-            <div class="actionbar__actions">
-                <button type="button" class="btn btn--primary" :aria-disabled="busy"
-                        @click="submitIncident()"
-                        x-text="busy ? 'Registrando…' : 'Registrar ocorrência'"></button>
-                <button type="button" class="btn btn--secondary" @click="cancelIncident()">Cancelar</button>
-            </div>
+        <template x-if="showTabBar()">
+            @include('field.partials.tabbar')
         </template>
-
-        <template x-if="screen === 'queue'">
-            <div class="actionbar__actions">
-                <button type="button" class="btn btn--primary" :aria-disabled="syncing || pending === 0"
-                        @click="syncNow()"
-                        x-text="syncing ? 'Enviando…' : 'Enviar agora'"></button>
-                <button type="button" class="btn btn--secondary" @click="goBack()">Voltar</button>
-            </div>
-        </template>
-    </footer>
+    </div>
 </template>

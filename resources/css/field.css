@@ -31,6 +31,8 @@
 @import './field/components/spine.css';
 @import './field/components/toast.css';
 @import './field/components/chip.css';
+@import './field/components/tabbar.css';
+@import './field/components/fab.css';
 @import './field/components/scanner.css';
 @import './field/components/panic.css';
 @import './field/utilities.css';

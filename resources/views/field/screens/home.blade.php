@@ -86,13 +86,15 @@
             </div>
         </template>
 
-        {{-- A fila deixa de ser alcançável só pela pastilha da barra de topo. --}}
-        <button type="button" class="choice choice--quiet" @click="openQueue()">
-            <span class="choice__body">
-                <span class="choice__title">Registros no aparelho</span>
-                <span class="choice__meta" x-text="syncChip().label"></span>
-            </span>
-            <span class="choice__chevron" aria-hidden="true">›</span>
-        </button>
+        {{-- Ações secundárias vivem no conteúdo: o dock guarda só a principal. --}}
+        <template x-if="shift">
+            <button type="button" class="btn btn--critical" @click="endShift()">
+                Encerrar turno
+            </button>
+        </template>
+
+        <template x-if="!shift">
+            <button type="button" class="btn btn--ghost" @click="doLogout()">Sair</button>
+        </template>
     </div>
 </template>

@@ -89,7 +89,7 @@ class FieldAppTest extends TestCase
 
         // Componentes que definem alvo de toque. Um botão fora desta lista não
         // tem tamanho garantido por nada.
-        $sized = 'btn|chip|segmented__option|choice|spine__item|now';
+        $sized = 'btn|chip|segmented__option|choice|spine__item|now|tabbar__item|fab|appbar__back';
 
         foreach ($matches[0] as $button) {
             $this->assertMatchesRegularExpression(
@@ -129,7 +129,7 @@ class FieldAppTest extends TestCase
         foreach ($this->fieldStylesheets() as $path) {
             $name = basename($path);
 
-            if (in_array($name, ['tokens.css', 'button.css', 'panic.css'], true)) {
+            if (in_array($name, ['tokens.css', 'button.css', 'panic.css', 'fab.css'], true)) {
                 continue;
             }
 

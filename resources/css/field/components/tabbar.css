@@ -1,0 +1,101 @@
+/*
+ * Barra de abas inferior.
+ *
+ * Navegar e agir deixam de disputar o mesmo espaço: as abas são destino, e a
+ * ação principal da tela fica na faixa logo acima. Antes tudo era bloco
+ * empilhado de largura total, e o rodapé chegava a comer um quarto da tela.
+ *
+ * A barra some nos subfluxos (leitura de QR, checklist) — nesses casos o
+ * caminho de volta é a seta do cabeçalho, como manda o padrão móvel.
+ */
+
+@layer components {
+    .tabbar {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: 1fr;
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .tabbar__item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-1);
+        min-height: var(--tap-row);
+        padding: var(--space-2) var(--space-1);
+        color: var(--text-muted);
+        font-size: var(--text-xs);
+        font-weight: var(--weight-semibold);
+        line-height: 1;
+        text-align: center;
+        transition: color var(--dur-fast) var(--ease-out);
+    }
+
+    .tabbar__glyph {
+        font-size: var(--text-lg);
+        line-height: 1;
+    }
+
+    /* Ativa se distingue por cor E por peso E por uma marca acima — cor
+       sozinha não basta. */
+    .tabbar__item[aria-current='page'] {
+        color: var(--accent-text);
+        font-weight: var(--weight-bold);
+    }
+
+    .tabbar__item[aria-current='page']::before {
+        content: '';
+        position: absolute;
+        margin-top: calc(var(--space-2) * -1 - 1px);
+        width: var(--space-6);
+        height: 3px;
+        border-radius: var(--radius-pill);
+        background: var(--accent);
+    }
+
+    .tabbar__item[aria-disabled='true'] {
+        color: var(--text-faint);
+        opacity: 0.55;
+    }
+
+    .tabbar__label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 100%;
+    }
+
+    /* Contador de pendências na aba da fila. */
+    .tabbar__badge {
+        position: absolute;
+        margin: calc(var(--space-5) * -1) 0 0 var(--space-5);
+        min-width: var(--space-5);
+        padding-inline: var(--space-1);
+        border-radius: var(--radius-pill);
+        background: var(--accent);
+        color: var(--accent-on);
+        font-size: var(--text-xs);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .tabbar__badge--alert {
+        background: var(--critical-text);
+        color: var(--bg);
+    }
+
+    /* Celular deitado: a barra encolhe e o ícone vai para o lado do rótulo. */
+    @media (orientation: landscape) and (max-height: 480px) {
+        .tabbar__item {
+            flex-direction: row;
+            min-height: var(--tap-md);
+        }
+
+        .tabbar__item[aria-current='page']::before {
+            display: none;
+        }
+    }
+}

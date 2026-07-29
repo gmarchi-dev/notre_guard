@@ -18,6 +18,21 @@ import { currentPosition } from './geo'
 /** Telas que empilham histórico — ver navigate() e o tratamento de popstate. */
 const SCREENS = ['boot', 'login', 'home', 'patrol', 'scan', 'checklist', 'incident', 'queue']
 
+/**
+ * Abas da barra inferior: destinos, não ações.
+ *
+ * Subfluxos (leitura de QR e checklist) não são destino — lá a barra some e o
+ * retorno é a seta do cabeçalho.
+ */
+const TABS = [
+    { id: 'home', label: 'Início', glyph: '⌂' },
+    { id: 'patrol', label: 'Ronda', glyph: '◎' },
+    { id: 'incident', label: 'Ocorrência', glyph: '✎' },
+    { id: 'queue', label: 'Fila', glyph: '↑' },
+]
+
+const SUBFLOWS = ['scan', 'checklist']
+
 const REASONS = ['Área interditada', 'Sem acesso / chave', 'Risco no local']
 
 function fieldApp() {
@@ -156,6 +171,110 @@ function fieldApp() {
             this.navigate('login', { replace: true })
         },
 
+        // ------------------------------------------------ barra inferior
+        tabs: TABS,
+
+        showTabBar() {
+            return !SUBFLOWS.includes(this.screen)
+        },
+
+        /** Subfluxo: sem abas, o retorno é a seta do cabeçalho. */
+        showBack() {
+            return SUBFLOWS.includes(this.screen)
+        },
+
+        tabEnabled(tab) {
+            if (tab.id === 'patrol') return !!this.patrol
+            if (tab.id === 'incident') return !!this.data
+
+            return true
+        },
+
+        async openTab(tab) {
+            if (!this.tabEnabled(tab)) {
+                if (tab.id === 'patrol') {
+                    this.toast('Nenhuma ronda em andamento. Inicie uma pela tela inicial.', 'warn', 3500)
+                }
+
+                return
+            }
+
+            if (tab.id === this.screen) return
+
+            // Trocar de aba não pode jogar fora um relato já digitado.
+            if (this.screen === 'incident' && this.incidentHasContent()) {
+                const ok = await this.ask({
+                    title: 'Descartar esta ocorrência?',
+                    text: 'O que você já escreveu será perdido.',
+                    confirmLabel: 'Descartar',
+                    destructive: true,
+                })
+
+                if (!ok) return
+            }
+
+            if (tab.id === 'incident') {
+                this.openIncident()
+                return
+            }
+
+            if (tab.id === 'queue') {
+                this.openQueue()
+                return
+            }
+
+            this.navigate(tab.id)
+        },
+
+        /**
+         * Uma ação principal por tela, exibida em destaque acima das abas. As
+         * secundárias ficam no conteúdo — antes eram até três blocos empilhados
+         * e o rodapé comia um quarto da tela.
+         */
+        primaryAction() {
+            switch (this.screen) {
+                case 'patrol':
+                    return {
+                        label: this.nextCheckpoint ? 'Ler QR' : 'Ler QR do ponto',
+                        hint: this.nextCheckpoint?.code ?? '',
+                        run: () => this.openScanner(),
+                    }
+
+                case 'checklist':
+                    return {
+                        label: this.busy ? 'Registrando…' : 'Confirmar ponto',
+                        hint: this.activeCheckpoint?.code ?? '',
+                        disabled: this.photoRequired && !this.checklistPhoto,
+                        run: () => this.confirmCheckpoint(),
+                    }
+
+                case 'incident':
+                    return {
+                        label: this.busy ? 'Registrando…' : 'Registrar ocorrência',
+                        hint: '',
+                        run: () => this.submitIncident(),
+                    }
+
+                case 'queue':
+                    return {
+                        label: this.syncing ? 'Enviando…' : 'Enviar agora',
+                        hint: '',
+                        disabled: this.pending === 0,
+                        run: () => this.syncNow(),
+                    }
+
+                case 'scan':
+                    return null
+
+                default:
+                    return null
+            }
+        },
+
+        runPrimaryAction() {
+            this.primaryAction()?.run()
+        },
+
         // -------------------------------------------------------- navegação
         /**
          * Ponto único de troca de tela. Empilha histórico para que o botão
@@ -201,9 +320,11 @@ function fieldApp() {
                 return
             }
 
+            // Só desliga a câmera: quem decide a tela é o estado do histórico
+            // logo abaixo. Chamar closeScanner() aqui empilharia de volta.
             if (this.scanner) {
-                this.closeScanner()
-                return
+                this.scanner.stop()
+                this.scanner = null
             }
 
             const target = event.state?.screen
@@ -828,6 +949,16 @@ function fieldApp() {
         cancelIncident() {
             this.clearPhoto('incidentPhoto')
             this.navigate(this.patrol ? 'patrol' : 'home')
+        },
+
+        incidentHasContent() {
+            return Boolean(
+                this.incident.incident_type_id ||
+                    this.incident.description.trim() ||
+                    this.incident.location.trim() ||
+                    this.incident.actions_taken.trim() ||
+                    this.incidentPhoto,
+            )
         },
 
         applyIncidentDefaults() {

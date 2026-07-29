@@ -5,6 +5,13 @@
     até a fila — num aplicativo declaradamente usado de luva.
 --}}
 <header class="appbar">
+    {{-- Nos subfluxos a barra de abas some; esta seta é o caminho de volta. --}}
+    <template x-if="showBack()">
+        <button type="button" class="appbar__back" @click="goBack()" aria-label="Voltar">
+            <span aria-hidden="true">‹</span>
+        </button>
+    </template>
+
     <div class="appbar__identity">
         <span class="appbar__brand">Notre Guard</span>
         <span class="appbar__context" x-show="shift && post" x-text="contextLine()"></span>

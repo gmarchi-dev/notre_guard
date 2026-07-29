@@ -53,6 +53,31 @@ mesma largura, 4px abaixo do botão de pânico.
 **Alvos de toque:** 56px na ação primária, 48px no restante, 64px em linha de lista. O degrau de
 44px foi extinto.
 
+## Barra inferior
+
+Modelo híbrido: **abas fixas para navegar, ação principal em destaque logo acima**. Navegar e agir
+deixam de disputar o mesmo espaço.
+
+Quatro abas — Início, Ronda, Ocorrência, Fila —, com a de Ronda habilitada só quando há ronda em
+andamento e a de Fila mostrando o contador de pendências. A aba ativa se distingue por cor, peso e
+um traço acima: cor sozinha não basta.
+
+**Uma ação principal por tela**, de largura total: "Ler QR — PC-04", "Confirmar ponto", "Registrar
+ocorrência", "Enviar agora". As secundárias — encerrar turno, encerrar ronda, sair — vivem no fim
+do conteúdo, onde fazem sentido depois de percorrer a tela.
+
+Antes eram até três blocos empilhados de largura total mais a emergência: cerca de **200px**, um
+quarto da tela. Hoje a tela inicial usa **66px**, e a mais carregada, 146px.
+
+**Nos subfluxos a barra some.** Leitura de QR e checklist não são destino, e sair de um checklist
+pela metade tem de ser deliberado — nesses casos o retorno é a seta do cabeçalho, como manda o
+padrão móvel. Trocar de aba com uma ocorrência já digitada pede confirmação.
+
+**A emergência é um botão flutuante**, circular e vermelho, ancorado acima do dock. Fora da barra
+de propósito: vizinho aos itens de navegação, o acionamento de socorro ficaria a um toque de
+distância de "Início". É o único elemento circular e o único vermelho preenchido da interface, e
+sobe junto quando existe faixa de ação.
+
 ## Decisões de interface
 
 - **O próximo ponto sai da lista e vira cartão**, com o código em corpo grande e o nome completo

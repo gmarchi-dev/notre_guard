@@ -33,6 +33,20 @@
         border-bottom: 1px solid var(--border);
     }
 
+    /* Nos subfluxos (leitura de QR, checklist) a barra de abas some, e o
+       retorno passa a ser esta seta — padrão móvel. */
+    .appbar__back {
+        display: grid;
+        place-items: center;
+        width: var(--tap-md);
+        height: var(--tap-md);
+        margin-left: calc(var(--space-2) * -1);
+        flex: none;
+        border-radius: var(--radius-md);
+        font-size: var(--text-xl);
+        color: var(--text);
+    }
+
     .appbar__identity {
         min-width: 0;
         flex: 1;
@@ -60,6 +74,8 @@
         overscroll-behavior: contain;
         -webkit-overflow-scrolling: touch;
         padding: var(--space-4);
+        /* Folga para o botão flutuante de emergência não cobrir o último item. */
+        padding-bottom: var(--space-12);
         display: flex;
         flex-direction: column;
         gap: var(--space-4);
@@ -69,41 +85,49 @@
         outline: none;
     }
 
-    /* --- rodapé de ações --- */
+    /* --- dock: faixa de ação + barra de abas --- */
     /*
      * Fundo sólido e borda, em vez do gradiente parcialmente transparente
      * anterior: com o scroll no main, não há mais nada passando por baixo, e o
      * gradiente só deixava o último item ilegível.
+     *
+     * `position: relative` é o que ancora o botão flutuante de emergência: ele
+     * sobe junto quando existe faixa de ação, em vez de cobri-la.
      */
-    .actionbar {
+    .dock {
+        position: relative;
         z-index: var(--z-footer);
-        display: flex;
-        flex-direction: column;
-        gap: var(--space-2);
-        padding: var(--space-3) var(--space-4);
-        padding-bottom: calc(var(--space-3) + env(safe-area-inset-bottom));
         background: var(--surface);
         border-top: 1px solid var(--border);
     }
 
-    /* A emergência fica numa faixa própria, separada fisicamente das ações da
-       tela — não basta ser de outra cor. */
-    .actionbar__emergency {
-        padding-bottom: var(--space-3);
-        border-bottom: 1px solid var(--border);
-    }
-
-    .actionbar__actions {
+    /* Uma ação principal por tela, de largura total. As secundárias vivem no
+       conteúdo, e o caminho de volta é a seta do cabeçalho. */
+    .actionslot {
         display: flex;
         flex-direction: column;
         gap: var(--space-2);
+        padding: var(--space-3) var(--space-4);
     }
 
-    .actionbar__actions--row {
+    /* Sem barra de abas embaixo (subfluxos), a faixa assume a área segura. */
+    .dock:not(:has(.tabbar)) .actionslot {
+        padding-bottom: calc(var(--space-3) + env(safe-area-inset-bottom));
+    }
+
+    /* Na leitura de QR o dock existe só para ancorar a emergência: sem faixa e
+       sem abas, ele não deve desenhar uma borda solta no pé da tela. */
+    .dock:not(:has(.actionslot)):not(:has(.tabbar)) {
+        background: transparent;
+        border-top: 0;
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .actionslot--row {
         flex-direction: row;
     }
 
-    .actionbar__actions--row > * {
+    .actionslot--row > * {
         flex: 1;
     }
 

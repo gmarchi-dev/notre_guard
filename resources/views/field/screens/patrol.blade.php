@@ -68,5 +68,11 @@
                 </template>
             </div>
         </div>
+
+        {{-- No fim do roteiro, onde a ação faz sentido depois de percorrer a
+             lista. O dock guarda só a ação principal. --}}
+        <button type="button" class="btn btn--critical" @click="endPatrol()">
+            Encerrar ronda
+        </button>
     </div>
 </template>
