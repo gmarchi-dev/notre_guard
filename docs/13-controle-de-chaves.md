@@ -52,6 +52,24 @@ tela e dar acesso ao sistema** — verificado: o vigilante logado na portaria re
 O login é por **matrícula**, a mesma credencial do aplicativo de campo. Pedir e-mail criaria uma
 segunda credencial para a mesma pessoa.
 
+**O quadro responde de relance.** A pergunta da portaria na troca de turno é sempre a mesma — o que
+está fora e o que está atrasado — e até então respondê-la exigia ler a tabela linha a linha, ou
+reparar num badge vermelho no menu lateral, o que só funciona para quem já sabe que ele existe.
+Agora o topo da página traz três números: **no quadro / fora do quadro / atrasadas**. O contador de
+atrasadas fica **cinza quando é zero**, de propósito: vermelho permanente vira paisagem e deixa de
+ser aviso justamente no dia em que houver atraso.
+
+A linha da chave vencida se destaca inteira, não só pelo badge. E **fora do quadro não é atraso**:
+quase toda chave passa o dia fora, e isso é o normal — se a linha se destacasse sempre, o destaque
+não significaria nada. Há teste para os dois lados.
+
+A ordenação continua sendo **por gancho**, não por problema: é assim que a chave é encontrada na
+parede. Os contadores e os filtros cobrem a leitura por exceção.
+
+O CSS do realce vai inline num render hook do painel, e não como tema Vite do Filament: um tema
+exigiria pipeline de build própria mais `filament:assets` no deploy, custo desproporcional para uma
+dúzia de linhas. Se um dia a portaria pedir identidade visual própria, aí o tema se justifica.
+
 ## Modelo
 
 | Tabela | O que é |
@@ -119,3 +137,8 @@ Reavaliar depois do piloto.
 - Sem histórico de troca de segredo ou registro de chave perdida — hoje isso seria uma
   observação em texto.
 - A portaria não tem busca por QR/código de barras na chave; a busca é por texto.
+- **O painel nunca foi visto por quem trabalha no balcão.** As melhorias de leitura acima partem do
+  que dá para afirmar de fora — que ler tabela linha a linha é pior que ler três números. O que
+  ainda falta decidir depende de observar um turno: se a fila no balcão pede uma tela de "entregar"
+  em vez da tabela, quantas chaves saem por dia, se o teclado é mesmo o meio de entrada. Diferente
+  do aplicativo de campo, aqui não há base para ir além disso sem conversar com a equipe.

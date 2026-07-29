@@ -3,6 +3,7 @@
 namespace App\Filament\Portaria\Resources\KeyItems\Pages;
 
 use App\Filament\Portaria\Resources\KeyItems\KeyItemResource;
+use App\Filament\Portaria\Widgets\KeyBoardOverview;
 use Filament\Resources\Pages\ListRecords;
 
 class ListKeyItems extends ListRecords
@@ -14,5 +15,12 @@ class ListKeyItems extends ListRecords
     protected function getHeaderActions(): array
     {
         return [];
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            KeyBoardOverview::class,
+        ];
     }
 }

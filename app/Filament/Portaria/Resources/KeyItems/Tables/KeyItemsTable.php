@@ -65,7 +65,13 @@ class KeyItemsTable
                     ->label('Unidade')
                     ->toggleable(),
             ])
+            // Ordem do gancho, não ordem de problema: é assim que a chave é
+            // encontrada na parede. O que está atrasado se destaca pela linha,
+            // e os contadores do topo dizem quanto é.
             ->defaultSort('code')
+            ->recordClasses(fn (KeyItem $record) => $record->currentLoan?->isOverdue()
+                ? 'ng-row-overdue'
+                : null)
             ->filters([
                 Filter::make('out')
                     ->label('Somente fora do quadro')
