@@ -22,7 +22,7 @@
         </template>
 
         <template x-if="checklistAnswers.length > 0">
-            <div class="card">
+            <div class="group">
                 <template x-for="(answer, index) in checklistAnswers" :key="answer.checklist_item_id">
                     <div class="checklist-item">
                         <div class="checklist-item__label" :id="'ck-' + answer.checklist_item_id"
@@ -77,17 +77,19 @@
             </div>
         </template>
 
-        <div class="card">
-            <p class="field__label">
-                Foto
-                <span class="field__required" x-show="photoRequired">— obrigatória: há item não conforme</span>
-            </p>
+        <section class="section">
+            <div class="section__head">
+                <h2 class="section__title">Foto</h2>
+                <span class="section__aside" x-show="photoRequired">obrigatória: há item não conforme</span>
+            </div>
 
             <template x-if="!checklistPhotoUrl">
                 <div>
                     <input class="field__file" id="checkpoint-photo" type="file" accept="image/*"
                            capture="environment" @change="capturePhoto($event, 'checklistPhoto')">
-                    <label class="btn btn--secondary" for="checkpoint-photo">Tirar foto</label>
+                    <label class="btn btn--secondary" for="checkpoint-photo">
+                        <span aria-hidden="true">◎</span> Tirar foto
+                    </label>
                 </div>
             </template>
 
@@ -101,6 +103,6 @@
                     </div>
                 </div>
             </template>
-        </div>
+        </section>
     </div>
 </template>

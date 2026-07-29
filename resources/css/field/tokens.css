@@ -26,9 +26,14 @@
         --surface-2: light-dark(oklch(0.968 0.007 247.896), oklch(0.279 0.041 260.031));
 
         /* Borda em Slate-400 no claro: a borda "discreta" padrão desaparece
-           ao sol. Aqui borda é estrutura, não decoração. */
+           ao sol. Aqui borda é estrutura, não decoração — e por isso é usada
+           com parcimônia: só onde separa de fato. */
         --border: light-dark(oklch(0.704 0.04 256.788), oklch(0.372 0.044 257.287));
         --border-strong: light-dark(oklch(0.554 0.046 257.417), oklch(0.446 0.043 257.281));
+
+        /* Fio interno de um agrupamento. Mais leve que --border: separa itens
+           irmãos sem desenhar uma caixa em volta de cada um. */
+        --divider: light-dark(oklch(0.929 0.013 255.508), oklch(0.279 0.041 260.031));
 
         /* ------------------------------------------------------- texto */
         --text: light-dark(oklch(0.129 0.042 264.695), oklch(0.984 0.003 247.858));
@@ -82,9 +87,9 @@
         --space-12: 48px;
 
         /* -------------------------------------------------------- raio */
-        --radius-sm: 8px;
-        --radius-md: 12px;
-        --radius-lg: 16px;
+        --radius-sm: 10px;
+        --radius-md: 14px;
+        --radius-lg: 18px;
         --radius-xl: 24px;
         --radius-pill: 999px;
 
@@ -118,6 +123,9 @@
         --shadow-sm: 0 1px 2px var(--shadow-color);
         --shadow-md: 0 4px 12px var(--shadow-color);
         --shadow-sheet: 0 -8px 32px var(--shadow-color);
+        /* Só a ação principal recebe elevação: é o que a destaca sem precisar
+           de mais uma borda na tela. */
+        --shadow-btn: 0 2px 8px var(--shadow-color);
 
         /* ----------------------------------------------------- z-index */
         --z-base: 0;

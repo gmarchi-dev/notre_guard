@@ -1,11 +1,9 @@
 /*
- * Listas.
+ * Linhas de escolha.
  *
- * Antes existia um único `.checkpoint` cumprindo três papéis diferentes:
- * escolher um posto, escolher um roteiro e mostrar o estado de um ponto de
- * ronda. Mesma aparência para significados distintos. Agora são componentes
- * separados; este arquivo traz a linha de escolha, e o ponto de ronda vive em
- * spine.css.
+ * Vivem dentro de um `group`: o contêiner é um só e as linhas se separam por
+ * um fio interno. Antes cada uma era uma caixa com borda própria e 8px de
+ * respiro — seis pontos de ronda viravam seis molduras.
  *
  * Regra que vale para toda lista daqui: o texto QUEBRA em até duas linhas.
  * Nunca `nowrap` + reticências — era exatamente o nome do local, o dado que
@@ -16,23 +14,17 @@
     .choice {
         display: flex;
         align-items: center;
-        gap: var(--space-3);
+        gap: var(--space-4);
         width: 100%;
         min-height: var(--tap-row);
-        padding: var(--space-3) var(--space-4);
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: var(--radius-lg);
+        padding: var(--space-4);
+        background: transparent;
         text-align: left;
         transition: background var(--dur-fast) var(--ease-out);
     }
 
     .choice:active {
         background: var(--surface-2);
-    }
-
-    .choice + .choice {
-        margin-top: var(--space-2);
     }
 
     .choice__body {
@@ -53,20 +45,14 @@
     }
 
     .choice__meta {
+        margin-top: 2px;
         font-size: var(--text-sm);
         color: var(--text-muted);
     }
 
     .choice__chevron {
         flex: none;
-        color: var(--text-muted);
+        color: var(--text-faint);
         font-size: var(--text-lg);
-    }
-
-    /* Linha de acesso à fila, em home: a fila deixa de ser alcançável só pela
-       pastilha da barra de topo. */
-    .choice--quiet {
-        background: transparent;
-        border-style: dashed;
     }
 }

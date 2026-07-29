@@ -53,13 +53,15 @@
     }
 
     /* --- cartão do próximo ponto --- */
+    /* Sem borda: o preenchimento tingido já separa o cartão do fundo, e o
+       contorno só somava mais uma moldura. */
     .now {
         display: flex;
         gap: var(--space-4);
-        padding: var(--space-5) var(--space-4);
+        padding: var(--space-5);
         background: var(--accent-quiet);
-        border: 1px solid var(--accent);
         border-radius: var(--radius-lg);
+        text-align: left;
     }
 
     .now__position {
@@ -111,8 +113,9 @@
 
     .now__instruction {
         margin-top: var(--space-3);
-        padding-top: var(--space-3);
-        border-top: 1px solid var(--accent);
+        padding: var(--space-3);
+        border-radius: var(--radius-sm);
+        background: var(--surface);
         font-size: var(--text-base);
         color: var(--text);
     }

@@ -53,6 +53,26 @@ mesma largura, 4px abaixo do botão de pânico.
 **Alvos de toque:** 56px na ação primária, 48px no restante, 64px em linha de lista. O degrau de
 44px foi extinto.
 
+## Menos molduras
+
+A primeira versão do redesenho usava cartão com borda para tudo: a tela inicial chegava a quatro
+contêineres empilhados, e cada item de lista era uma caixa própria com 8px de respiro — seis
+pontos de ronda viravam seis molduras.
+
+Agora vale a regra oposta: **irmãos dividem um contêiner e se separam por um fio interno leve**
+(`group`), e informação simples vira linha (`row`) em vez de cartão inteiro. O `card` ficou
+reservado ao que é de fato um objeto destacado — o cartão do próximo ponto e os avisos
+persistentes.
+
+Campos de formulário são preenchidos e **sem borda**: já se distinguem do fundo pela superfície,
+e um contorno em cada um devolveria as molduras que saíram. Erro de validação vira uma barra
+lateral por `box-shadow`, não mais uma borda.
+
+Os botões secundários também trocaram contorno por **preenchimento suave** — botão com borda é
+mais uma moldura. O contorno some da interface quase por completo; só a ação principal recebe
+elevação, que é o que a destaca sem desenhar nada em volta. O toque afunda o botão em vez de
+encolhê-lo: com o dedo cobrindo o alvo, o deslocamento vertical é mais perceptível.
+
 ## Barra inferior
 
 Modelo híbrido: **abas fixas para navegar, ação principal em destaque logo acima**. Navegar e agir

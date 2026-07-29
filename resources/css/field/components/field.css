@@ -11,12 +11,13 @@
 
 @layer components {
     .field + .field {
-        margin-top: var(--space-4);
+        margin-top: var(--space-5);
     }
 
     .field__label {
         display: block;
         margin-bottom: var(--space-2);
+        padding-inline: var(--space-1);
         font-size: var(--text-sm);
         font-weight: var(--weight-semibold);
         color: var(--text);
@@ -29,13 +30,15 @@
         color: var(--text-muted);
     }
 
+    /* Preenchido, sem borda: o campo já se distingue do fundo pela superfície,
+       e uma borda em volta de cada um devolveria as molduras que saíram. */
     .field__control {
         width: 100%;
         min-height: var(--tap-lg);
-        padding: var(--space-3) var(--space-4);
-        background: var(--surface-2);
-        border: 1px solid var(--border);
-        border-radius: var(--radius-lg);
+        padding: var(--space-4);
+        background: var(--surface);
+        border: 0;
+        border-radius: var(--radius-md);
         color: var(--text);
         font-family: inherit;
         font-size: var(--text-base);
@@ -52,8 +55,7 @@
     }
 
     .field__control[aria-invalid='true'] {
-        border-color: var(--critical-text);
-        border-left-width: 4px;
+        box-shadow: inset 4px 0 0 var(--critical-text);
     }
 
     .field__hint {
@@ -92,7 +94,6 @@
         flex: none;
         object-fit: cover;
         border-radius: var(--radius-md);
-        border: 1px solid var(--border);
         background: var(--surface-2);
     }
 

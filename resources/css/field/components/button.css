@@ -5,6 +5,10 @@
  * especificidade (0,1,0), e nenhum seletor descendente define tamanho — é o
  * que impede a cascata de correções que existia antes.
  *
+ * As variantes secundárias usam PREENCHIMENTO SUAVE, não contorno: um botão
+ * com borda é mais uma moldura na tela, e a interface já tinha molduras
+ * demais. O contorno ficou só para o que precisa se anunciar como destrutivo.
+ *
  * Em operação demorada usamos aria-disabled com guarda em JS, e não o atributo
  * disabled: o botão continua focável e a mudança é anunciada pelo leitor de
  * tela. `disabled` de verdade fica só para pré-condição não atendida, como
@@ -20,25 +24,31 @@
         width: 100%;
         min-height: var(--tap-lg);
         padding-inline: var(--space-5);
-        border-radius: var(--radius-lg);
+        border-radius: var(--radius-md);
         background: var(--surface-2);
         color: var(--text);
         font-size: var(--text-base);
         font-weight: var(--weight-semibold);
         line-height: var(--leading-tight);
+        letter-spacing: 0.005em;
         text-align: center;
         text-decoration: none;
-        transition: background var(--dur-fast) var(--ease-out),
-            transform var(--dur-fast) var(--ease-out);
+        transition:
+            background var(--dur-fast) var(--ease-out),
+            transform var(--dur-fast) var(--ease-out),
+            box-shadow var(--dur-fast) var(--ease-out);
     }
 
+    /* Afunda em vez de encolher: com o dedo cobrindo o botão, o deslocamento
+       vertical é mais perceptível que a mudança de escala. */
     .btn:active {
-        transform: scale(0.985);
+        transform: translateY(1px);
     }
 
     .btn[disabled],
     .btn[aria-disabled='true'] {
-        opacity: 0.55;
+        opacity: 0.5;
+        box-shadow: none;
     }
 
     .btn[aria-disabled='true'] {
@@ -46,36 +56,37 @@
     }
 
     /* --- variantes --- */
+
+    /* A única com elevação: é o que a destaca sem mais uma borda na tela. */
     .btn--primary {
         background: var(--accent);
         color: var(--accent-on);
+        box-shadow: var(--shadow-btn);
+        font-weight: var(--weight-bold);
+    }
+
+    .btn--primary:active {
+        box-shadow: none;
     }
 
     .btn--secondary {
-        background: transparent;
-        border: 1px solid var(--border-strong);
+        background: var(--surface-2);
         color: var(--text);
     }
 
-    /* Ação destrutiva. Deliberadamente NÃO usa fundo vermelho: no rodapé ela
-       aparece logo abaixo do botão de emergência, e dois blocos vermelhos da
-       mesma largura, a 8px um do outro, é um erro esperando acontecer. */
+    /* Ação destrutiva. Deliberadamente NÃO usa fundo vermelho cheio: o botão
+       de emergência é o único vermelho preenchido da interface. */
     .btn--critical {
-        background: transparent;
-        border: 1px solid var(--border-strong);
+        background: var(--critical-quiet);
         color: var(--critical-text);
     }
 
-    .btn--critical:active {
-        background: var(--critical-quiet);
-    }
-
-    /* Vermelho preenchido existe aqui e no overlay de pânico. Em nenhum outro
-       lugar — ver tokens.css e o teste que garante a exclusividade. */
+    /* Vermelho preenchido existe aqui e no botão flutuante de emergência. Em
+       nenhum outro lugar — ver tokens.css e o teste que garante a
+       exclusividade. */
     .btn--emergency {
         background: var(--emergency);
         color: var(--emergency-on);
-        border: 2px solid var(--emergency-edge);
         font-weight: var(--weight-bold);
         letter-spacing: 0.03em;
     }
@@ -83,6 +94,11 @@
     .btn--ghost {
         background: transparent;
         color: var(--text-muted);
+        font-weight: var(--weight-medium);
+    }
+
+    .btn--ghost:active {
+        background: var(--surface-2);
     }
 
     /* --- tamanhos --- */
@@ -91,7 +107,7 @@
         width: auto;
         padding-inline: var(--space-4);
         font-size: var(--text-sm);
-        border-radius: var(--radius-md);
+        border-radius: var(--radius-sm);
     }
 
     .btn--icon {
@@ -99,7 +115,7 @@
         min-width: var(--tap-md);
         min-height: var(--tap-md);
         padding: 0;
-        border-radius: var(--radius-md);
+        border-radius: var(--radius-pill);
         font-size: var(--text-lg);
     }
 
@@ -115,7 +131,7 @@
         letter-spacing: 0.04em;
     }
 
-    /* Rótulo secundário dentro do botão: "Ler QR" + "P-04". */
+    /* Rótulo secundário dentro do botão: "Ler QR" + "PC-04". */
     .btn__hint {
         font-weight: var(--weight-regular);
         opacity: 0.85;

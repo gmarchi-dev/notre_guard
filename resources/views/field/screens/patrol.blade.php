@@ -49,9 +49,12 @@
             </div>
         </template>
 
-        <div>
-            <h2 class="section-label">Pontos do roteiro</h2>
-            <div class="spine mt-3">
+        <section class="section">
+            <div class="section__head">
+                <h2 class="section__title">Pontos do roteiro</h2>
+            </div>
+
+            <div class="spine">
                 <template x-for="item in routeCheckpoints" :key="item.checkpoint_id">
                     <button type="button"
                             class="spine__item"
@@ -67,7 +70,7 @@
                     </button>
                 </template>
             </div>
-        </div>
+        </section>
 
         {{-- No fim do roteiro, onde a ação faz sentido depois de percorrer a
              lista. O dock guarda só a ação principal. --}}

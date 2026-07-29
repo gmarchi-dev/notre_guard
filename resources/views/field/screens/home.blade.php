@@ -1,10 +1,9 @@
 {{--
     Tela inicial.
 
-    As ações primárias saíram de dentro do conteúdo (onde eram botões de 44px
-    encostados à direita) e viraram linhas de escolha de 64px, com a linha
-    inteira tocável. A ação de encerrar e a de ocorrência ficam no rodapé, ao
-    alcance do polegar.
+    Antes eram quatro contêineres com borda empilhados, mais uma caixa por item
+    de lista. Agora cada seção é um agrupamento único com fios internos: uma
+    superfície contínua no lugar de vários blocos.
 --}}
 <template x-if="screen === 'home'">
     <div class="stack">
@@ -28,11 +27,15 @@
         </template>
 
         <template x-if="!shift">
-            <div>
-                <h2 class="section-label">Assumir posto</h2>
-                <div class="mt-3">
+            <section class="section">
+                <div class="section__head">
+                    <h2 class="section__title">Assumir posto</h2>
+                </div>
+
+                <div class="group">
                     <template x-for="post in (data?.posts ?? [])" :key="post.id">
-                        <button type="button" class="choice" @click="startShift(post.id)" :aria-disabled="busy">
+                        <button type="button" class="choice" @click="startShift(post.id)"
+                                :aria-disabled="busy">
                             <span class="choice__body">
                                 <span class="choice__title" x-text="post.name"></span>
                                 <span class="choice__meta" x-text="postKindLabel(post.kind)"></span>
@@ -40,27 +43,38 @@
                             <span class="choice__chevron" aria-hidden="true">›</span>
                         </button>
                     </template>
+
                     <template x-if="(data?.posts ?? []).length === 0">
-                        <p class="muted">Nenhum posto disponível. Fale com a supervisão.</p>
+                        <p class="row muted">Nenhum posto disponível. Fale com a supervisão.</p>
                     </template>
                 </div>
-            </div>
+            </section>
         </template>
 
         <template x-if="shift">
             <div class="stack">
-                <div class="card">
-                    <h2 class="section-label">Turno em andamento</h2>
-                    <p class="card__title mt-2" x-text="post?.name ?? 'Posto'"></p>
-                    <p class="card__meta">Desde <time x-text="formatTime(shift.started_at)"></time></p>
+                {{-- Duas informações não precisam de um cartão inteiro. --}}
+                <div class="group">
+                    <div class="row">
+                        <span class="row__label">Posto</span>
+                        <span class="row__value" x-text="post?.name ?? '—'"></span>
+                    </div>
+                    <div class="row">
+                        <span class="row__label">Em serviço desde</span>
+                        <time class="row__value numeric" x-text="formatTime(shift.started_at)"></time>
+                    </div>
                 </div>
 
                 <template x-if="!patrol">
-                    <div>
-                        <h2 class="section-label">Iniciar ronda</h2>
-                        <div class="mt-3">
+                    <section class="section">
+                        <div class="section__head">
+                            <h2 class="section__title">Iniciar ronda</h2>
+                        </div>
+
+                        <div class="group">
                             <template x-for="route in routes" :key="route.id">
-                                <button type="button" class="choice" @click="startPatrol(route.id)" :aria-disabled="busy">
+                                <button type="button" class="choice" @click="startPatrol(route.id)"
+                                        :aria-disabled="busy">
                                     <span class="choice__body">
                                         <span class="choice__title" x-text="route.name"></span>
                                         <span class="choice__meta numeric"
@@ -69,20 +83,25 @@
                                     <span class="choice__chevron" aria-hidden="true">›</span>
                                 </button>
                             </template>
+
                             <template x-if="routes.length === 0">
-                                <p class="muted">Nenhum roteiro cadastrado para esta unidade.</p>
+                                <p class="row muted">Nenhum roteiro cadastrado para esta unidade.</p>
                             </template>
                         </div>
-                    </div>
+                    </section>
                 </template>
 
-                <div class="card">
-                    <label class="field__label" for="handover">Passagem de serviço</label>
+                <section class="section">
+                    <div class="section__head">
+                        <h2 class="section__title">Passagem de serviço</h2>
+                        <span class="section__aside">salva no aparelho</span>
+                    </div>
+
                     <textarea class="field__control" id="handover" x-model="handoverNotes"
                               @input.debounce.600ms="persistHandover()"
+                              aria-label="Passagem de serviço"
                               placeholder="Pendências para o próximo turno"></textarea>
-                    <p class="field__hint">Salvo no aparelho enquanto você digita. Entra no encerramento do turno.</p>
-                </div>
+                </section>
             </div>
         </template>
 

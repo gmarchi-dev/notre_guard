@@ -1,0 +1,93 @@
+/*
+ * Agrupamento.
+ *
+ * Substitui a pilha de cartões com borda. Antes, a tela inicial mostrava
+ * quatro contêineres desenhados um embaixo do outro — cada item de lista era
+ * uma caixa própria, com borda e 8px de respiro. Muita moldura para pouca
+ * informação.
+ *
+ * Aqui os irmãos dividem UM contêiner e se separam por um fio interno leve. A
+ * tela passa a ter uma superfície contínua em vez de vários blocos.
+ */
+
+@layer components {
+    .group {
+        background: var(--surface);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+    }
+
+    .group > * + * {
+        border-top: 1px solid var(--divider);
+    }
+
+    /* Conjunto de campos: sem preenchimento nem fio, porque os próprios campos
+       já são superfície. Não é variante de `group` — é outra coisa, e por isso
+       tem nome próprio. */
+    .fieldset {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-5);
+    }
+
+    /* Cabeçalho de seção: um rótulo respirando acima do agrupamento, sem
+       moldura própria. */
+    .section {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+    }
+
+    .section__head {
+        display: flex;
+        align-items: baseline;
+        gap: var(--space-2);
+        padding-inline: var(--space-1);
+    }
+
+    .section__title {
+        font-size: var(--text-sm);
+        font-weight: var(--weight-semibold);
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+
+    .section__aside {
+        margin-left: auto;
+        font-size: var(--text-sm);
+        color: var(--text-faint);
+    }
+
+    /* Linha de informação dentro de um agrupamento: rótulo à esquerda, valor à
+       direita. Substitui cartões inteiros usados só para exibir dois dados. */
+    .row {
+        display: flex;
+        align-items: baseline;
+        gap: var(--space-4);
+        padding: var(--space-4);
+    }
+
+    .row__label {
+        color: var(--text-muted);
+        font-size: var(--text-sm);
+    }
+
+    .row__value {
+        margin-left: auto;
+        text-align: right;
+        font-weight: var(--weight-semibold);
+    }
+
+    .row--stacked {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-2);
+    }
+
+    .row--stacked .row__value {
+        margin-left: 0;
+        text-align: left;
+        font-weight: var(--weight-regular);
+    }
+}
