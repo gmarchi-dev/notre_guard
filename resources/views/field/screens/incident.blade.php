@@ -30,7 +30,7 @@
                             <span class="choice__meta"
                                   x-text="incidentType?.group ?? 'Cinco grupos'"></span>
                         </span>
-                        <span class="choice__chevron" aria-hidden="true">›</span>
+                        <span class="choice__chevron"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-forward"/></svg></span>
                     </button>
 
                     <p class="field__error" id="err-type" x-show="incidentErrors.incident_type_id"
@@ -59,7 +59,7 @@
                             <input class="field__file" id="incident-photo" type="file" accept="image/*"
                                    capture="environment" @change="capturePhoto($event, 'incidentPhoto')">
                             <label class="btn btn--secondary" for="incident-photo">
-                                <span aria-hidden="true">◎</span> Tirar foto
+                                <svg class="icon" aria-hidden="true"><use href="#i-camera"/></svg> Tirar foto
                             </label>
                         </div>
                     </template>
@@ -82,17 +82,17 @@
                 <div class="field">
                     <span class="field__label" id="incident-severity-label">Gravidade</span>
 
-                    <div class="segmented" role="radiogroup" aria-labelledby="incident-severity-label">
+                    <div class="scale" role="radiogroup" aria-labelledby="incident-severity-label">
                         <template x-for="level in severities" :key="level.value">
                             <button type="button" role="radio"
-                                    class="segmented__option"
-                                    :class="'segmented__option--sev-' + level.value"
+                                    class="scale__option"
+                                    :class="'scale__option--' + level.value"
                                     :aria-checked="incident.severity === level.value"
                                     :tabindex="incident.severity === level.value ? 0 : -1"
                                     @click="setSeverity(level.value)"
                                     @keydown.arrow-right.prevent="moveSeverity(1)"
                                     @keydown.arrow-left.prevent="moveSeverity(-1)">
-                                <span class="segmented__mark" aria-hidden="true" x-text="level.mark"></span>
+                                <span class="scale__dot" aria-hidden="true"></span>
                                 <span x-text="level.label"></span>
                             </button>
                         </template>

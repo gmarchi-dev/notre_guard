@@ -10,7 +10,7 @@
         <div class="toast" :class="'toast--' + toast.kind" :role="toast.kind === 'ok' ? 'status' : 'alert'">
             <div class="toast__body" x-text="toast.text"></div>
             <button type="button" class="btn btn--ghost btn--icon" @click="dismissToast(toast.id)"
-                    :aria-label="'Fechar aviso: ' + toast.text">&times;</button>
+                    :aria-label="'Fechar aviso: ' + toast.text"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
         </div>
     </template>
 </div>

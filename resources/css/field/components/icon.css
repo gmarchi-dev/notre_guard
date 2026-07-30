@@ -1,0 +1,52 @@
+/*
+ * Ícones.
+ *
+ * Um só peso de traço para o app inteiro. Substituem os glifos de texto, que
+ * dependiam da fonte do sistema: mudavam de desenho entre Android e iOS e não
+ * tinham caixa previsível - o "⚠" media 19x22 e sentava alto dentro do círculo
+ * do botão de emergência.
+ *
+ * `display: block` importa: como inline, o SVG herdaria o espaço de descida da
+ * linha de texto e voltaria a desalinhar dentro de qualquer contêiner centrado.
+ */
+
+@layer components {
+    /* O sprite não é para ser visto: fica fora de fluxo, sem ocupar espaço. */
+    .icons {
+        position: absolute;
+        width: 0;
+        height: 0;
+        overflow: hidden;
+    }
+
+    .icon {
+        display: block;
+        width: var(--icon-md);
+        height: var(--icon-md);
+        flex: none;
+        /* O traço acompanha a cor do texto de quem o contém. */
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .icon--sm {
+        width: var(--icon-sm);
+        height: var(--icon-sm);
+    }
+
+    .icon--lg {
+        width: var(--icon-lg);
+        height: var(--icon-lg);
+        stroke-width: 1.75;
+    }
+
+    /* Preenchido: a aba ativa e o tema noturno usam a mesma forma em versão
+       sólida, para que a distinção não dependa só de cor. */
+    .icon--solid {
+        fill: currentColor;
+        stroke: none;
+    }
+}

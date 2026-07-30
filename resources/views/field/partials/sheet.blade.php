@@ -65,8 +65,11 @@
                                                 <span class="choice__meta" x-text="item.meta"></span>
                                             </template>
                                         </span>
-                                        <span class="choice__chevron" aria-hidden="true"
-                                              x-text="item.leaf ? '' : '›'"></span>
+                                        <template x-if="!item.leaf">
+                                            <span class="choice__chevron">
+                                                <svg class="icon icon--sm" aria-hidden="true"><use href="#i-forward"/></svg>
+                                            </span>
+                                        </template>
                                     </button>
                                 </template>
                             </div>

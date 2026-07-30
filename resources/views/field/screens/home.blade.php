@@ -16,7 +16,7 @@
              e iniciar outra sobrescrevia a anterior sem encerrá-la. --}}
         <template x-if="patrol">
             <button type="button" class="now" @click="resumePatrol()">
-                <span class="now__position" aria-hidden="true">▸</span>
+                <span class="now__position"><svg class="icon icon--lg" aria-hidden="true"><use href="#i-play"/></svg></span>
                 <span class="now__body">
                     <span class="now__eyebrow">Ronda em andamento</span>
                     <span class="card__title" x-text="route?.name ?? 'Roteiro'"></span>
@@ -40,7 +40,7 @@
                                 <span class="choice__title" x-text="post.name"></span>
                                 <span class="choice__meta" x-text="postKindLabel(post.kind)"></span>
                             </span>
-                            <span class="choice__chevron" aria-hidden="true">›</span>
+                            <span class="choice__chevron"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-forward"/></svg></span>
                         </button>
                     </template>
 
@@ -82,7 +82,7 @@
                                         <span class="choice__meta numeric"
                                               x-text="route.checkpoints.length + ' pontos · ' + route.expected_duration_min + ' min'"></span>
                                     </span>
-                                    <span class="choice__chevron" aria-hidden="true">›</span>
+                                    <span class="choice__chevron"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-forward"/></svg></span>
                                 </button>
                             </template>
 

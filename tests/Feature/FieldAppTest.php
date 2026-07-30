@@ -89,7 +89,7 @@ class FieldAppTest extends TestCase
 
         // Componentes que definem alvo de toque. Um botão fora desta lista não
         // tem tamanho garantido por nada.
-        $sized = 'btn|chip|segmented__option|choice|spine__item|now|tabbar__item|fab|appbar__back';
+        $sized = 'btn|chip|segmented__option|scale__option|choice|spine__item|now|tabbar__item|fab|appbar__back';
 
         foreach ($matches[0] as $button) {
             $this->assertMatchesRegularExpression(
@@ -117,11 +117,58 @@ class FieldAppTest extends TestCase
         // "Crítica" é o extremo da escala, mas um segundo bloco vermelho cheio
         // na tela rouba do botão de emergência exatamente o significado que ele
         // precisa ter. A distinção vem do contorno e do sinal.
-        $css = File::get(resource_path('css/field/components/segmented.css'));
+        $css = File::get(resource_path('css/field/components/scale.css'));
 
-        $this->assertStringContainsString('.segmented__option--sev-critical', $css);
         $this->assertStringNotContainsString('background: var(--emergency)', $css);
-        $this->assertStringNotContainsString('background: var(--critical-text)', $css);
+
+        // O que importa é o estado MARCADO da opção: ali o preenchimento tem de
+        // ser o vermelho suave. O ponto de 8px em vermelho forte é a rampa da
+        // escala, não um bloco - e é o que mantém a intensidade legível.
+        $this->assertMatchesRegularExpression(
+            "/\.scale__option--critical\[aria-checked='true'\]\s*\{[^}]*background:\s*var\(--critical-quiet\)/s",
+            $css,
+            'a gravidade crítica virou bloco vermelho e passou a competir com a emergência.',
+        );
+    }
+
+    public function test_icons_are_drawn_not_typed(): void
+    {
+        // Glifo de texto depende da fonte do sistema: muda de desenho, de peso
+        // e de largura entre Android e iOS, e não tem caixa previsível. O "⚠"
+        // do botão de emergência media 19x22 e sentava alto dentro do círculo.
+        $glifos = ['⌂', '◎', '✎', '⚠', '▸', '⋯', '‹', '›', '☀', '☾', '◐', '↑'];
+
+        foreach (File::allFiles(resource_path('views/field')) as $arquivo) {
+            if ($arquivo->getFilename() === 'icons.blade.php') {
+                continue;
+            }
+
+            $conteudo = File::get($arquivo->getPathname());
+
+            foreach ($glifos as $glifo) {
+                $this->assertStringNotContainsString(
+                    $glifo,
+                    $conteudo,
+                    "{$arquivo->getFilename()} voltou a desenhar ícone com caractere de texto ({$glifo}).",
+                );
+            }
+        }
+    }
+
+    public function test_every_icon_reference_resolves_to_a_symbol(): void
+    {
+        // Um <use> apontando para símbolo inexistente não dá erro: renderiza
+        // vazio. O ícone some e nada avisa.
+        $html = $this->fieldHtml();
+
+        preg_match_all('/<use[^>]*href="#(i-[\w-]+)"/', $html, $usos);
+        preg_match_all('/<symbol id="(i-[\w-]+)"/', $html, $simbolos);
+
+        $this->assertNotEmpty($simbolos[1], 'o conjunto de ícones não foi incluído na página.');
+
+        foreach (array_unique($usos[1]) as $id) {
+            $this->assertContains($id, $simbolos[1], "ícone #{$id} referenciado mas não definido.");
+        }
     }
 
     // ------------------------------------------------------------- temas

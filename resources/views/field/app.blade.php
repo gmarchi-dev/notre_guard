@@ -33,6 +33,8 @@
     @vite(['resources/css/field.css', 'resources/js/field/app.js'])
 </head>
 <body>
+@include('field.partials.icons')
+
 <div class="app" x-data="fieldApp" x-cloak>
 
     @include('field.partials.appbar')

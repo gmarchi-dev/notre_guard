@@ -27,7 +27,7 @@
             </template>
         </div>
         <button type="button" class="btn btn--ghost btn--icon" @click="dismissPanicState()"
-                aria-label="Fechar aviso de emergência">&times;</button>
+                aria-label="Fechar aviso de emergência"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
     </div>
 </template>
 
@@ -37,6 +37,6 @@
             <span x-text="'Roteiro carregado ' + dataAgeLabel() + '. Sem contato com o servidor desde então.'"></span>
         </div>
         <button type="button" class="btn btn--ghost btn--icon" @click="refreshData({ force: true })"
-                aria-label="Tentar atualizar os dados">&#8635;</button>
+                aria-label="Tentar atualizar os dados"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg></button>
     </div>
 </template>

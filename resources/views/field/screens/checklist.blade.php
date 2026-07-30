@@ -49,7 +49,7 @@
                                     @click="checklistAnswers[index].answer = 'conforming'"
                                     @keydown.arrow-right.prevent="checklistAnswers[index].answer = 'nonconforming'"
                                     @keydown.arrow-left.prevent="checklistAnswers[index].answer = 'not_applicable'">
-                                <span class="segmented__mark" aria-hidden="true">✓</span>
+                                <svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg>
                                 <span>Conforme</span>
                             </button>
 
@@ -60,7 +60,7 @@
                                     @click="checklistAnswers[index].answer = 'nonconforming'"
                                     @keydown.arrow-right.prevent="checklistAnswers[index].answer = 'not_applicable'"
                                     @keydown.arrow-left.prevent="checklistAnswers[index].answer = 'conforming'">
-                                <span class="segmented__mark" aria-hidden="true">!</span>
+                                <svg class="icon icon--sm" aria-hidden="true"><use href="#i-alert"/></svg>
                                 <span>Não conforme</span>
                             </button>
 
@@ -71,7 +71,7 @@
                                     @click="checklistAnswers[index].answer = 'not_applicable'"
                                     @keydown.arrow-right.prevent="checklistAnswers[index].answer = 'conforming'"
                                     @keydown.arrow-left.prevent="checklistAnswers[index].answer = 'nonconforming'">
-                                <span class="segmented__mark" aria-hidden="true">–</span>
+                                <svg class="icon icon--sm" aria-hidden="true"><use href="#i-minus"/></svg>
                                 <span>Não se aplica</span>
                             </button>
                         </div>
@@ -101,7 +101,7 @@
                     <input class="field__file" id="checkpoint-photo" type="file" accept="image/*"
                            capture="environment" @change="capturePhoto($event, 'checklistPhoto')">
                     <label class="btn btn--secondary" for="checkpoint-photo">
-                        <span aria-hidden="true">◎</span> Tirar foto
+                        <svg class="icon" aria-hidden="true"><use href="#i-camera"/></svg> Tirar foto
                     </label>
                 </div>
             </template>

@@ -11,7 +11,7 @@
         {{-- Emergência: único elemento circular e único vermelho preenchido da
              interface. Ancorado ao dock, sobe junto com a faixa de ação. --}}
         <button type="button" class="fab" @click="askPanic()" aria-label="Acionar emergência">
-            <span class="fab__glyph" aria-hidden="true">⚠</span>
+            <svg class="icon" aria-hidden="true"><use href="#i-sos"/></svg>
             <span class="fab__label" aria-hidden="true">SOS</span>
         </button>
 

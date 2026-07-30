@@ -153,6 +153,11 @@
         --ease-out: cubic-bezier(0.2, 0, 0, 1);
         --ease-spring: cubic-bezier(0.2, 0.8, 0.2, 1);
 
+        /* ------------------------------------------------------ ícone */
+        --icon-sm: 18px;
+        --icon-md: 22px;
+        --icon-lg: 26px;
+
         /* ---------------------------------------------- alvo de toque */
         /* Três tamanhos. O de 44px deixou de existir de propósito. */
         --tap-lg: 56px;

@@ -13,7 +13,7 @@
     {{-- Nos subfluxos a barra de abas some; esta seta é o caminho de volta. --}}
     <template x-if="showBack()">
         <button type="button" class="appbar__back" @click="goBack()" aria-label="Voltar">
-            <span aria-hidden="true">‹</span>
+            <svg class="icon" aria-hidden="true"><use href="#i-back"/></svg>
         </button>
     </template>
 
@@ -40,6 +40,6 @@
     <button type="button" class="btn btn--ghost btn--icon"
             @click="openThemeSheet()"
             :aria-label="'Aparência: ' + themeLabel() + '. Toque para trocar.'">
-        <span aria-hidden="true" x-text="themeMark()"></span>
+        <svg class="icon" aria-hidden="true"><use :href="themeIcon()"/></svg>
     </button>
 </header>

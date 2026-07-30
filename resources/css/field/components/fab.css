@@ -14,14 +14,25 @@
  */
 
 @layer components {
+    /*
+     * `flex` com `justify-content: center`, e não `grid` com `place-items`.
+     *
+     * Era esta a origem do desalinhamento: com duas linhas automáticas dentro
+     * de uma altura fixa, o grid ESTICA as linhas para preencher o círculo e
+     * centra cada item na sua própria faixa. O resultado é que o `gap: 2px`
+     * declarado aparecia como 15,4px na tela, e ícone e rótulo flutuavam soltos
+     * em vez de formarem um par.
+     */
     .fab {
         position: absolute;
         bottom: calc(100% + var(--space-3));
         right: var(--space-4);
         z-index: var(--z-footer);
-        display: grid;
-        place-items: center;
-        gap: 2px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
         width: var(--tap-row);
         height: var(--tap-row);
         border-radius: 50%;
@@ -37,15 +48,10 @@
         transform: scale(0.94);
     }
 
-    .fab__glyph {
-        font-size: var(--text-xl);
-        line-height: 1;
-    }
-
     .fab__label {
-        font-size: 10px;
-        font-weight: var(--weight-bold);
-        letter-spacing: 0.06em;
+        font-size: 11px;
+        font-weight: var(--weight-black);
+        letter-spacing: 0.08em;
         line-height: 1;
     }
 }

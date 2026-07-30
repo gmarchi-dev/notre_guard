@@ -25,10 +25,10 @@ const SCREENS = ['boot', 'login', 'home', 'patrol', 'scan', 'checklist', 'incide
  * retorno é a seta do cabeçalho.
  */
 const TABS = [
-    { id: 'home', label: 'Início', glyph: '⌂' },
-    { id: 'patrol', label: 'Ronda', glyph: '◎' },
-    { id: 'incident', label: 'Ocorrência', glyph: '✎' },
-    { id: 'queue', label: 'Fila', glyph: '↑' },
+    { id: 'home', label: 'Início' },
+    { id: 'patrol', label: 'Ronda' },
+    { id: 'incident', label: 'Ocorrência' },
+    { id: 'queue', label: 'Fila' },
 ]
 
 const SUBFLOWS = ['scan', 'checklist']
@@ -160,10 +160,10 @@ function fieldApp() {
 
         // ------------------------------------------------------------- tema
         themes: [
-            { value: 'system', label: 'Sistema', mark: '◐', hint: 'segue o aparelho' },
-            { value: 'light', label: 'Claro', mark: '☀', hint: 'sol direto, turno diurno' },
-            { value: 'dark', label: 'Escuro', mark: '☾', hint: 'pouca luz, contraste alto' },
-            { value: 'night', label: 'Noturno', mark: '●', hint: 'preserva a visão noturna' },
+            { value: 'system', label: 'Sistema', hint: 'segue o aparelho' },
+            { value: 'light', label: 'Claro', hint: 'sol direto, turno diurno' },
+            { value: 'dark', label: 'Escuro', hint: 'pouca luz, contraste alto' },
+            { value: 'night', label: 'Noturno', hint: 'preserva a visão noturna' },
         ],
 
         /**
@@ -185,8 +185,9 @@ function fieldApp() {
             this.syncThemeColor()
         },
 
-        themeMark() {
-            return this.themes.find((t) => t.value === this.theme)?.mark ?? '◐'
+        /** Id do ícone do tema em uso — ver partials/icons.blade.php. */
+        themeIcon() {
+            return `#i-theme-${this.theme}`
         },
 
         themeLabel() {
@@ -210,7 +211,7 @@ function fieldApp() {
                         label: 'Tema',
                         items: this.themes.map((option) => ({
                             value: option.value,
-                            title: `${option.mark}  ${option.label}`,
+                            title: option.label,
                             meta: option.value === this.theme ? 'em uso' : option.hint,
                             leaf: true,
                         })),

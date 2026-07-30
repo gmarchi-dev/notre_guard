@@ -22,12 +22,14 @@
 @import './field/fonts.css';
 @import './field/base.css';
 @import './field/layout.css';
+@import './field/components/icon.css';
 @import './field/components/button.css';
 @import './field/components/card.css';
 @import './field/components/group.css';
 @import './field/components/list.css';
 @import './field/components/field.css';
 @import './field/components/segmented.css';
+@import './field/components/scale.css';
 @import './field/components/sheet.css';
 @import './field/components/spine.css';
 @import './field/components/toast.css';

@@ -1,0 +1,93 @@
+/*
+ * Escala de gravidade.
+ *
+ * Deixou de ser um segmented de quatro colunas iguais. Naquele modelo cada
+ * opção ficava presa a 80px numa tela de 375, "Crítica" quase encostava nas
+ * bordas, e as quatro tinham exatamente o mesmo peso visual - o que é justo o
+ * contrário do que uma escala precisa comunicar.
+ *
+ * Aqui as opções são pastilhas dimensionadas pelo CONTEÚDO, na mesma linguagem
+ * arredondada dos botões, e trazem um ponto colorido que sobe de intensidade.
+ * A rampa se lê antes da leitura do texto.
+ *
+ * "Crítica" continua sem bloco vermelho preenchido: vermelho cheio pertence ao
+ * botão de emergência, e um segundo bloco vermelho na tela roubaria dele o
+ * significado. Ela se distingue pelo contorno e pelo ponto mais forte.
+ */
+
+@layer components {
+    .scale {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-2);
+    }
+
+    .scale__option {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        min-height: var(--tap-md);
+        padding-inline: var(--space-3);
+        border-radius: var(--radius-pill);
+        background: var(--surface);
+        color: var(--text-muted);
+        font-size: var(--text-sm);
+        font-weight: var(--weight-semibold);
+        white-space: nowrap;
+        transition:
+            background var(--dur-fast) var(--ease-out),
+            color var(--dur-fast) var(--ease-out);
+    }
+
+    /* O ponto é o que carrega a rampa; o preenchimento da pastilha só confirma
+       a escolha. Assim a intensidade continua legível nas quatro, marcada ou
+       não - e a distinção nunca depende só de cor, porque a marcada também
+       muda de fundo e de peso. */
+    .scale__dot {
+        width: 8px;
+        height: 8px;
+        flex: none;
+        border-radius: 50%;
+        background: currentColor;
+    }
+
+    .scale__option--low .scale__dot {
+        background: var(--text-faint);
+    }
+
+    .scale__option--medium .scale__dot {
+        background: var(--accent);
+    }
+
+    .scale__option--high .scale__dot {
+        background: var(--warning);
+    }
+
+    .scale__option--critical .scale__dot {
+        background: var(--critical-text);
+    }
+
+    .scale__option[aria-checked='true'] {
+        background: var(--surface-2);
+        color: var(--text);
+        box-shadow: inset 0 0 0 2px var(--border-strong);
+    }
+
+    .scale__option--medium[aria-checked='true'] {
+        background: var(--accent-quiet);
+        color: var(--accent-text);
+        box-shadow: inset 0 0 0 2px var(--accent);
+    }
+
+    .scale__option--high[aria-checked='true'] {
+        background: var(--warning-quiet);
+        color: var(--warning-text);
+        box-shadow: inset 0 0 0 2px var(--warning);
+    }
+
+    .scale__option--critical[aria-checked='true'] {
+        background: var(--critical-quiet);
+        color: var(--critical-text);
+        box-shadow: inset 0 0 0 2px var(--critical-text);
+    }
+}

@@ -128,6 +128,42 @@ O que mudou, e por quê:
 - **Hierarquia tipográfica.** O título da tela subiu de 22 para 26px: contra os 17px do corpo, a
   diferença anterior não chegava a criar níveis.
 
+### Ícones desenhados, não digitados
+
+Os ícones eram glifos de texto - `⌂ ◎ ✎ ↑ ⚠ ‹ ›`. Dependiam da fonte do sistema: mudavam de
+desenho, de peso e de largura entre Android e iOS, e, o que mais importa, **não tinham caixa
+previsível**. Agora são um sprite SVG inline (`partials/icons.blade.php`), traço de 2px em grade de
+24, um só peso para o app inteiro. Inline e não arquivo externo porque `<use href>` entre
+documentos não funciona sem rede.
+
+Dois testes cobrem isso: nenhum glifo de texto volta às views, e todo `<use>` resolve para um
+`<symbol>` existente - um `<use>` órfão não dá erro, apenas renderiza vazio.
+
+### Barra inferior
+
+O indicador da aba ativa era um traço posicionado por margem negativa, fora de fluxo e sem relação
+com o alvo que marcava. Virou uma **pastilha atrás do ícone**: fica no lugar certo, acompanha o item
+e dá âncora para o contador de pendências, que agora inverte de cor sobre a pastilha preenchida.
+
+### Gravidade: de colunas para escala
+
+O segmented de quatro colunas iguais prendia cada opção a 80px numa tela de 375 e dava às quatro
+**exatamente o mesmo peso visual** - o contrário do que uma escala precisa comunicar. Virou uma fila
+de pastilhas dimensionadas pelo conteúdo, cada uma com um ponto colorido que sobe de intensidade: a
+rampa se lê antes do texto. Cabe em uma linha (338px de 343) e quebra sozinha em telas menores.
+
+"Crítica" continua **sem bloco vermelho preenchido**: vermelho cheio pertence à emergência. O ponto
+de 8px em vermelho forte é a rampa; o preenchimento da pastilha marcada é o vermelho suave. O teste
+foi refeito para exigir exatamente isso, em vez de proibir a cor por inteiro.
+
+### O botão de SOS
+
+O relato era "desalinhado", e a medição achou a causa: `display: grid` com duas linhas automáticas
+dentro de uma altura fixa **estica as linhas** para preencher o círculo e centra cada item na sua
+faixa. O `gap: 2px` declarado aparecia como **15,4px** na tela, e ícone e rótulo flutuavam soltos em
+vez de formarem um par. Virou `flex` com `justify-content: center`: vão real de 3px, conteúdo
+centrado no círculo.
+
 ### O defeito que a medição encontrou
 
 `.fieldset` tem `gap` e `.field + .field` tinha `margin-top`. **As duas regras se somavam**: o vão

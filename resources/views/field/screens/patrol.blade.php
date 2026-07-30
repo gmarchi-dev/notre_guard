@@ -33,7 +33,7 @@
                      distância este botão impunha seus 48px ao bloco inteiro. --}}
                 <button type="button" class="btn btn--ghost btn--icon now__refresh"
                         @click="locate()" :aria-busy="locating"
-                        aria-label="Medir a distância até o próximo ponto">&#8635;</button>
+                        aria-label="Medir a distância até o próximo ponto"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg></button>
 
                 <div class="now__body">
                     <p class="now__eyebrow">Próximo ponto</p>
@@ -66,7 +66,7 @@
 
         <template x-if="!nextCheckpoint">
             <div class="now now--done">
-                <span class="now__position" aria-hidden="true">✓</span>
+                <span class="now__position"><svg class="icon icon--lg" aria-hidden="true"><use href="#i-check"/></svg></span>
                 <div class="now__body">
                     <p class="now__eyebrow">Roteiro completo</p>
                     <p class="card__title mt-2">Todos os pontos foram registrados. Encerre a ronda.</p>
@@ -91,7 +91,7 @@
                             <span class="spine__code" x-text="item.checkpoint.code"></span>
                             <span class="spine__name" x-text="item.checkpoint.name"></span>
                         </span>
-                        <span class="choice__chevron" aria-hidden="true" x-show="!item.done">⋯</span>
+                        <span class="choice__chevron" x-show="!item.done"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-more"/></svg></span>
                     </button>
                 </template>
             </div>
