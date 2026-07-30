@@ -22,7 +22,7 @@ use Tests\Feature\Api\SyncTestCase;
 
 /**
  * Expurgo é código destrutivo: o que ele apaga não volta. Os testes cobrem
- * tanto o que precisa sair quanto — principalmente — o que precisa ficar.
+ * tanto o que precisa sair quanto - principalmente - o que precisa ficar.
  */
 class RetentionPurgeTest extends SyncTestCase
 {
@@ -233,7 +233,7 @@ class RetentionPurgeTest extends SyncTestCase
     public function test_purged_report_stops_reporting_false_late_records(): void
     {
         // Sem a marca data_purged_at, todo RDO antigo acusaria "chegaram
-        // registros depois do fechamento" — um falso alarme permanente.
+        // registros depois do fechamento" - um falso alarme permanente.
         $date = now()->subMonths(14);
         $this->shiftAt($date, withEvidence: false);
 

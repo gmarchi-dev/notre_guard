@@ -2,7 +2,7 @@
     Realce da chave atrasada no quadro.
 
     Vai inline num render hook, e não como tema Vite do Filament, de propósito:
-    um tema exigiria pipeline de build própria e `filament:assets` no deploy —
+    um tema exigiria pipeline de build própria e `filament:assets` no deploy -
     custo desproporcional para uma dúzia de linhas. Se um dia a portaria pedir
     identidade visual própria, aí sim vale o tema.
 

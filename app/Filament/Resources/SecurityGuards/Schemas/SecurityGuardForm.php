@@ -90,7 +90,7 @@ class SecurityGuardForm
                     TextInput::make('refresher_valid_until')
                         ->label('Reciclagem válida até')
                         ->type('date')
-                        ->helperText('Exigência da Lei 14.967/2024. Vencida, não bloqueia o app — apenas alerta.'),
+                        ->helperText('Exigência da Lei 14.967/2024. Vencida, não bloqueia o app - apenas alerta.'),
 
                     Toggle::make('active')
                         ->label('Ativo')

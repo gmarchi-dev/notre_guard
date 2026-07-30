@@ -35,7 +35,7 @@ class EditDailyReport extends EditRecord
         if (app(DailyReportBuilder::class)->hasLateRecords($report)) {
             // Aparelho que ficou dias sem rede faz registros chegarem depois do
             // fechamento. O documento continua válido, mas deixou de refletir o
-            // que existe hoje — e quem lê precisa saber disso.
+            // que existe hoje - e quem lê precisa saber disso.
             Notification::make()
                 ->title('Registros chegaram após o fechamento')
                 ->body('O conteúdo atual desta data não bate mais com o selo do RDO fechado. Considere reabrir e fechar de novo.')

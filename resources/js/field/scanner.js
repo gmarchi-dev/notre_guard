@@ -3,7 +3,7 @@ import jsQR from 'jsqr'
 /**
  * Leitor de QR Code.
  *
- * Usa BarcodeDetector quando existe (Chrome/Android — muito mais rápido e com
+ * Usa BarcodeDetector quando existe (Chrome/Android - muito mais rápido e com
  * menos bateria) e cai para jsQR sobre canvas no resto, principalmente iOS.
  */
 export class QrScanner {
@@ -101,6 +101,6 @@ export function confirmFeedback() {
         oscillator.start()
         oscillator.stop(audio.currentTime + 0.12)
     } catch {
-        // Sem áudio disponível — a vibração já basta.
+        // Sem áudio disponível - a vibração já basta.
     }
 }

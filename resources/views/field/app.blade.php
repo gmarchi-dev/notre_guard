@@ -12,7 +12,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="/manifest.webmanifest">
     <link rel="apple-touch-icon" href="/icons/notre-guard-192.png">
-    <title>Notre Guard — Campo</title>
+    <title>Notre Guard - Campo</title>
 
     {{-- Bloqueante e antes do @vite de propósito: o Alpine carrega como módulo
          diferido, tarde demais. Um flash de tela branca na madrugada custa a

@@ -164,7 +164,7 @@ class InactivityAlertTest extends SyncTestCase
 
     public function test_silence_uses_device_time_not_server_arrival(): void
     {
-        // Leitura feita há 5 minutos que só chegou agora não é inatividade — o
+        // Leitura feita há 5 minutos que só chegou agora não é inatividade - o
         // vigilante agiu, a rede é que estava fora.
         $patrol = $this->patrolStartedAt(now()->subHours(2));
 

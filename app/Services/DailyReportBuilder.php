@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Storage;
 use RuntimeException;
 
 /**
- * Monta o RDO — Relatório Diário de Ocorrências — de uma unidade em uma data.
+ * Monta o RDO - Relatório Diário de Ocorrências - de uma unidade em uma data.
  *
  * Enquanto está em rascunho, o conteúdo é recalculado a cada visualização: é um
  * espelho do que existe no banco. No fechamento vira fotografia, com hash do
@@ -31,7 +31,7 @@ class DailyReportBuilder
     public function buildOrUpdate(Unit $unit, Carbon $date): DailyReport
     {
         // whereDate e não igualdade: o cast "date" grava 'Y-m-d H:i:s', então
-        // comparar com 'Y-m-d' não casa e o RDO acabaria duplicado — o índice
+        // comparar com 'Y-m-d' não casa e o RDO acabaria duplicado - o índice
         // único derruba a segunda gravação.
         $report = DailyReport::query()
             ->where('unit_id', $unit->id)
@@ -43,7 +43,7 @@ class DailyReportBuilder
             ]);
 
         // RDO fechado não se recalcula: ele é o registro do que foi fechado.
-        // Idem para rascunho cuja data já foi expurgada — recalcular só zeraria
+        // Idem para rascunho cuja data já foi expurgada - recalcular só zeraria
         // os números de um período que não existe mais.
         if ($report->exists && ($report->isClosed() || $report->dataWasPurged())) {
             return $report;
@@ -74,7 +74,7 @@ class DailyReportBuilder
 
         if ($openShifts > 0) {
             // Fechar com turno em aberto produziria um RDO que nasce
-            // desatualizado — os registros daquele turno ainda vão chegar.
+            // desatualizado - os registros daquele turno ainda vão chegar.
             throw new RuntimeException(
                 "Ainda há {$openShifts} turno(s) aberto(s) nesta data. Feche o RDO após o encerramento dos turnos.",
             );
@@ -96,7 +96,7 @@ class DailyReportBuilder
     }
 
     /**
-     * Registros podem chegar dias depois — um aparelho que ficou sem rede. Se o
+     * Registros podem chegar dias depois - um aparelho que ficou sem rede. Se o
      * conteúdo atual não bate mais com o hash selado, o RDO fechado deixou de
      * refletir a realidade e a supervisão precisa saber.
      */
@@ -134,7 +134,7 @@ class DailyReportBuilder
 
     /**
      * Movimentação de chaves do dia e o que ficou fora do quadro. A chave não
-     * devolvida é a pendência que a portaria passa para o turno seguinte — é
+     * devolvida é a pendência que a portaria passa para o turno seguinte - é
      * exatamente o tipo de coisa que o RDO existe para registrar.
      */
     private function keys(Unit $unit, Carbon $date): array

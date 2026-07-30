@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('shifts', function (Blueprint $table) {
             $table->id();
-            $table->uuid('uuid')->unique(); // gerado no dispositivo — chave de idempotência
+            $table->uuid('uuid')->unique(); // gerado no dispositivo - chave de idempotência
             $table->foreignId('security_guard_id')->constrained()->cascadeOnDelete();
             $table->foreignId('post_id')->constrained()->cascadeOnDelete();
             $table->foreignId('unit_id')->constrained()->cascadeOnDelete();

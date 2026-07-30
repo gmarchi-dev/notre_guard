@@ -3,7 +3,7 @@
  *
  * Regra que sustenta toda a camada de componentes: AQUI NÃO SE ESTILIZA
  * `button`. A base apenas neutraliza a aparência do agente de usuário. Sem
- * tamanho, sem cor, sem raio — nada que precise ser desfeito depois.
+ * tamanho, sem cor, sem raio - nada que precise ser desfeito depois.
  *
  * Foi a ausência dessa regra que produziu a cascata anterior: `button` definia
  * 56px, `button.small` desfazia para 44, `.answers button` para 48,
@@ -63,7 +63,7 @@
         font-weight: var(--weight-semibold);
     }
 
-    /* Neutralização pura — ver o comentário do topo. */
+    /* Neutralização pura - ver o comentário do topo. */
     button {
         margin: 0;
         padding: 0;

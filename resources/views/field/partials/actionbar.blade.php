@@ -1,7 +1,7 @@
 {{--
     Dock: uma ação principal por tela, e a barra de abas embaixo.
 
-    Antes eram até três botões empilhados de largura total mais a emergência —
+    Antes eram até três botões empilhados de largura total mais a emergência -
     cerca de um quarto da altura da tela só de rodapé. Agora navegar e agir não
     disputam mais o mesmo espaço: as ações secundárias vivem no conteúdo, e o
     retorno é a seta do cabeçalho.

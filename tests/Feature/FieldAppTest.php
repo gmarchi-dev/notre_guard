@@ -11,7 +11,7 @@ use Tests\TestCase;
  *
  * Boa parte destes testes não verifica comportamento: verifica **disciplina**.
  * São invariantes que já foram violadas uma vez e que ninguém percebe ao
- * revisar um diff — zoom bloqueado, alvo de toque encolhido por estilo inline,
+ * revisar um diff - zoom bloqueado, alvo de toque encolhido por estilo inline,
  * vermelho de emergência reaproveitado numa ação comum.
  */
 class FieldAppTest extends TestCase
@@ -34,7 +34,7 @@ class FieldAppTest extends TestCase
 
     public function test_field_app_opens_without_authentication(): void
     {
-        // Precisa abrir antes de existir qualquer token — inclusive offline,
+        // Precisa abrir antes de existir qualquer token - inclusive offline,
         // servida pelo service worker.
         $this->get('/campo')->assertOk()->assertSee('Notre Guard');
     }
@@ -95,7 +95,7 @@ class FieldAppTest extends TestCase
             $this->assertMatchesRegularExpression(
                 '/class="[^"]*\b(' . $sized . ')\b/',
                 $button,
-                "Botão sem classe de componente — o tamanho do alvo depende dela: {$button}",
+                "Botão sem classe de componente - o tamanho do alvo depende dela: {$button}",
             );
         }
     }
@@ -108,7 +108,7 @@ class FieldAppTest extends TestCase
         $this->assertStringNotContainsString(
             '<select',
             $this->fieldHtml(),
-            'seleção nativa reintroduzida — use o sheet de escolha em lista.',
+            'seleção nativa reintroduzida - use o sheet de escolha em lista.',
         );
     }
 
@@ -157,7 +157,7 @@ class FieldAppTest extends TestCase
     {
         // Em WebView sem light-dark() um token esquecido não vira o valor
         // escuro: ele fica sem valor nenhum, e a regra que o usa é descartada.
-        // Foi assim que --divider sumiu — junto com os fios de todo agrupamento.
+        // Foi assim que --divider sumiu - junto com os fios de todo agrupamento.
         $css = File::get(resource_path('css/field/tokens.css'));
 
         preg_match_all('/(--[\w-]+)\s*:\s*light-dark\(/', $css, $matches);
@@ -178,7 +178,7 @@ class FieldAppTest extends TestCase
 
     public function test_night_mode_redefines_everything_except_the_emergency(): void
     {
-        // Um token esquecido no modo noturno mantém o valor do tema escuro —
+        // Um token esquecido no modo noturno mantém o valor do tema escuro -
         // ou seja, volta a acender exatamente o que este tema existe para
         // apagar. A emergência é a única exceção, e é deliberada.
         $css = File::get(resource_path('css/field/tokens.css'));
@@ -207,7 +207,7 @@ class FieldAppTest extends TestCase
         // dimensiona pelo MAX-CONTENT: um nome de posto longo somado à pastilha
         // de sincronização esticava a barra de topo para 552px num aparelho de
         // 375 e a página inteira rolava na horizontal. O max-width do .app não
-        // impedia — quem mandava era o filho mais largo.
+        // impedia - quem mandava era o filho mais largo.
         $layout = File::get(resource_path('css/field/layout.css'));
 
         $this->assertMatchesRegularExpression(
@@ -227,7 +227,7 @@ class FieldAppTest extends TestCase
     public function test_the_appearance_control_stays_out_of_the_content_area(): void
     {
         // A área central é do turno, da ronda e da ocorrência. Um ajuste no
-        // meio dela concorre com o que o vigilante está fazendo — por isso a
+        // meio dela concorre com o que o vigilante está fazendo - por isso a
         // aparência vive na barra de topo, atrás de um sheet.
         $this->assertStringContainsString(
             'openThemeSheet()',
@@ -248,7 +248,7 @@ class FieldAppTest extends TestCase
     {
         // O script roda antes do @vite de propósito. Se ele não reconhecer o
         // valor gravado, o aparelho abre no tema errado e só corrige depois que
-        // o Alpine carrega — um flash claro na madrugada.
+        // o Alpine carrega - um flash claro na madrugada.
         $this->assertStringContainsString("t === 'night'", $this->fieldHtml());
     }
 

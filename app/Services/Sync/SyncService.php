@@ -117,7 +117,7 @@ class SyncService
 
     /**
      * Idempotência. Eventos de encerramento (shift.end, patrol.end) não têm
-     * registro próprio — o próprio handler detecta o reenvio e devolve o estado
+     * registro próprio - o próprio handler detecta o reenvio e devolve o estado
      * atual, então aqui só checamos os que criam registro.
      */
     private function alreadyProcessed(array $event): int|string|null

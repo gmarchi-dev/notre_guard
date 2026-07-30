@@ -21,7 +21,7 @@ use Illuminate\Support\Carbon;
  * Traduz um evento vindo do dispositivo em registros do banco.
  *
  * Todo handler é idempotente pelo uuid do evento: reenviar não duplica. Nenhum
- * handler edita registro de campo já existente — correção vem como evento novo.
+ * handler edita registro de campo já existente - correção vem como evento novo.
  */
 class EventProcessor
 {
@@ -261,7 +261,7 @@ class EventProcessor
     }
 
     /**
-     * Pânico que chegou pela fila, e não pelo endpoint dedicado — o aparelho
+     * Pânico que chegou pela fila, e não pelo endpoint dedicado - o aparelho
      * estava sem rede na hora do acionamento. O alerta é criado com a hora
      * original, e a diferença até received_at mostra quanto tempo se passou.
      */

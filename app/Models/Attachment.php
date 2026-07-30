@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
  * Evidência (foto, vídeo, áudio). Criada como "pending" quando o evento chega
- * do dispositivo e passa a "stored" quando o binário é recebido — o upload é
+ * do dispositivo e passa a "stored" quando o binário é recebido - o upload é
  * uma requisição separada, para não travar a sincronização dos eventos.
  */
 class Attachment extends Model

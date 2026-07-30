@@ -4,7 +4,7 @@ import Dexie from 'dexie'
  * Banco local do aparelho.
  *
  * `cache` guarda o pacote baixado no início do turno (roteiros, pontos,
- * checklists). `queue` é a fila de eventos ainda não confirmados pelo servidor —
+ * checklists). `queue` é a fila de eventos ainda não confirmados pelo servidor -
  * ela é a razão de o app funcionar sem rede, e nada sai dela antes de o servidor
  * confirmar por uuid.
  */
@@ -46,7 +46,7 @@ export async function clearAll() {
  * mesmo registro nunca duplica no servidor.
  *
  * `knownUuid` existe para o botão de pânico, que tenta a entrega direta antes de
- * enfileirar — os dois caminhos precisam usar o MESMO uuid, senão um pedido de
+ * enfileirar - os dois caminhos precisam usar o MESMO uuid, senão um pedido de
  * socorro entregue e depois sincronizado criaria dois alertas.
  */
 export async function enqueue(type, payload, occurredAt = null, knownUuid = null) {

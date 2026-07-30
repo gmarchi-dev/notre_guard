@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 use Tests\Feature\Api\SyncTestCase;
 
 /**
- * Indicadores do painel. Erro aqui não quebra nada — só mostra um número
+ * Indicadores do painel. Erro aqui não quebra nada - só mostra um número
  * errado, que é pior: alguém decide com base nele.
  */
 class OperationMetricsTest extends SyncTestCase

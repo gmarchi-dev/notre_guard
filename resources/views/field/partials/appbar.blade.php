@@ -3,7 +3,7 @@
     ajuste de aparência.
 
     A pastilha abre a fila e tem 48px. Antes tinha ~26px e era o único caminho
-    até a fila — num aplicativo declaradamente usado de luva.
+    até a fila - num aplicativo declaradamente usado de luva.
 
     A aparência vive aqui, e não no conteúdo: a área central é do turno, da
     ronda e da ocorrência. Um ajuste no meio dela concorre com o que o

@@ -13,7 +13,7 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
  *
  * A pergunta da portaria na troca de turno é sempre a mesma: o que está fora e
  * o que está atrasado. Até aqui a resposta exigia ler a tabela linha a linha,
- * ou reparar num badge vermelho no menu lateral — o que só funciona para quem
+ * ou reparar num badge vermelho no menu lateral - o que só funciona para quem
  * já sabe que ele existe.
  */
 class KeyBoardOverview extends StatsOverviewWidget

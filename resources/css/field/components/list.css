@@ -3,10 +3,10 @@
  *
  * Vivem dentro de um `group`: o contêiner é um só e as linhas se separam por
  * um fio interno. Antes cada uma era uma caixa com borda própria e 8px de
- * respiro — seis pontos de ronda viravam seis molduras.
+ * respiro - seis pontos de ronda viravam seis molduras.
  *
  * Regra que vale para toda lista daqui: o texto QUEBRA em até duas linhas.
- * Nunca `nowrap` + reticências — era exatamente o nome do local, o dado que
+ * Nunca `nowrap` + reticências - era exatamente o nome do local, o dado que
  * diz aonde ir, que se perdia primeiro.
  */
 

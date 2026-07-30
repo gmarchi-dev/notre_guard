@@ -6,7 +6,7 @@
 |--------------------------------------------------------------------------
 |
 | Desligada por padrão. Enquanto GOOGLE_AUTH_ENABLED=false, as rotas retornam
-| 404 e o botão não aparece na tela de login — o acesso continua sendo por
+| 404 e o botão não aparece na tela de login - o acesso continua sendo por
 | e-mail e senha.
 |
 | Para ligar: criar as credenciais OAuth no Google Cloud do domínio, preencher
@@ -19,7 +19,7 @@ return [
 
     /*
      * Domínio institucional aceito. Login de conta fora dele é recusado, mesmo
-     * que o Google autentique com sucesso — sem isso, qualquer conta Google do
+     * que o Google autentique com sucesso - sem isso, qualquer conta Google do
      * mundo poderia tentar entrar.
      */
     'hosted_domain' => env('GOOGLE_HOSTED_DOMAIN', 'notredamecampinas.net.br'),

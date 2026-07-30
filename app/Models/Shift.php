@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * Turno de serviço: da assunção de posto ao fechamento.
  *
- * Registra PRESENÇA OPERACIONAL, não jornada de trabalho — o sistema não é
+ * Registra PRESENÇA OPERACIONAL, não jornada de trabalho - o sistema não é
  * REP-P e não substitui registro de ponto (Portaria 671/2021).
  */
 class Shift extends Model

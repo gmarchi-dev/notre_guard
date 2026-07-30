@@ -48,7 +48,7 @@ class CheckpointsRelationManager extends RelationManager
                     ->step(0.0000001),
                 TextInput::make('radius_m')
                     ->label('Raio de tolerância (m)')
-                    ->helperText('Leitura fora do raio não é recusada — é registrada como desvio.')
+                    ->helperText('Leitura fora do raio não é recusada - é registrada como desvio.')
                     ->numeric()
                     ->minValue(5)
                     ->default(50)

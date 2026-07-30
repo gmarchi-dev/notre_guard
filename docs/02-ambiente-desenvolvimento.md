@@ -1,9 +1,9 @@
-# 02 — Ambiente de desenvolvimento
+# 02 - Ambiente de desenvolvimento
 
 Mesmo ambiente do Portal de Segurança Digital: **Windows 11** com **Laravel Herd**
 (PHP + Composer) e **MySQL 8.4** como processo standalone.
 
-O projeto vive em `C:\claude\notre_guard`, ao lado de `C:\claude\seguranca_digital` — caminho
+O projeto vive em `C:\claude\notre_guard`, ao lado de `C:\claude\seguranca_digital` - caminho
 local, curto, sem espaços nem acentos e fora de qualquer pasta sincronizada. Isso evita o
 atrito de Composer, npm e Vite com caminhos citados e a sobrecarga de sincronizar `vendor/`
 e `node_modules/`.
@@ -39,7 +39,7 @@ GRANT ALL PRIVILEGES ON notre_guard.* TO 'ng_app'@'localhost';
 FLUSH PRIVILEGES;
 ```
 
-Banco **separado** do `seguranca_digital` — os sistemas são independentes.
+Banco **separado** do `seguranca_digital` - os sistemas são independentes.
 
 ## `.env` previsto
 
@@ -58,7 +58,7 @@ DB_PASSWORD=ng_local_dev
 
 ## Teste em dispositivo real
 
-A PWA do vigilante exige **HTTPS** para câmera, geolocalização e service worker — inclusive
+A PWA do vigilante exige **HTTPS** para câmera, geolocalização e service worker - inclusive
 no celular durante o desenvolvimento. `php artisan serve` em HTTP não serve. Usar o domínio
 `.test` com TLS do Herd (`herd secure`) e acessar do celular pela rede local, ou um túnel
 (`herd share`). Sem isso não é possível testar leitura de QR Code no aparelho.

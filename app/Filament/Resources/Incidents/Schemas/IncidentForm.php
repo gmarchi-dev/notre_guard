@@ -20,7 +20,7 @@ class IncidentForm
     {
         return $schema->components([
             Section::make('Registro do vigilante')
-                ->description('Somente leitura — conteúdo original enviado do campo.')
+                ->description('Somente leitura - conteúdo original enviado do campo.')
                 ->columns(3)
                 ->schema([
                     TextEntry::make('number')->label('Número')->weight('bold'),

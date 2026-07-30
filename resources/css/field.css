@@ -1,7 +1,7 @@
 /*
  * Interface de campo do Notre Guard.
  *
- * Índice. Todo o conteúdo vive em resources/css/field/ — o Vite inlina estes
+ * Índice. Todo o conteúdo vive em resources/css/field/ - o Vite inlina estes
  * imports e emite um único arquivo, então a casca offline continua sendo uma
  * requisição só.
  *

@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
  * segundos e em lote, o que é irrelevante para uma leitura de ponto e
  * inaceitável para um pedido de socorro. Aqui o aparelho tenta entregar na hora.
  *
- * Se não houver rede, o app enfileira o mesmo evento com o mesmo uuid — e a
+ * Se não houver rede, o app enfileira o mesmo evento com o mesmo uuid - e a
  * idempotência garante que a entrega tardia não crie um segundo alerta.
  */
 class PanicController extends Controller

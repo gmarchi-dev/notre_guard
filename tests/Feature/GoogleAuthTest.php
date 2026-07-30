@@ -163,7 +163,7 @@ class GoogleAuthTest extends TestCase
 
     public function test_provisioning_creates_a_guard_without_panel_access_when_enabled(): void
     {
-        // Se algum dia for ligado, o perfil criado é o de menor privilégio —
+        // Se algum dia for ligado, o perfil criado é o de menor privilégio -
         // vigilante não entra no painel.
         config(['google.allow_provisioning' => true]);
 

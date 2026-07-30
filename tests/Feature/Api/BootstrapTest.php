@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 /**
  * Pacote que o aparelho baixa no início do turno.
  *
- * Depois disto o app funciona sem rede até o fim do turno — o que estiver
+ * Depois disto o app funciona sem rede até o fim do turno - o que estiver
  * faltando aqui simplesmente não existe em campo.
  */
 class BootstrapTest extends SyncTestCase
@@ -95,7 +95,7 @@ class BootstrapTest extends SyncTestCase
 
     public function test_a_new_installation_gets_no_shortcuts_instead_of_wrong_ones(): void
     {
-        // Sem histórico, a seção some — melhor que sugerir o que ninguém usa.
+        // Sem histórico, a seção some - melhor que sugerir o que ninguém usa.
         $this->incidentType('Patrimônio', 'Furto ou tentativa');
 
         $this->assertSame([], $this->bootstrap()->assertOk()->json('frequent_incident_type_ids'));

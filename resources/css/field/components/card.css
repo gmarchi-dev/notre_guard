@@ -1,7 +1,7 @@
 /*
  * Cartões e faixas.
  *
- * O cartão ficou reservado ao que é de fato um objeto destacado — o cartão do
+ * O cartão ficou reservado ao que é de fato um objeto destacado - o cartão do
  * próximo ponto e os avisos persistentes. Blocos de informação comum passaram
  * a usar `group`/`row`, sem moldura própria.
  */

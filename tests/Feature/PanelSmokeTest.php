@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 /**
- * As telas do painel são configuradas por closures que só rodam ao renderizar —
+ * As telas do painel são configuradas por closures que só rodam ao renderizar -
  * um rótulo ou relacionamento errado não aparece em nenhum outro teste.
  */
 class PanelSmokeTest extends TestCase
@@ -104,7 +104,7 @@ class PanelSmokeTest extends TestCase
 
     public function test_dashboard_renders(): void
     {
-        // Os widgets são lazy e não entram no HTML inicial — o conteúdo deles
+        // Os widgets são lazy e não entram no HTML inicial - o conteúdo deles
         // está coberto em DashboardWidgetsTest. Aqui só a página e os filtros.
         $this->seed(DatabaseSeeder::class);
 

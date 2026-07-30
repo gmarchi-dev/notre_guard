@@ -1,4 +1,4 @@
-# 06 — PWA de campo
+# 06 - PWA de campo
 
 Acesso: `/campo`. Instalável na tela inicial. Aparelho corporativo, um por posto/turno.
 
@@ -29,24 +29,24 @@ no aparelho: aguardando envio, tentando de novo e recusado, com o motivo devolvi
 ## Sistema visual
 
 **Alinhado ao painel administrativo.** A tipografia é a Inter, e as cores saem das mesmas escalas
-OKLCH do Filament (`vendor/filament/support/src/Colors/Color.php`) — o painel e o aplicativo têm a
+OKLCH do Filament (`vendor/filament/support/src/Colors/Color.php`) - o painel e o aplicativo têm a
 mesma paleta, não "um azul parecido".
 
 **Claro e escuro.** A ronda é noturna, mas a portaria trabalha ao sol. Os dois temas convivem em
 `light-dark()`, declarados uma vez só; o interruptor é o `color-scheme` do `:root`, com override
-manual persistido em `localStorage['ng.theme']` e aplicado por script inline **antes** do bundle —
+manual persistido em `localStorage['ng.theme']` e aplicado por script inline **antes** do bundle -
 o Alpine carrega diferido, e um flash branco de madrugada custa a visão noturna do vigilante.
 
 O claro usa **branco puro** e bordas mais escuras que o habitual: sob sol direto quem decide
 legibilidade é luminância absoluta, e a borda "discreta" padrão simplesmente desaparece.
 
-No escuro o botão primário **inverte** — azul claro com texto quase preto. Isso levou o contraste
+No escuro o botão primário **inverte** - azul claro com texto quase preto. Isso levou o contraste
 de 3,6:1 para 5,5:1; escurecer o azul original teria piorado.
 
-**Modo noturno — um terceiro tema, não um "escuro mais escuro".** O tema escuro comum é de alto
+**Modo noturno - um terceiro tema, não um "escuro mais escuro".** O tema escuro comum é de alto
 contraste: texto Slate-50 sobre Slate-950, botão primário em Blue-400 preenchido, disco do próximo
 ponto em azul cheio. Lê-se muito bem, e às duas da manhã custa a visão escotópica de quem volta a
-olhar o pátio — a recuperação leva minutos.
+olhar o pátio - a recuperação leva minutos.
 
 O que emite luz não é o texto, que é traço fino: são as **áreas preenchidas**. Por isso aqui os
 preenchimentos se invertem (fundo escuro, rótulo colorido) em vez de o texto simplesmente escurecer.
@@ -60,7 +60,7 @@ Medido no navegador, em luminância absoluta:
 | **emergência** | 0,170 | 0,170 | **0 %** |
 
 A medição expôs algo que ninguém tinha notado: **no tema escuro o botão de pânico é um dos
-elementos preenchidos mais escuros da tela** — três vezes mais escuro que o marcador de um ponto
+elementos preenchidos mais escuros da tela** - três vezes mais escuro que o marcador de um ponto
 já registrado. No modo noturno ele passa a ser, de longe, o mais claro, com quase sete vezes a
 luminância do preenchimento seguinte. Não foi efeito colateral: a emergência é o único token que o
 modo noturno **não** redefine, e há teste garantindo isso.
@@ -68,7 +68,7 @@ modo noturno **não** redefine, e há teste garantindo isso.
 A troca é manual e permanente (`Sistema / Claro / Escuro / Noturno`), nunca automática por horário:
 mudar a tela sozinho no meio do turno faz o vigilante achar que o aplicativo travou.
 
-O controle fica **na barra de topo**, atrás de um sheet — não no conteúdo. A área central é do
+O controle fica **na barra de topo**, atrás de um sheet - não no conteúdo. A área central é do
 turno, da ronda e da ocorrência; um ajuste de aparência no meio dela concorre com o que o vigilante
 está fazendo. Em subfluxo a marca cede o lugar: a seta dá o caminho de volta e o `<h1>` logo abaixo
 já diz onde se está. Sheet em vez de ciclar por toque porque são quatro opções, e ciclar obrigaria a passar
@@ -76,18 +76,18 @@ pelas outras três para chegar na desejada. O botão existe **antes do login** d
 o modo noturno é exatamente o que se quer fazer ao pegar o aparelho no início do turno da noite.
 Há teste garantindo que o controle não volte para o conteúdo.
 
-O `<meta theme-color>` acompanha a escolha, convertido para sRGB — os tokens são `oklch()`, que a
+O `<meta theme-color>` acompanha a escolha, convertido para sRGB - os tokens são `oklch()`, que a
 barra de status do iOS não lê.
 
 **Contraste verificado por número**, não por olhômetro: todos os pares de token passam de 4,5:1 nos
 três temas, medidos no navegador (ver seção de verificação). Essa medição também encontrou dois
 defeitos antigos: `--border-strong` dava **2,66:1** no escuro, abaixo dos 3:1 que a WCAG 1.4.11 pede
 para contorno de controle (agora 4,23), e `--divider` **não existia no fallback** para WebView sem
-`light-dark()` — lá os fios internos de todo agrupamento simplesmente não eram desenhados. Ambos
+`light-dark()` - lá os fios internos de todo agrupamento simplesmente não eram desenhados. Ambos
 viraram teste.
 
 **Vermelho preenchido é exclusivo da emergência**, e isso é teste, não comentário. "Encerrar
-turno" é uma ação destrutiva de contorno, com rótulo em vermelho — antes era um bloco vermelho da
+turno" é uma ação destrutiva de contorno, com rótulo em vermelho - antes era um bloco vermelho da
 mesma largura, 4px abaixo do botão de pânico.
 
 **Alvos de toque:** 56px na ação primária, 48px no restante, 64px em linha de lista. O degrau de
@@ -96,19 +96,19 @@ mesma largura, 4px abaixo do botão de pânico.
 ## Menos molduras
 
 A primeira versão do redesenho usava cartão com borda para tudo: a tela inicial chegava a quatro
-contêineres empilhados, e cada item de lista era uma caixa própria com 8px de respiro — seis
+contêineres empilhados, e cada item de lista era uma caixa própria com 8px de respiro - seis
 pontos de ronda viravam seis molduras.
 
 Agora vale a regra oposta: **irmãos dividem um contêiner e se separam por um fio interno leve**
 (`group`), e informação simples vira linha (`row`) em vez de cartão inteiro. O `card` ficou
-reservado ao que é de fato um objeto destacado — o cartão do próximo ponto e os avisos
+reservado ao que é de fato um objeto destacado - o cartão do próximo ponto e os avisos
 persistentes.
 
 Campos de formulário são preenchidos e **sem borda**: já se distinguem do fundo pela superfície,
 e um contorno em cada um devolveria as molduras que saíram. Erro de validação vira uma barra
 lateral por `box-shadow`, não mais uma borda.
 
-Os botões secundários também trocaram contorno por **preenchimento suave** — botão com borda é
+Os botões secundários também trocaram contorno por **preenchimento suave** - botão com borda é
 mais uma moldura. O contorno some da interface quase por completo; só a ação principal recebe
 elevação, que é o que a destaca sem desenhar nada em volta. O toque afunda o botão em vez de
 encolhê-lo: com o dedo cobrindo o alvo, o deslocamento vertical é mais perceptível.
@@ -118,19 +118,19 @@ encolhê-lo: com o dedo cobrindo o alvo, o deslocamento vertical é mais percept
 Modelo híbrido: **abas fixas para navegar, ação principal em destaque logo acima**. Navegar e agir
 deixam de disputar o mesmo espaço.
 
-Quatro abas — Início, Ronda, Ocorrência, Fila —, com a de Ronda habilitada só quando há ronda em
+Quatro abas - Início, Ronda, Ocorrência, Fila -, com a de Ronda habilitada só quando há ronda em
 andamento e a de Fila mostrando o contador de pendências. A aba ativa se distingue por cor, peso e
 um traço acima: cor sozinha não basta.
 
-**Uma ação principal por tela**, de largura total: "Ler QR — PC-04", "Confirmar ponto", "Registrar
-ocorrência", "Enviar agora". As secundárias — encerrar turno, encerrar ronda, sair — vivem no fim
+**Uma ação principal por tela**, de largura total: "Ler QR - PC-04", "Confirmar ponto", "Registrar
+ocorrência", "Enviar agora". As secundárias - encerrar turno, encerrar ronda, sair - vivem no fim
 do conteúdo, onde fazem sentido depois de percorrer a tela.
 
 Antes eram até três blocos empilhados de largura total mais a emergência: cerca de **200px**, um
 quarto da tela. Hoje a tela inicial usa **66px**, e a mais carregada, 146px.
 
 **Nos subfluxos a barra some.** Leitura de QR e checklist não são destino, e sair de um checklist
-pela metade tem de ser deliberado — nesses casos o retorno é a seta do cabeçalho, como manda o
+pela metade tem de ser deliberado - nesses casos o retorno é a seta do cabeçalho, como manda o
 padrão móvel. Trocar de aba com uma ocorrência já digitada pede confirmação.
 
 **A emergência é um botão flutuante**, circular e vermelho, ancorado acima do dock. Fora da barra
@@ -145,7 +145,7 @@ A grade é `auto 1fr auto` em `100dvh`, com o `<main>` como única região de ro
 **A coluna é `minmax(0, 1fr)`, não a coluna implícita.** Sem isso a coluna do grid fica `auto`, que
 se dimensiona pelo **max-content**: um nome de posto longo somado à pastilha de sincronização
 esticava a barra de topo para **552px num aparelho de 375**, e a página inteira rolava na horizontal.
-O `max-width` do `.app` não impedia — quem mandava era a faixa de conteúdo do filho mais largo.
+O `max-width` do `.app` não impedia - quem mandava era a faixa de conteúdo do filho mais largo.
 Defeito antigo, que só apareceu quando a barra ganhou um quarto item; hoje é teste.
 
 Pela mesma razão a marca da barra nunca quebra linha: comprimida entre a pastilha e o ajuste de
@@ -155,9 +155,9 @@ aparência, ela empilhava em duas linhas e esticava a altura da barra de 48 para
 
 - **O próximo ponto sai da lista e vira cartão**, com o código em corpo grande e o nome completo
   quebrando em até três linhas. Quem caminha de madrugada, de luva, responde a uma pergunta só:
-  para onde eu vou agora. Antes o nome era truncado com reticências — o dado que diz aonde ir era
+  para onde eu vou agora. Antes o nome era truncado com reticências - o dado que diz aonde ir era
   o primeiro a se perder.
-- **A ação primária nomeia o alvo**: "Ler QR — PC-04". Sozinha, elimina boa parte da necessidade
+- **A ação primária nomeia o alvo**: "Ler QR - PC-04". Sozinha, elimina boa parte da necessidade
   de consultar a lista.
 - **O trilho continua listando todos os pontos**, porque ronda real não é sempre sequencial:
   forçar a ordem seria regressão funcional.
@@ -169,7 +169,7 @@ aparência, ela empilhava em duas linhas e esticava a altura da barra de 48 para
 - **Toasts em vez de avisos no topo**: o aviso antigo empurrava o layout e, numa tela rolada, o
   vigilante não via. Sucesso some em 4s; erro persiste até ser fechado.
 - **O botão voltar do Android navega** dentro do aplicativo (History API). Com turno aberto, o
-  primeiro toque na raiz só avisa — sair sem querer no meio de um turno é caro.
+  primeiro toque na raiz só avisa - sair sem querer no meio de um turno é caro.
 - **Zoom liberado.** `maximum-scale=1` violava a WCAG 1.4.4. Todos os campos têm 17px, que é o que
   impede o iOS de dar zoom sozinho ao focar.
 
@@ -179,7 +179,7 @@ O evento nasce no IndexedDB com uuid gerado no aparelho e só sai da fila quando
 confirma aquele uuid. A sincronização roda a cada 30 s, ao voltar a rede e ao trazer o app para
 frente.
 
-O service worker cacheia **só a casca** — nunca respostas da API. Uma resposta velha de
+O service worker cacheia **só a casca** - nunca respostas da API. Uma resposta velha de
 `/bootstrap` faria o vigilante rondar com roteiro desatualizado, o que é pior que não abrir.
 
 Se o bootstrap falhar mas houver cache, o aplicativo continua funcionando e mostra uma **faixa
@@ -193,7 +193,7 @@ para sempre.
 ## Acessibilidade
 
 Foco visível em tudo, foco movido ao título a cada troca de tela, foco preso dentro de sheet e
-pânico, `Escape` fecha. O checklist é um `radiogroup` de verdade, com o rótulo do item associado —
+pânico, `Escape` fecha. O checklist é um `radiogroup` de verdade, com o rótulo do item associado -
 antes eram três botões soltos, e o leitor de tela anunciava "Conforme, botão" sem dizer de qual
 item. Estado nunca é comunicado só por cor: o selecionado tem preenchimento **e** ícone.
 
@@ -204,19 +204,19 @@ item. Estado nunca é comunicado só por cor: o selecionado tem preenchimento **
 - **NFC não está implementado.** Web NFC só existe em Chrome/Android; o QR é o mecanismo primário.
 - **Notificação push exige o app instalado na tela inicial** no iOS (16.4+).
 - **`light-dark()` exige Chrome 123+ / Safari 17.5+.** Em WebView anterior existe fallback via
-  `@supports`, e ele é o tema **escuro** — o cenário degradado tem de ser o seguro para a ronda.
-- A tela de fila lista os eventos, mas não as fotos individualmente — só o total pendente.
+  `@supports`, e ele é o tema **escuro** - o cenário degradado tem de ser o seguro para a ronda.
+- A tela de fila lista os eventos, mas não as fotos individualmente - só o total pendente.
 
 ## Registro de ocorrência
 
 Era a única tela que ainda parecia formulário web: `<select>` nativo com os **17 tipos achatados**
-num rótulo só (`"Patrimônio › Furto ou tentativa"`), gravidade em outro `<select>` — apesar de o
-checklist já ter um `segmented` para exatamente esse tipo de escolha — e a foto no fim da rolagem.
+num rótulo só (`"Patrimônio › Furto ou tentativa"`), gravidade em outro `<select>` - apesar de o
+checklist já ter um `segmented` para exatamente esse tipo de escolha - e a foto no fim da rolagem.
 É a tela que se usa logo depois de encontrar um portão arrombado, ou seja, o pior lugar para pedir
 precisão de dedo numa roda nativa.
 
 O bootstrap passou a entregar `group` e `name` separados, além do `label` completo que o RDO usa. A
-escolha virou **duas etapas** por sheet — grupo, depois tipo — com atalho para os mais registrados
+escolha virou **duas etapas** por sheet - grupo, depois tipo - com atalho para os mais registrados
 naquela unidade nos últimos 90 dias (`frequent_incident_type_ids`). O atalho é **medido**: em
 instalação nova a lista vem vazia e a seção some, em vez de sugerir o que ninguém usa. Cancelar na
 segunda etapa volta aos grupos, não zera a escolha.
@@ -226,7 +226,7 @@ preenchido**, apesar de ser o extremo da escala: vermelho cheio pertence ao bot�
 um segundo bloco vermelho na tela rouba dele o significado. A distinção vem do contorno grosso e do
 sinal `!`. Há teste para isso.
 
-Nenhum `<select>` nativo sobrevive no app de campo — também virou invariante de teste.
+Nenhum `<select>` nativo sobrevive no app de campo - também virou invariante de teste.
 
 ## Retorno ao vigilante
 
@@ -235,7 +235,7 @@ Três informações que o servidor já tinha e o aparelho não mostrava.
 **Reconhecimento do pânico.** Depois do acionamento, o app consulta `GET /api/v1/panic/{uuid}` a
 cada 10 segundos, por até 15 minutos, e para assim que alguém reconhece. A faixa muda de
 "Acionamento recebido às 02:11. Aguardando a supervisão reconhecer" para "Ana reconheceu às 02:14",
-com vibração curta — padrão diferente do acionamento, porque é resposta, não alarme. A distinção é
+com vibração curta - padrão diferente do acionamento, porque é resposta, não alarme. A distinção é
 o ponto: *o servidor gravou* nunca foi *alguém está indo*, e até aqui o aparelho só dizia a
 primeira coisa. A rota só devolve alerta do próprio vigilante autenticado; acionamento ainda na
 fila responde 404, que o app trata como "continua tentando".
@@ -243,7 +243,7 @@ fila responde 404, que o app trata como "continua tentando".
 **Aviso de desvio na hora da leitura.** Ao abrir um ponto, o app mede a distância até a coordenada
 cadastrada (Haversine em `resources/js/field/geo.js`, mesma fórmula de `App\Support\Geo`) e, se
 passar do `radius_m`, mostra faixa de aviso no checklist e pede confirmação antes de gravar. O
-servidor continua marcando `out_of_radius` como sempre — a diferença é que agora o vigilante fica
+servidor continua marcando `out_of_radius` como sempre - a diferença é que agora o vigilante fica
 sabendo enquanto ainda dá para andar até o ponto, em vez de o desvio aparecer só no RDO do dia
 seguinte. **Nada é bloqueado:** recusar a confirmação apenas não grava, e a pessoa volta ao ponto.
 
@@ -263,7 +263,7 @@ Negar a permissão de localização não bloqueia nada: o registro entra com a m
 A distância até o próximo ponto **não abre exceção a isso**: ela reaproveita a última medida já
 feita, guardada só em memória e nunca transmitida sozinha. Mostrar distância em tempo real exigiria
 `watchPosition` durante o turno inteiro, que é exatamente o rastreamento que este aplicativo
-promete não fazer — e o preço seria pago em bateria e em confiança da equipe, não em código.
+promete não fazer - e o preço seria pago em bateria e em confiança da equipe, não em código.
 
 ## Verificação
 
@@ -273,6 +273,6 @@ em `tokens.css`, vermelho de emergência reservado, fonte auto-hospedada com `fo
 e o service worker com poda de assets.
 
 No navegador, via MCP: varredura de todos os interativos medindo `getBoundingClientRect()` contra
-o mínimo exigido, e cálculo da razão WCAG a partir do que o navegador **efetivamente resolveu** —
+o mínimo exigido, e cálculo da razão WCAG a partir do que o navegador **efetivamente resolveu** -
 pintando a cor num canvas, porque o Chrome devolve `oklch()` computado e uma leitura ingênua dos
 números daria resultado errado.

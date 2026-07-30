@@ -8,7 +8,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 /**
- * Ficha do turno — somente leitura. Ver PatrolForm para o porquê.
+ * Ficha do turno - somente leitura. Ver PatrolForm para o porquê.
  */
 class ShiftForm
 {

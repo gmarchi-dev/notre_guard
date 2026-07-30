@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
  * Restringe o resource à unidade do gestor logado.
  *
  * Admin e supervisão enxergam todas as unidades. O gestor de unidade só vê a
- * dele — sem isso, dar acesso a um gestor significaria expor a operação de todas
+ * dele - sem isso, dar acesso a um gestor significaria expor a operação de todas
  * as unidades do colégio.
  *
  * O resource declara em qual coluna (ou caminho de relacionamento) está a
@@ -29,7 +29,7 @@ trait ScopedToUnit
     }
 
     /**
-     * Ponto de extensão para resources com regra própria — sobrescrever isto, e
+     * Ponto de extensão para resources com regra própria - sobrescrever isto, e
      * nunca getEloquentQuery(), porque chamar Resource::getEloquentQuery()
      * estaticamente perde o late static binding e o model vem vazio.
      */

@@ -66,9 +66,9 @@ class DemoUnitSeeder extends Seeder
 
         $checkpoints = [
             ['PC-01', 'Portão principal', -22.90560, -47.06080],
-            ['PC-02', 'Estacionamento — fundo', -22.90600, -47.06120],
-            ['PC-03', 'Bloco A — entrada', -22.90520, -47.06050],
-            ['PC-04', 'Bloco B — corredor externo', -22.90490, -47.06010],
+            ['PC-02', 'Estacionamento - fundo', -22.90600, -47.06120],
+            ['PC-03', 'Bloco A - entrada', -22.90520, -47.06050],
+            ['PC-04', 'Bloco B - corredor externo', -22.90490, -47.06010],
             ['PC-05', 'Casa de máquinas', -22.90610, -47.06040],
             ['PC-06', 'Quadra poliesportiva', -22.90540, -47.06160],
         ];

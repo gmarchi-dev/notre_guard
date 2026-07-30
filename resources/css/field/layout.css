@@ -6,7 +6,7 @@
  * de listas longas, o 100dvh passa a se comportar no Safari móvel, e a barra
  * de topo dispensa position:sticky.
  *
- * `min-height: 0` no main é obrigatório — sem ele o filho de grid não encolhe
+ * `min-height: 0` no main é obrigatório - sem ele o filho de grid não encolhe
  * e o overflow simplesmente não acontece.
  */
 
@@ -20,7 +20,7 @@
          * Sem isto a coluna é `auto`, que se dimensiona pelo MAX-CONTENT: um
          * nome de posto longo somado à pastilha de sincronização esticava a
          * barra de topo para além da largura do aparelho e a página inteira
-         * rolava na horizontal. O `max-width` do .app não impedia — quem
+         * rolava na horizontal. O `max-width` do .app não impedia - quem
          * mandava era a faixa de conteúdo do filho mais largo.
          */
         grid-template-columns: minmax(0, 1fr);
@@ -44,7 +44,7 @@
     }
 
     /* Nos subfluxos (leitura de QR, checklist) a barra de abas some, e o
-       retorno passa a ser esta seta — padrão móvel. */
+       retorno passa a ser esta seta - padrão móvel. */
     .appbar__back {
         display: grid;
         place-items: center;

@@ -15,7 +15,7 @@ use Tests\TestCase;
 /**
  * Resumo do quadro de chaves.
  *
- * A pergunta da portaria na troca de turno é sempre a mesma — o que está fora e
+ * A pergunta da portaria na troca de turno é sempre a mesma - o que está fora e
  * o que está atrasado. Antes a resposta exigia ler a tabela linha a linha.
  */
 class KeyBoardOverviewTest extends TestCase

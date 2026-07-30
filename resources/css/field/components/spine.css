@@ -3,14 +3,14 @@
  *
  * Quem caminha às duas da manhã, de luva, olhando de relance, responde a uma
  * pergunta só: PARA ONDE EU VOU AGORA. Uma lista uniforme de pontos obriga a
- * varrer tudo atrás do primeiro item não concluído — por isso o próximo ponto
+ * varrer tudo atrás do primeiro item não concluído - por isso o próximo ponto
  * sai da lista e vira um cartão no topo, com o nome completo em corpo grande.
  *
  * O trilho abaixo continua existindo porque ronda real não é sempre
  * sequencial: o vigilante precisa poder ir a um ponto fora de ordem, e forçar
  * a sequência seria uma regressão funcional.
  *
- * O conector é pseudo-elemento DO ITEM, nunca uma linha absoluta única — esta
+ * O conector é pseudo-elemento DO ITEM, nunca uma linha absoluta única - esta
  * desalinha assim que um rótulo ocupa três linhas.
  */
 

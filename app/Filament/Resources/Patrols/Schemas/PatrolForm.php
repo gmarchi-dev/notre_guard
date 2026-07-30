@@ -8,7 +8,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 /**
- * Ficha da ronda — somente leitura.
+ * Ficha da ronda - somente leitura.
  *
  * Ronda é registro de campo: imutável. Se o painel permitisse editar, a
  * aderência de ronda viraria um número negociável.

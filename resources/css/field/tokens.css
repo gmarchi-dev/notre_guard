@@ -2,7 +2,7 @@
  * Tokens da interface de campo.
  *
  * ESTE É O ÚNICO ARQUIVO DE CAMPO COM VALOR LITERAL DE COR OU MEDIDA.
- * Todos os demais usam var(). Há teste que verifica isso — ver
+ * Todos os demais usam var(). Há teste que verifica isso - ver
  * tests/Feature/FieldAppTest.php.
  *
  * As cores saem das mesmas escalas OKLCH do painel administrativo
@@ -10,7 +10,7 @@
  * painel e o aplicativo passam a ter a mesma paleta, não "um azul parecido".
  *
  * Claro e escuro convivem em light-dark(), declarados uma vez só. O
- * interruptor é o color-scheme do :root — que de quebra acerta scrollbar,
+ * interruptor é o color-scheme do :root - que de quebra acerta scrollbar,
  * select nativo e teclado do sistema.
  */
 
@@ -26,11 +26,11 @@
         --surface-2: light-dark(oklch(0.968 0.007 247.896), oklch(0.279 0.041 260.031));
 
         /* Borda em Slate-400 no claro: a borda "discreta" padrão desaparece
-           ao sol. Aqui borda é estrutura, não decoração — e por isso é usada
+           ao sol. Aqui borda é estrutura, não decoração - e por isso é usada
            com parcimônia: só onde separa de fato. */
         --border: light-dark(oklch(0.704 0.04 256.788), oklch(0.372 0.044 257.287));
         /* Slate-500 nos dois temas. No escuro era Slate-600, que dava 2.66:1
-           contra o fundo — abaixo dos 3:1 que a WCAG 1.4.11 pede para o
+           contra o fundo - abaixo dos 3:1 que a WCAG 1.4.11 pede para o
            contorno de um controle. Medido, não estimado. */
         --border-strong: light-dark(oklch(0.554 0.046 257.417), oklch(0.554 0.046 257.417));
 
@@ -72,7 +72,7 @@
         --critical-quiet: light-dark(oklch(0.936 0.032 17.717), oklch(0.258 0.092 26.042));
 
         /* Vermelho preenchido é EXCLUSIVO da emergência. Nenhuma outra regra
-           pode usar --emergency como background — ver button.css e panic.css,
+           pode usar --emergency como background - ver button.css e panic.css,
            e o teste que garante isso. */
         --emergency: light-dark(oklch(0.505 0.213 27.518), oklch(0.577 0.245 27.325));
         --emergency-on: oklch(1 0 0);
@@ -163,21 +163,21 @@
     }
 
     /*
-     * Modo noturno — terceiro tema, não um "escuro mais escuro".
+     * Modo noturno - terceiro tema, não um "escuro mais escuro".
      *
      * O tema escuro comum é de alto contraste: texto Slate-50 sobre Slate-950,
      * botão primário em Blue-400 preenchido, disco do próximo ponto em azul
-     * cheio. Isso se lê muito bem — e às duas da manhã, no pátio, custa a visão
+     * cheio. Isso se lê muito bem - e às duas da manhã, no pátio, custa a visão
      * escotópica de quem volta a olhar para o escuro. A recuperação leva
      * minutos, e é o vigilante que paga.
      *
      * O que mais emite luz não é o texto, que é traço fino: são as ÁREAS
      * PREENCHIDAS. Por isso aqui os preenchimentos de acento, sucesso e aviso
-     * se invertem — fundo escuro, rótulo colorido — em vez de o texto
+     * se invertem - fundo escuro, rótulo colorido - em vez de o texto
      * simplesmente escurecer.
      *
      * A emergência é a única coisa que NÃO escurece. No modo noturno ela passa
-     * a ser, de longe, o objeto mais claro da tela — que é exatamente o que se
+     * a ser, de longe, o objeto mais claro da tela - que é exatamente o que se
      * quer dela.
      *
      * Contraste continua medido, não estimado: >= 7:1 no texto principal,

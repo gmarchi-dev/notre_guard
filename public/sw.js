@@ -1,5 +1,5 @@
 /**
- * Service worker do Notre Guard — Campo.
+ * Service worker do Notre Guard - Campo.
  *
  * Só a casca do app é cacheada. Dados nunca: eles vivem no IndexedDB, sob
  * controle da fila de sincronização. Requisições à API jamais são servidas do

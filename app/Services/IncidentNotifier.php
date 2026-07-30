@@ -32,7 +32,7 @@ class IncidentNotifier
     }
 
     /**
-     * Gravidade alta ou crítica, ou tipo marcado como "notificar supervisão" —
+     * Gravidade alta ou crítica, ou tipo marcado como "notificar supervisão" -
      * que é como a gestão sinaliza um assunto sensível independente da
      * gravidade que o vigilante escolheu em campo.
      */

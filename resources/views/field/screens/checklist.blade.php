@@ -2,7 +2,7 @@
     Checklist do ponto.
 
     O grupo de respostas virou um radiogroup de verdade: antes eram três botões
-    soltos com aria-pressed, sem ligação com o rótulo do item — o leitor de tela
+    soltos com aria-pressed, sem ligação com o rótulo do item - o leitor de tela
     anunciava "Conforme, botão" sem dizer de qual item, e nada impedia
     logicamente que os três estivessem marcados ao mesmo tempo.
 
@@ -18,7 +18,7 @@
         {{--
             Aviso de distância. Aparece assim que o GPS responde, antes de o
             checklist ser preenchido, porque é aí que ainda dá para andar até o
-            ponto. O registro nunca é bloqueado — só informado.
+            ponto. O registro nunca é bloqueado - só informado.
         --}}
         <template x-if="checkpointTooFar">
             <div class="banner banner--warn" role="status">

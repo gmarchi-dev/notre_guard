@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
  * Detecta vigilante que iniciou uma ronda e parou de registrar.
  *
  * Vigia **rondas em andamento**, não turnos. Um vigilante em portaria pode
- * passar horas sem ler um ponto, e isso é normal — alertar nesse caso geraria
+ * passar horas sem ler um ponto, e isso é normal - alertar nesse caso geraria
  * ruído constante. Ronda iniciada e silenciosa, não: ou aconteceu algo com ele,
  * ou o aparelho ficou sem bateria, e as duas coisas a supervisão precisa saber.
  *
@@ -65,7 +65,7 @@ class InactivityWatcher
                         'patrol_id' => $patrol->id,
                         'occurred_at' => $now,
                         'received_at' => $now,
-                        // A última posição conhecida é o que orienta a busca —
+                        // A última posição conhecida é o que orienta a busca -
                         // não é onde ele está, é onde foi visto por último.
                         'latitude' => $last?->latitude,
                         'longitude' => $last?->longitude,
@@ -82,7 +82,7 @@ class InactivityWatcher
     /**
      * Silêncio medido pela última leitura; se não houve nenhuma, pelo início da
      * ronda. Usa occurred_at (hora do aparelho) porque é quando o vigilante
-     * agiu de fato — received_at pode estar atrasado por falta de rede, e isso
+     * agiu de fato - received_at pode estar atrasado por falta de rede, e isso
      * não é inatividade.
      */
     public function silenceMinutes(Patrol $patrol, ?Carbon $now = null): int

@@ -33,7 +33,7 @@
 
 <h1>Relatório Diário de Ocorrências</h1>
 <p class="sub">
-    {{ $report->unit->name }} ({{ $report->unit->code }}) —
+    {{ $report->unit->name }} ({{ $report->unit->code }}) -
     {{ $report->report_date->format('d/m/Y') }}
 </p>
 
@@ -209,7 +209,7 @@
         {{ $report->closed_at?->format('d/m/Y H:i') ?? '—' }}
     </p>
     <p>
-        Selo de integridade (SHA-256) — qualquer alteração posterior nos registros deste dia
+        Selo de integridade (SHA-256) - qualquer alteração posterior nos registros deste dia
         muda este valor:
     </p>
     <p class="hash">{{ $report->content_hash }}</p>

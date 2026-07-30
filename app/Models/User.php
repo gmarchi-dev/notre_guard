@@ -67,7 +67,7 @@ class User extends Authenticatable implements FilamentUser
     }
 
     /**
-     * O administrador tem tudo por definição — do contrário seria possível
+     * O administrador tem tudo por definição - do contrário seria possível
      * revogar a própria capacidade de conceder permissões e travar o sistema.
      */
     public function hasPermission(string $permission): bool
@@ -108,7 +108,7 @@ class User extends Authenticatable implements FilamentUser
 
     /**
      * Gestor de unidade só enxerga a própria unidade. Admin e supervisão
-     * enxergam todas — por isso o unit_id deles fica nulo.
+     * enxergam todas - por isso o unit_id deles fica nulo.
      */
     public function isScopedToUnit(): bool
     {
@@ -116,7 +116,7 @@ class User extends Authenticatable implements FilamentUser
     }
 
     /**
-     * O vigilante não entra no painel administrativo — lá está a operação
+     * O vigilante não entra no painel administrativo - lá está a operação
      * inteira das duas unidades.
      *
      * O painel da portaria não é liberado por perfil, e sim pela permissão de

@@ -31,7 +31,7 @@ class ShiftResource extends Resource
 
     protected static ?int $navigationSort = 2;
 
-    /** Turnos nascem em campo — o painel apenas consulta. */
+    /** Turnos nascem em campo - o painel apenas consulta. */
     public static function canCreate(): bool
     {
         return false;

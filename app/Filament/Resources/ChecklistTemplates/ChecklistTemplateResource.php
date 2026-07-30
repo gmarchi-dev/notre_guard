@@ -34,7 +34,7 @@ class ChecklistTemplateResource extends Resource
     protected static ?int $navigationSort = 1;
 
     /**
-     * Checklist com unit_id nulo é modelo global, válido para todas as unidades —
+     * Checklist com unit_id nulo é modelo global, válido para todas as unidades -
      * o gestor precisa enxergá-lo junto com os da própria unidade.
      */
     protected static function applyUnitScope(Builder $query, int $unitId): Builder

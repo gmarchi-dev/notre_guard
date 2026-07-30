@@ -22,7 +22,7 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
  * Painel do computador da portaria: controle de chaves e nada mais.
  *
  * Existe como painel separado, e não como um recorte do administrativo, porque
- * o vigilante precisa entrar aqui — e o painel administrativo tem a operação
+ * o vigilante precisa entrar aqui - e o painel administrativo tem a operação
  * inteira das duas unidades. Separar é a diferença entre dar uma tela e dar
  * acesso ao sistema.
  */

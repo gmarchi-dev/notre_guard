@@ -26,7 +26,7 @@ class ItemsRelationManager extends RelationManager
         return $schema->components([
             TextInput::make('label')
                 ->label('Item')
-                ->helperText('Redação curta e afirmativa — o vigilante lê isso no escuro.')
+                ->helperText('Redação curta e afirmativa - o vigilante lê isso no escuro.')
                 ->required()
                 ->maxLength(255)
                 ->columnSpanFull(),

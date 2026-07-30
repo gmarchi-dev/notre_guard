@@ -17,7 +17,7 @@ class QrCodeController extends Controller
         $post->load('unit');
 
         return view('qr.sheet', [
-            'title' => 'Posto — '.$post->name,
+            'title' => 'Posto - '.$post->name,
             'tags' => [[
                 'heading' => $post->unit->name,
                 'title' => $post->name,
@@ -32,13 +32,13 @@ class QrCodeController extends Controller
         $checkpoint->load('unit');
 
         return view('qr.sheet', [
-            'title' => 'Ponto — '.$checkpoint->code,
+            'title' => 'Ponto - '.$checkpoint->code,
             'tags' => [$this->checkpointTag($checkpoint)],
         ]);
     }
 
     /**
-     * Todos os pontos ativos de uma unidade, um por folha — o caso real de uso
+     * Todos os pontos ativos de uma unidade, um por folha - o caso real de uso
      * na implantação de um site novo.
      */
     public function unitCheckpoints(Unit $unit): View
@@ -46,7 +46,7 @@ class QrCodeController extends Controller
         $checkpoints = $unit->checkpoints()->where('active', true)->orderBy('code')->get();
 
         return view('qr.sheet', [
-            'title' => 'Pontos de controle — '.$unit->name,
+            'title' => 'Pontos de controle - '.$unit->name,
             'tags' => $checkpoints->map(fn (Checkpoint $c) => $this->checkpointTag($c, $unit))->all(),
         ]);
     }

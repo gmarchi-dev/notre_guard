@@ -1,7 +1,7 @@
 {{--
     Ocorrência.
 
-    Três seções na ordem da pergunta real — o que houve, onde, o que você fez —
+    Três seções na ordem da pergunta real - o que houve, onde, o que você fez -
     mas sem cartão em volta de cada uma: os campos já são superfície, e a
     moldura extra só apertava a tela.
 --}}
@@ -20,7 +20,7 @@
                      escolha e o grupo a que ela pertence. --}}
                 <div class="field">
                     <span class="field__label" id="incident-type-label">
-                        Tipo <span class="field__required">— obrigatório</span>
+                        Tipo <span class="field__required">- obrigatório</span>
                     </span>
 
                     <button type="button" class="choice" id="incident-type"
@@ -43,7 +43,7 @@
 
                 <div class="field">
                     <label class="field__label" for="incident-description">
-                        Relato <span class="field__required">— obrigatório</span>
+                        Relato <span class="field__required">- obrigatório</span>
                     </label>
                     <textarea class="field__control" id="incident-description" x-model="incident.description"
                               placeholder="Descreva os fatos, sem opinião"

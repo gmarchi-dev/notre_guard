@@ -1,9 +1,9 @@
 /*
- * Bottom sheet — substitui confirm() e prompt() nativos.
+ * Bottom sheet - substitui confirm() e prompt() nativos.
  *
  * Os diálogos do navegador some sob o teclado em PWA instalada, não são
  * estilizáveis, não dizem o contexto e, no caso do prompt(), capturavam a
- * justificativa de ponto pulado — campo obrigatório de auditoria — numa caixa
+ * justificativa de ponto pulado - campo obrigatório de auditoria - numa caixa
  * de uma linha.
  *
  * Sobe da base da tela: é onde o polegar está.

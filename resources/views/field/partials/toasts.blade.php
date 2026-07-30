@@ -1,7 +1,7 @@
 {{--
     Pilha de toasts, ancorada acima do rodapé.
 
-    Antes o aviso ficava no topo do conteúdo e empurrava o layout — numa tela
+    Antes o aviso ficava no topo do conteúdo e empurrava o layout - numa tela
     rolada, o vigilante não via. E só cabia um por vez: o seguinte apagava o
     anterior.
 --}}

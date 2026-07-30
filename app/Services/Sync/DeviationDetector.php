@@ -11,7 +11,7 @@ use Illuminate\Support\Carbon;
 /**
  * Calcula desvios de uma leitura de ponto.
  *
- * Nada aqui recusa um registro. Desvio é informação para o supervisor — app que
+ * Nada aqui recusa um registro. Desvio é informação para o supervisor - app que
  * recusa registro produz vigilante que anota em papel.
  */
 class DeviationDetector

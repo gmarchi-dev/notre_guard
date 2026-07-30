@@ -5,7 +5,7 @@
  * ação principal da tela fica na faixa logo acima. Antes tudo era bloco
  * empilhado de largura total, e o rodapé chegava a comer um quarto da tela.
  *
- * A barra some nos subfluxos (leitura de QR, checklist) — nesses casos o
+ * A barra some nos subfluxos (leitura de QR, checklist) - nesses casos o
  * caminho de volta é a seta do cabeçalho, como manda o padrão móvel.
  */
 
@@ -40,7 +40,7 @@
         line-height: 1;
     }
 
-    /* Ativa se distingue por cor E por peso E por uma marca acima — cor
+    /* Ativa se distingue por cor E por peso E por uma marca acima - cor
        sozinha não basta. */
     .tabbar__item[aria-current='page'] {
         color: var(--accent-text);

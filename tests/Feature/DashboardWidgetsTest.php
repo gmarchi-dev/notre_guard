@@ -92,7 +92,7 @@ class DashboardWidgetsTest extends SyncTestCase
 
         $this->actingAs($manager);
 
-        // Mesmo pedindo "todas as unidades", só enxerga a dele — que não teve
+        // Mesmo pedindo "todas as unidades", só enxerga a dele - que não teve
         // operação nenhuma.
         $component = Livewire::test(OperationOverview::class, [
             'pageFilters' => ['period' => '30', 'unit_id' => null],

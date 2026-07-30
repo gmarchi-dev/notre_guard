@@ -2,7 +2,7 @@
  * Pastilhas.
  *
  * A da barra de topo mostra o estado da sincronização e abre a fila. Antes
- * tinha ~26px de altura — metade do mínimo — e era o ÚNICO acesso à fila num
+ * tinha ~26px de altura - metade do mínimo - e era o ÚNICO acesso à fila num
  * aplicativo declaradamente usado de luva. Agora tem 48px, e a fila também é
  * alcançável por uma linha na tela inicial.
  */

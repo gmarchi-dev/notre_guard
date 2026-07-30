@@ -1,4 +1,4 @@
-# 08 — Painel operacional
+# 08 - Painel operacional
 
 Página inicial do painel (`/admin`). Dois filtros no topo: **período** (7, 30 ou 90 dias) e
 **unidade**.
@@ -16,9 +16,9 @@ Página inicial do painel (`/admin`). Dois filtros no topo: **período** (7, 30 
 ## Gráficos
 
 - **Aderência por dia** (linha), com a meta de 95% tracejada.
-- **Ocorrências por hora do dia** (barras) — a recorrência por faixa horária é o que orienta
+- **Ocorrências por hora do dia** (barras) - a recorrência por faixa horária é o que orienta
   reforço de posto e redesenho de janela de ronda.
-- **Pontos com mais não conformidade** (barras horizontais) — onde o problema é crônico.
+- **Pontos com mais não conformidade** (barras horizontais) - onde o problema é crônico.
 - **Ocorrências por tipo** (barras horizontais).
 
 ## Decisões que afetam a leitura dos números
@@ -41,11 +41,11 @@ microssegundos economizados.
 
 O filtro de unidade é uma conveniência da tela, não o mecanismo de segurança: o
 `ReadsDashboardFilters` **reforça a unidade do gestor no servidor**, ignorando o que vier do
-Livewire. Um gestor de unidade que peça "todas as unidades" continua vendo apenas a dele — há
+Livewire. Um gestor de unidade que peça "todas as unidades" continua vendo apenas a dele - há
 teste para isso.
 
 ## Testes
 
 Widgets de gráfico são *lazy*: a página abre sem executar `getData()`, então um erro no gráfico
 só apareceria para o gestor, na tela. `DashboardWidgetsTest` monta cada widget via Livewire, com
-e sem dados, justamente para cobrir isso — o caso "sem dados" é onde mora a divisão por zero.
+e sem dados, justamente para cobrir isso - o caso "sem dados" é onde mora a divisão por zero.

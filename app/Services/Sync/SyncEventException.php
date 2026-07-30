@@ -25,7 +25,7 @@ class SyncEventException extends RuntimeException
     }
 
     /**
-     * Evento inválido — retentar não resolve. O dispositivo descarta e o erro
+     * Evento inválido - retentar não resolve. O dispositivo descarta e o erro
      * fica registrado no lote para investigação.
      */
     public static function permanent(string $message, string $errorCode = 'invalid_event'): self

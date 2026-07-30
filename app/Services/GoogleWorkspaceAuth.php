@@ -72,7 +72,7 @@ class GoogleWorkspaceAuth
 
     /**
      * Um google_id diferente do já vinculado significa outra conta com o mesmo
-     * e-mail — o caso do endereço reaproveitado depois de um desligamento.
+     * e-mail - o caso do endereço reaproveitado depois de um desligamento.
      * Recusar é mais seguro que assumir que é a mesma pessoa.
      */
     private function bind(User $user, SocialiteUser $googleUser): void

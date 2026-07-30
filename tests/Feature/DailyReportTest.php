@@ -13,7 +13,7 @@ use Tests\Feature\Api\SyncTestCase;
 
 /**
  * O RDO é o documento que a supervisão e o contratante consomem. Ele agrega o
- * que veio do campo — por isso os testes constroem os dados pelo mesmo caminho
+ * que veio do campo - por isso os testes constroem os dados pelo mesmo caminho
  * que o aparelho usa, e não por factory.
  */
 class DailyReportTest extends SyncTestCase

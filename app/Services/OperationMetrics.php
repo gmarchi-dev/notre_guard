@@ -16,7 +16,7 @@ use Illuminate\Support\Collection;
  *
  * As agregações por dia e por hora são feitas em PHP e não no banco: `HOUR()` e
  * `strftime()` divergem entre MySQL e SQLite, e o volume aqui é de centenas de
- * registros por mês — não vale trocar portabilidade por microssegundos.
+ * registros por mês - não vale trocar portabilidade por microssegundos.
  */
 class OperationMetrics
 {
@@ -156,7 +156,7 @@ class OperationMetrics
     }
 
     /**
-     * Pontos que mais produzem não conformidade — onde o problema é crônico.
+     * Pontos que mais produzem não conformidade - onde o problema é crônico.
      *
      * @return Collection<int, object{label: string, total: int}>
      */
@@ -168,7 +168,7 @@ class OperationMetrics
             ->with('patrolScan.checkpoint')
             ->get()
             ->groupBy(fn (ChecklistResponse $r) => $r->patrolScan?->checkpoint
-                ? "{$r->patrolScan->checkpoint->code} — {$r->patrolScan->checkpoint->name}"
+                ? "{$r->patrolScan->checkpoint->code} - {$r->patrolScan->checkpoint->name}"
                 : '—')
             ->map->count()
             ->sortDesc()

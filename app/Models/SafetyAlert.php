@@ -86,7 +86,7 @@ class SafetyAlert extends Model
 
     /**
      * Quanto tempo o alerta ficou sem ninguém reconhecer. É o número que diz se
-     * a supervisão está de fato atendendo — um botão de pânico que ninguém vê
+     * a supervisão está de fato atendendo - um botão de pânico que ninguém vê
      * não protege ninguém.
      */
     public function minutesToAcknowledge(): ?int

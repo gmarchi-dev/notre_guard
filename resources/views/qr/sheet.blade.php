@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $title }} — Notre Guard</title>
+    <title>{{ $title }} - Notre Guard</title>
     <style>
         :root { color-scheme: light; }
         * { box-sizing: border-box; }
@@ -68,7 +68,7 @@
 </head>
 <body>
     <div class="toolbar">
-        <h1>{{ $title }} — {{ count($tags) }} etiqueta(s)</h1>
+        <h1>{{ $title }} - {{ count($tags) }} etiqueta(s)</h1>
         <button onclick="window.print()">Imprimir</button>
     </div>
 

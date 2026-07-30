@@ -2,7 +2,7 @@
  * Agrupamento.
  *
  * Substitui a pilha de cartões com borda. Antes, a tela inicial mostrava
- * quatro contêineres desenhados um embaixo do outro — cada item de lista era
+ * quatro contêineres desenhados um embaixo do outro - cada item de lista era
  * uma caixa própria, com borda e 8px de respiro. Muita moldura para pouca
  * informação.
  *
@@ -22,7 +22,7 @@
     }
 
     /* Conjunto de campos: sem preenchimento nem fio, porque os próprios campos
-       já são superfície. Não é variante de `group` — é outra coisa, e por isso
+       já são superfície. Não é variante de `group` - é outra coisa, e por isso
        tem nome próprio. */
     .fieldset {
         display: flex;

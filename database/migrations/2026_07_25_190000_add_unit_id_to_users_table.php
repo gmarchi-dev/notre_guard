@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            // Unidade do gestor. Admin e supervisão deixam nulo — enxergam tudo.
+            // Unidade do gestor. Admin e supervisão deixam nulo - enxergam tudo.
             $table->foreignId('unit_id')
                 ->nullable()
                 ->after('active')

@@ -1,10 +1,10 @@
-# Notre Guard — instruções do projeto
+# Notre Guard - instruções do projeto
 
 Sistema de gestão de segurança patrimonial (ronda eletrônica, RDO, ocorrências) do Colégio
 Notre Dame Campinas. Ver [README.md](README.md) e
 [docs/01-plano-de-implantacao.md](docs/01-plano-de-implantacao.md).
 
-**Estado atual:** Fases 1, 2 e 3 completas. Laravel 13 + **Filament 4** (não 3 — ver
+**Estado atual:** Fases 1, 2 e 3 completas. Laravel 13 + **Filament 4** (não 3 - ver
 `docs/04-decisoes-tecnicas.md`), painel com cadastros, telas operacionais, RDO com PDF selado,
 indicadores, notificações, retenção LGPD e login Google (desligado); API de sincronização e PWA
 de campo offline-first; painel da portaria com controle de chaves; alertas de pânico e
@@ -15,11 +15,11 @@ As notificações são enfileiradas: sem `php artisan queue:work` os avisos fica
 expurgo de dados vencidos depende do agendador (`schedule:run` no cron).
 
 Antes de mexer no modelo de dados ou em resources, ler `docs/03-modelo-de-dados.md` e
-`docs/04-decisoes-tecnicas.md` — há duas renomeações obrigatórias (`PatrolRoute`,
+`docs/04-decisoes-tecnicas.md` - há duas renomeações obrigatórias (`PatrolRoute`,
 `SecurityGuard`) por colisão com o framework. Para mexer em campo ou sync, ler
 `docs/05-api-de-sincronizacao.md` e `docs/06-pwa-de-campo.md`.
 
-Depois de alterar `resources/js/field/**` ou `resources/css/field.css`, rodar `npm run build` —
+Depois de alterar `resources/js/field/**` ou `resources/css/field.css`, rodar `npm run build` -
 a PWA é servida pelo build, não pelo dev server.
 
 ## Idioma
@@ -46,11 +46,11 @@ Não reabrir sem o usuário pedir:
 - **Eventos de campo são append-only e imutáveis**, com UUID gerado no dispositivo e
   endpoint de sync idempotente pelo UUID. Correção é evento de retificação, nunca edição.
 - **Nenhuma validação bloqueia o registro em campo.** GPS fora do raio ou horário fora da
-  janela viram *desvio marcado*, analisado pelo supervisor — o app nunca recusa.
+  janela viram *desvio marcado*, analisado pelo supervisor - o app nunca recusa.
 - **Registro de ponto eletrônico legal está fora de escopo** (Portaria 671/2021). A assunção
   de posto é presença operacional, e a UI precisa dizer isso.
 - **Localização só é coletada durante ronda ativa.** Nunca rastreamento contínuo.
-- Banco e repositório separados do Portal; auth Google e linguagem visual compartilhados —
+- Banco e repositório separados do Portal; auth Google e linguagem visual compartilhados -
   mas **não componentes de código**: o Portal é Filament 3, este projeto é Filament 4.
 - **Turnos e rondas não são criáveis nem editáveis pelo painel.** Nascem no dispositivo e são
   somente leitura. Permitir edição transformaria aderência de ronda em número negociável.
@@ -59,16 +59,16 @@ Não reabrir sem o usuário pedir:
 - Tudo que entra no IndexedDB passa por `plain()` em `db.js`: o Alpine entrega `Proxy` e o
   IndexedDB não consegue cloná-los.
 - **A supervisão de segurança é central** (matriz + filial, mesma gerência). O perfil
-  `unit_manager` e o trait `ScopedToUnit` existem e funcionam, mas não estão em uso — não
+  `unit_manager` e o trait `ScopedToUnit` existem e funcionam, mas não estão em uso - não
   investir em escopo de escrita por unidade sem o usuário pedir.
 - Se precisar de escopo por unidade: usar o trait `ScopedToUnit` e sobrescrever
   `applyUnitScope()`. **Nunca** sobrescrever `getEloquentQuery()` chamando
-  `Resource::getEloquentQuery()` — perde o late static binding e quebra a listagem com erro 500.
+  `Resource::getEloquentQuery()` - perde o late static binding e quebra a listagem com erro 500.
 - Criar login e trocar perfil é só de administrador (`UserResource::canAccess()`).
 - **RDO em rascunho é espelho do banco; fechado é fotografia selada.** Não recalcular RDO
-  fechado, não editar o conteúdo — a saída para registro atrasado é reabrir. Consultar sempre
+  fechado, não editar o conteúdo - a saída para registro atrasado é reabrir. Consultar sempre
   com `whereDate()` (ver `docs/07-rdo.md`).
-- **Nos indicadores, ausência de dado é `null`, nunca zero** — "não houve ronda" e "as rondas
+- **Nos indicadores, ausência de dado é `null`, nunca zero** - "não houve ronda" e "as rondas
   falharam" levam a decisões diferentes (ver `docs/08-dashboard.md`).
 - **Default de boolean (`active` etc.) vai no `$attributes` do model**, não só no banco. Já
   causou bug três vezes: instância criada em código fica com o campo nulo até ser recarregada.
@@ -78,7 +78,7 @@ Não reabrir sem o usuário pedir:
 - **O módulo de chaves é liberado por permissão individual** (`keys.manage`), não por perfil.
   Nada é concedido automaticamente; só o administrador tem tudo por definição. Nova permissão =
   constante em `User::PERMISSIONS` + Gate já registrado automaticamente.
-- **Pânico não passa pela fila** e sua notificação **não** é `ShouldQueue` — depender do worker
+- **Pânico não passa pela fila** e sua notificação **não** é `ShouldQueue` - depender do worker
   tornaria o botão inútil. A fila é só contingência, com o mesmo uuid. Inatividade vigia
   **rondas**, não turnos (ver `docs/12-seguranca-do-vigilante.md`).
 - **Só ocorrência grave notifica.** Não ampliar o gatilho sem o usuário pedir: ruído constante
@@ -88,5 +88,5 @@ Não reabrir sem o usuário pedir:
   valendo (ver `docs/11-autenticacao-google.md`).
 - **Retenção:** evidência vencida perde o binário, não a linha (o hash fica como prova); turno
   aberto nunca é expurgado; toda execução é registrada em `retention_runs`. Prazos em
-  `config/retention.php` — alterar é decisão de negócio, documentar o motivo em
+  `config/retention.php` - alterar é decisão de negócio, documentar o motivo em
   `docs/10-lgpd-e-retencao.md`.

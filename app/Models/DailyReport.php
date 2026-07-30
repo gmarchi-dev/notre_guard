@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * RDO — Relatório Diário de Ocorrências, por unidade e data.
+ * RDO - Relatório Diário de Ocorrências, por unidade e data.
  */
 class DailyReport extends Model
 {

@@ -6,7 +6,7 @@
 |--------------------------------------------------------------------------
 |
 | Prazos definidos no plano de implantação. O sistema trata dado pessoal de
-| colaborador — localização durante a ronda, foto, nome — e de terceiros
+| colaborador - localização durante a ronda, foto, nome - e de terceiros
 | citados em ocorrência. Guardar além do necessário é tratamento sem base.
 |
 | Alterar prazo aqui é decisão de negócio: registre o motivo em
@@ -22,7 +22,7 @@ return [
     'evidence_months' => (int) env('RETENTION_EVIDENCE_MONTHS', 12),
 
     /*
-     * Turnos, rondas e leituras. É onde mora a localização do vigilante — o
+     * Turnos, rondas e leituras. É onde mora a localização do vigilante - o
      * dado mais sensível do sistema e o de menor valor histórico.
      */
     'patrol_months' => (int) env('RETENTION_PATROL_MONTHS', 12),
@@ -39,7 +39,7 @@ return [
     'sync_log_months' => (int) env('RETENTION_SYNC_LOG_MONTHS', 6),
 
     /*
-     * Notificações lidas ou não no painel — carregam resumo de ocorrência.
+     * Notificações lidas ou não no painel - carregam resumo de ocorrência.
      */
     'notification_months' => (int) env('RETENTION_NOTIFICATION_MONTHS', 12),
 ];

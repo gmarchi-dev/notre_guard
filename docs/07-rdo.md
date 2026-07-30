@@ -1,4 +1,4 @@
-# 07 — RDO (Relatório Diário de Ocorrências)
+# 07 - RDO (Relatório Diário de Ocorrências)
 
 Um RDO por **unidade e data**. Agrega o que foi registrado em campo: turnos, rondas, leituras
 com desvio, não conformidades de checklist e ocorrências.
@@ -12,7 +12,7 @@ listagem ou a ficha é aberta. Números de RDO em rascunho nunca envelhecem em s
 `content_hash` (SHA-256 do JSON) e o PDF é gerado em `storage/app/private/reports/AAAA/MM/`.
 A partir daí `buildOrUpdate()` não recalcula mais nada.
 
-Só as **observações da supervisão** são editáveis, e apenas enquanto o RDO está aberto — elas
+Só as **observações da supervisão** são editáveis, e apenas enquanto o RDO está aberto - elas
 entram no PDF.
 
 ## Fechar exige turnos encerrados
@@ -38,7 +38,7 @@ indistinguíveis.
 
 Gerado com dompdf a partir de `resources/views/pdf/daily-report.blade.php`, fonte DejaVu Sans
 (necessária para os acentos). Fica em disco privado e é servido por
-`GET /rdo/{dailyReport}/pdf`, que verifica a unidade do usuário — o escopo do painel não
+`GET /rdo/{dailyReport}/pdf`, que verifica a unidade do usuário - o escopo do painel não
 protege um link direto.
 
 O rodapé traz quem fechou, quando, e o selo SHA-256 por extenso.

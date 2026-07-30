@@ -4,7 +4,7 @@
  * Cópia própria em resources/fonts/, e não um link para
  * public/fonts/filament/**: `filament:upgrade` republica aquele arquivo com
  * outro hash, e o aparelho offline ficaria com um CSS em cache apontando para
- * um arquivo que não existe mais — a fonte quebraria justamente quando
+ * um arquivo que não existe mais - a fonte quebraria justamente quando
  * houvesse rede.
  *
  * Só o subset latin (48 KB): o português inteiro cabe em U+0000-00FF. O
@@ -13,7 +13,7 @@
  * O Vite reescreve este url() para /build/assets/, que já é coberto pela
  * regra de cache do service worker (public/sw.js).
  *
- * font-display: swap, nunca block — se o arquivo não estiver em cache, texto
+ * font-display: swap, nunca block - se o arquivo não estiver em cache, texto
  * em fonte errada é infinitamente melhor que texto ausente numa ronda.
  */
 

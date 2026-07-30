@@ -1,7 +1,7 @@
-# 11 — Autenticação Google Workspace
+# 11 - Autenticação Google Workspace
 
 **Estado: implementada e desligada.** `GOOGLE_AUTH_ENABLED=false`. Com o flag desligado, as
-rotas devolvem 404 e o botão não aparece na tela de login — o acesso ao painel continua sendo
+rotas devolvem 404 e o botão não aparece na tela de login - o acesso ao painel continua sendo
 por e-mail e senha.
 
 Não há nada a fazer no código para ativar: só as credenciais e o flag.
@@ -27,7 +27,7 @@ inteira. O administrador cria a conta em Configuração → Usuários; o Google 
 já existe.
 
 Existe `GOOGLE_AUTH_ALLOW_PROVISIONING`, desligado. Se algum dia for ligado, a conta nasce com
-perfil **vigilante** — que não acessa o painel. É o menor privilégio possível.
+perfil **vigilante** - que não acessa o painel. É o menor privilégio possível.
 
 ## Por que o `google_id`
 
@@ -36,7 +36,7 @@ mesmo `coordenacao@` é dado a outra pessoa. Sem o vínculo pelo id da conta Goo
 herdaria silenciosamente o acesso do antecessor.
 
 O vínculo é gravado no primeiro login. Se um `google_id` diferente chegar para um e-mail já
-vinculado, o login é recusado e a situação precisa ser resolvida pela administração — que é o
+vinculado, o login é recusado e a situação precisa ser resolvida pela administração - que é o
 comportamento correto quando não se sabe se é a mesma pessoa.
 
 ## Convivência com a senha
@@ -45,7 +45,7 @@ A adoção é faseada, como no Portal de Segurança Digital: ligar o Google **n�
 por senha. Isso mantém um caminho de entrada se o OAuth falhar, e não impede o acesso do
 administrador durante a transição.
 
-Quando o Google estiver consolidado, desativar a senha é uma decisão à parte — hoje não há
+Quando o Google estiver consolidado, desativar a senha é uma decisão à parte - hoje não há
 mecanismo para isso, e desabilitar exigiria uma alteração no painel.
 
 ## O aplicativo de campo não usa Google
@@ -61,7 +61,7 @@ o próximo.
    do tipo *Web application*.
 2. Cadastrar como *Authorized redirect URI* exatamente a URL pública do callback:
    `https://SEU-DOMINIO/auth/google/callback`. Precisa ser **HTTPS** em produção.
-3. Na tela de consentimento, marcar o tipo como **Internal** — restringe ao domínio.
+3. Na tela de consentimento, marcar o tipo como **Internal** - restringe ao domínio.
 4. Preencher no `.env`:
 
 ```
@@ -77,7 +77,7 @@ GOOGLE_REDIRECT_URI=https://SEU-DOMINIO/auth/google/callback
    Google.
 
 O `hd` é enviado no redirect para reduzir o ruído do seletor de contas, mas não substitui a
-validação de domínio no servidor — o parâmetro é do cliente e não é confiável.
+validação de domínio no servidor - o parâmetro é do cliente e não é confiável.
 
 ## Implementação
 

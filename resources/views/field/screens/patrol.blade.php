@@ -2,7 +2,7 @@
     Ronda.
 
     O próximo ponto sai da lista e vira um cartão no topo, com o código em
-    corpo grande e o nome completo quebrando em até três linhas — antes o nome
+    corpo grande e o nome completo quebrando em até três linhas - antes o nome
     era truncado com reticências, ou seja, o dado que diz aonde ir era o
     primeiro a se perder.
 

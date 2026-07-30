@@ -134,7 +134,7 @@ class RetentionPurger
 
     /**
      * Apagar o turno cascateia rondas, leituras e respostas de checklist. As
-     * evidências ligadas a essas leituras são polimórficas e não têm cascata —
+     * evidências ligadas a essas leituras são polimórficas e não têm cascata -
      * precisam ser removidas antes, senão sobra linha órfã apontando para um id
      * que não existe mais.
      */

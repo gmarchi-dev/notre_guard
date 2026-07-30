@@ -137,7 +137,7 @@ class PanicAlertTest extends SyncTestCase
     {
         // Cenário real: a entrega direta funciona, mas o app não recebe a
         // resposta e enfileira por precaução. O mesmo uuid impede o segundo
-        // alerta — é por isso que o app reaproveita o uuid no fallback.
+        // alerta - é por isso que o app reaproveita o uuid no fallback.
         Notification::fake();
 
         $uuid = (string) Str::uuid7();

@@ -33,7 +33,7 @@ class SafetyAlertRaised extends Notification
 
         $mail = (new MailMessage)
             ->subject(sprintf(
-                '%s[%s] %s — %s',
+                '%s[%s] %s - %s',
                 $urgent ? 'URGENTE: ' : '',
                 $alert->unit->code,
                 $alert->kindLabel(),
@@ -93,7 +93,7 @@ class SafetyAlertRaised extends Notification
         }
 
         return sprintf(
-            '**Localização:** %s, %s — https://maps.google.com/?q=%s,%s',
+            '**Localização:** %s, %s - https://maps.google.com/?q=%s,%s',
             $alert->latitude,
             $alert->longitude,
             $alert->latitude,

@@ -6,7 +6,7 @@ use App\Models\IncidentType;
 use Illuminate\Database\Seeder;
 
 /**
- * Taxonomia inicial de ocorrências. É um ponto de partida para a Fase 0 —
+ * Taxonomia inicial de ocorrências. É um ponto de partida para a Fase 0 -
  * a árvore definitiva sai da conversa com a equipe de segurança.
  */
 class IncidentTypeSeeder extends Seeder

@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 use Tests\Feature\Api\SyncTestCase;
 
 /**
- * Aviso de ocorrência grave. O que se testa aqui é quem recebe e quando —
+ * Aviso de ocorrência grave. O que se testa aqui é quem recebe e quando -
  * errar isso significa ou silêncio numa emergência, ou ruído que faz a
  * supervisão ignorar o sistema.
  */

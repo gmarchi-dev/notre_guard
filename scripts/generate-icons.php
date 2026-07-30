@@ -13,7 +13,7 @@ if (! is_dir($target)) {
 $font = 'C:\Windows\Fonts\arialbd.ttf';
 
 /**
- * @param  int  $padding  margem interna — ícone maskable precisa de área segura
+ * @param  int  $padding  margem interna - ícone maskable precisa de área segura
  */
 function icon(string $path, int $size, int $padding, string $font): void
 {

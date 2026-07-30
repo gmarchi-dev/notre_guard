@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 /**
  * O livro da portaria: histórico de quem levou o quê, quando e se devolveu.
- * Somente leitura — retirada e devolução acontecem no quadro de chaves.
+ * Somente leitura - retirada e devolução acontecem no quadro de chaves.
  */
 class KeyLoansTable
 {

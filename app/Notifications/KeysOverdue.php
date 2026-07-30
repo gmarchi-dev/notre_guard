@@ -39,7 +39,7 @@ class KeysOverdue extends Notification implements ShouldQueue
 
         foreach ($this->loans as $loan) {
             $mail->line(sprintf(
-                '- **%s** (%s) — com %s desde %s, prazo %s',
+                '- **%s** (%s) - com %s desde %s, prazo %s',
                 $loan->keyItem?->code,
                 $loan->keyItem?->name,
                 $loan->holder?->name,

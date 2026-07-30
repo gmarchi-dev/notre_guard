@@ -48,7 +48,7 @@ class SecurityGuard extends Model
     }
 
     /**
-     * Reciclagem vencida não bloqueia o uso do app — apenas sinaliza ao gestor,
+     * Reciclagem vencida não bloqueia o uso do app - apenas sinaliza ao gestor,
      * que é quem trata a pendência junto ao RH.
      */
     public function refresherExpired(): bool

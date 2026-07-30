@@ -2,7 +2,7 @@
     Faixas persistentes: o que não pode desaparecer sozinho.
 
     Diferente do toast, que some. Aqui ficam o estado do acionamento de
-    emergência e o aviso de roteiro desatualizado — este último cobre o caso em
+    emergência e o aviso de roteiro desatualizado - este último cobre o caso em
     que o bootstrap falha e o vigilante ronda com dados velhos sem saber.
 --}}
 

@@ -1,7 +1,7 @@
 /**
  * Cliente da API de campo.
  *
- * Toda função aqui pode falhar por falta de rede — isso é o normal, não a
+ * Toda função aqui pode falhar por falta de rede - isso é o normal, não a
  * exceção. Quem chama trata o erro mantendo o registro na fila local.
  */
 const TOKEN_KEY = 'ng.token'
@@ -86,7 +86,7 @@ export function bootstrap() {
 
 /**
  * Pânico vai direto, fora da fila. Timeout curto de propósito: se o servidor
- * não responder rápido, o app não pode ficar esperando — enfileira e segue.
+ * não responder rápido, o app não pode ficar esperando - enfileira e segue.
  */
 export function sendPanic(payload, timeoutMs = 6000) {
     return request('panic', {

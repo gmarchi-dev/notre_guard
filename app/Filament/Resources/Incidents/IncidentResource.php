@@ -33,7 +33,7 @@ class IncidentResource extends Resource
 
     /**
      * Ocorrência nasce no aplicativo do vigilante, como turno e ronda. A ficha
-     * aqui mostra o relato original e recebe a análise da supervisão — não há
+     * aqui mostra o relato original e recebe a análise da supervisão - não há
      * como criar uma da qual ninguém foi testemunha.
      */
     public static function canCreate(): bool

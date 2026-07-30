@@ -2,7 +2,7 @@
  * Botões.
  *
  * Todo botão declara sua intenção: .btn + variante + tamanho. Tudo em
- * especificidade (0,1,0), e nenhum seletor descendente define tamanho — é o
+ * especificidade (0,1,0), e nenhum seletor descendente define tamanho - é o
  * que impede a cascata de correções que existia antes.
  *
  * As variantes secundárias usam PREENCHIMENTO SUAVE, não contorno: um botão
@@ -82,7 +82,7 @@
     }
 
     /* Vermelho preenchido existe aqui e no botão flutuante de emergência. Em
-       nenhum outro lugar — ver tokens.css e o teste que garante a
+       nenhum outro lugar - ver tokens.css e o teste que garante a
        exclusividade. */
     .btn--emergency {
         background: var(--emergency);

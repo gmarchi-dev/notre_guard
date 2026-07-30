@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         // Registro das execuções de expurgo. A LGPD exige poder demonstrar o
-        // tratamento — inclusive a eliminação. Sem este histórico, "nós
+        // tratamento - inclusive a eliminação. Sem este histórico, "nós
         // apagamos" é afirmação sem prova.
         Schema::create('retention_runs', function (Blueprint $table) {
             $table->id();
@@ -28,7 +28,7 @@ return new class extends Migration
             // Quando os dados de campo da data são expurgados, o RDO fechado
             // deixa de ser recalculável. Sem esta marca, a verificação de
             // integridade acusaria "registros chegaram depois do fechamento"
-            // para todo RDO antigo — um falso alarme permanente.
+            // para todo RDO antigo - um falso alarme permanente.
             $table->timestamp('data_purged_at')->nullable()->after('content_hash');
         });
     }

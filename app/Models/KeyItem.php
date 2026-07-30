@@ -63,6 +63,6 @@ class KeyItem extends Model
 
     public function label(): string
     {
-        return "{$this->code} — {$this->name}";
+        return "{$this->code} - {$this->name}";
     }
 }

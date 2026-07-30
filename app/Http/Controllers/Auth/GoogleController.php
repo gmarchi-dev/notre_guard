@@ -16,7 +16,7 @@ class GoogleController extends Controller
 {
     public function __construct(private readonly GoogleWorkspaceAuth $google)
     {
-        // Enquanto o recurso está desligado as rotas não existem — 404, e não
+        // Enquanto o recurso está desligado as rotas não existem - 404, e não
         // uma tela de erro que revele que o caminho está lá.
         abort_unless($this->google->enabled(), 404);
     }

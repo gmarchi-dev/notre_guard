@@ -51,7 +51,7 @@ php artisan notre-guard:purge-data --dry-run
 O painel fica em <http://127.0.0.1:8010/admin> e a PWA do vigilante em
 <http://127.0.0.1:8010/campo>.
 
-> Para testar a PWA em celular é preciso **HTTPS** — câmera, geolocalização e service worker
+> Para testar a PWA em celular é preciso **HTTPS** - câmera, geolocalização e service worker
 > não funcionam em HTTP. Use `herd secure` ou um túnel.
 
 ### Acessos de desenvolvimento
@@ -98,7 +98,7 @@ php artisan test
 - **Retenção de dados (LGPD)**: expurgo diário automatizado com prazos configuráveis e
   histórico das execuções para prestação de contas
 - **Login Google Workspace** implementado e **desligado** (`GOOGLE_AUTH_ENABLED=false`);
-  ativação é só credencial e flag — ver [docs/11](docs/11-autenticacao-google.md)
+  ativação é só credencial e flag - ver [docs/11](docs/11-autenticacao-google.md)
 - Gestão de usuários e perfis (só administrador), com criação do login direto no cadastro
   de vigilante
 - **Escopo por unidade**: o gestor de unidade enxerga apenas a própria unidade
@@ -112,7 +112,7 @@ php artisan test
 - Tela de fila mostrando o que está pendente e o que o servidor recusou, com o motivo
 - **Botão de emergência** sempre visível, com confirmação em duas etapas e contingência offline
 - Desvios (fora do raio, sem GPS, fora da janela, fora de ordem, relógio divergente) são
-  marcados pelo servidor — o app nunca recusa um registro
+  marcados pelo servidor - o app nunca recusa um registro
 
 Turnos, rondas e leituras são imutáveis: nascem em campo e o painel só consulta.
 
@@ -121,29 +121,29 @@ Turnos, rondas e leituras são imutáveis: nascem em campo e o painel só consul
 - Quadro de chaves com entrega e devolução, cadastro de solicitante na hora da retirada
 - Livro de retiradas com prazo por retirada e aviso diário de chaves não devolvidas
 - Painel separado do administrativo: o porteiro entra aqui, e não na operação das unidades
-- Acesso por **permissão individual** (`keys.manage`), concedida usuário por usuário — não é
+- Acesso por **permissão individual** (`keys.manage`), concedida usuário por usuário - não é
   liberado por perfil
 
 ## Documentação
 
 | Documento | Conteúdo |
 |---|---|
-| [01 — Plano de implantação](docs/01-plano-de-implantacao.md) | Estudo de mercado, escopo por fases, arquitetura, roadmap, riscos |
-| [02 — Ambiente de desenvolvimento](docs/02-ambiente-desenvolvimento.md) | Herd, MySQL, `.env`, teste em dispositivo real |
-| [03 — Modelo de dados](docs/03-modelo-de-dados.md) | Tabelas, convenções de sincronização, tokens de QR |
-| [04 — Decisões técnicas](docs/04-decisoes-tecnicas.md) | Decisões tomadas na implementação, com o motivo |
-| [05 — API de sincronização](docs/05-api-de-sincronizacao.md) | Endpoints, tipos de evento, idempotência, desvios |
-| [06 — PWA de campo](docs/06-pwa-de-campo.md) | Telas, offline, decisões de interface, limitações |
-| [07 — RDO](docs/07-rdo.md) | Ciclo do relatório diário, selo de integridade, PDF |
-| [08 — Painel operacional](docs/08-dashboard.md) | Indicadores, gráficos e como ler os números |
-| [09 — Notificações](docs/09-notificacoes.md) | Quando dispara, quem recebe, canais e fila |
-| [10 — LGPD e retenção](docs/10-lgpd-e-retencao.md) | Prazos, regras do expurgo e prestação de contas |
-| [11 — Autenticação Google](docs/11-autenticacao-google.md) | Regras de aceite e roteiro de ativação |
-| [12 — Segurança do vigilante](docs/12-seguranca-do-vigilante.md) | Botão de pânico, inatividade e atendimento |
-| [13 — Controle de chaves](docs/13-controle-de-chaves.md) | Livro da portaria, prazos e painel próprio |
+| [01 - Plano de implantação](docs/01-plano-de-implantacao.md) | Estudo de mercado, escopo por fases, arquitetura, roadmap, riscos |
+| [02 - Ambiente de desenvolvimento](docs/02-ambiente-desenvolvimento.md) | Herd, MySQL, `.env`, teste em dispositivo real |
+| [03 - Modelo de dados](docs/03-modelo-de-dados.md) | Tabelas, convenções de sincronização, tokens de QR |
+| [04 - Decisões técnicas](docs/04-decisoes-tecnicas.md) | Decisões tomadas na implementação, com o motivo |
+| [05 - API de sincronização](docs/05-api-de-sincronizacao.md) | Endpoints, tipos de evento, idempotência, desvios |
+| [06 - PWA de campo](docs/06-pwa-de-campo.md) | Telas, offline, decisões de interface, limitações |
+| [07 - RDO](docs/07-rdo.md) | Ciclo do relatório diário, selo de integridade, PDF |
+| [08 - Painel operacional](docs/08-dashboard.md) | Indicadores, gráficos e como ler os números |
+| [09 - Notificações](docs/09-notificacoes.md) | Quando dispara, quem recebe, canais e fila |
+| [10 - LGPD e retenção](docs/10-lgpd-e-retencao.md) | Prazos, regras do expurgo e prestação de contas |
+| [11 - Autenticação Google](docs/11-autenticacao-google.md) | Regras de aceite e roteiro de ativação |
+| [12 - Segurança do vigilante](docs/12-seguranca-do-vigilante.md) | Botão de pânico, inatividade e atendimento |
+| [13 - Controle de chaves](docs/13-controle-de-chaves.md) | Livro da portaria, prazos e painel próprio |
 
 ## Relação com o Portal de Segurança Digital
 
 Aplicação **independente** (código e banco próprios). Compartilha com o Portal o modelo de
-autenticação Google Workspace faseada e a linguagem visual — mas não componentes de código,
+autenticação Google Workspace faseada e a linguagem visual - mas não componentes de código,
 porque o Portal está em Filament 3 e este projeto em Filament 4.

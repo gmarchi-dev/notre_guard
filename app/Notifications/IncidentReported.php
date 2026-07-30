@@ -39,7 +39,7 @@ class IncidentReported extends Notification implements ShouldQueue
         $incident = $this->incident->loadMissing(['unit', 'type.parent', 'reportedBy.user']);
 
         return (new MailMessage)
-            ->subject("[{$incident->unit->code}] {$this->severityLabel()} — {$incident->number}")
+            ->subject("[{$incident->unit->code}] {$this->severityLabel()} - {$incident->number}")
             ->greeting("Ocorrência {$incident->number}")
             ->line("**Unidade:** {$incident->unit->name}")
             ->line('**Tipo:** '.$incident->type->fullName())
@@ -61,7 +61,7 @@ class IncidentReported extends Notification implements ShouldQueue
         $incident = $this->incident->loadMissing(['unit', 'type']);
 
         return FilamentNotification::make()
-            ->title("{$incident->number} — ".$incident->type->fullName())
+            ->title("{$incident->number} - ".$incident->type->fullName())
             ->body("{$incident->unit->name} · ".$incident->occurred_at->format('d/m H:i'))
             ->icon('heroicon-o-exclamation-triangle')
             ->color($incident->severity === 'critical' ? 'danger' : 'warning')

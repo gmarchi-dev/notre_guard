@@ -15,13 +15,13 @@ import { sync, startSyncLoop, onSyncChange, refreshPending } from './sync'
 import { QrScanner, confirmFeedback } from './scanner'
 import { currentPosition, distanceMeters, formatDistance } from './geo'
 
-/** Telas que empilham histórico — ver navigate() e o tratamento de popstate. */
+/** Telas que empilham histórico - ver navigate() e o tratamento de popstate. */
 const SCREENS = ['boot', 'login', 'home', 'patrol', 'scan', 'checklist', 'incident', 'queue']
 
 /**
  * Abas da barra inferior: destinos, não ações.
  *
- * Subfluxos (leitura de QR e checklist) não são destino — lá a barra some e o
+ * Subfluxos (leitura de QR e checklist) não são destino - lá a barra some e o
  * retorno é a seta do cabeçalho.
  */
 const TABS = [
@@ -121,7 +121,7 @@ function fieldApp() {
          * memória e nunca é transmitida sozinha.
          *
          * É deliberadamente pontual: mostrar distância em tempo real exigiria
-         * ler o GPS continuamente, que é rastreamento — exatamente o que este
+         * ler o GPS continuamente, que é rastreamento - exatamente o que este
          * aplicativo promete não fazer.
          */
         lastPosition: null,
@@ -198,13 +198,13 @@ function fieldApp() {
          *
          * A área central é do turno, da ronda e da ocorrência; um ajuste no meio
          * dela concorre com o que o vigilante está fazendo. Sheet, e não um
-         * ciclo por toque, porque são quatro opções — ciclar obrigaria a passar
+         * ciclo por toque, porque são quatro opções - ciclar obrigaria a passar
          * pelas outras três para chegar na desejada.
          */
         async openThemeSheet() {
             const choice = await this.pick({
                 title: 'Aparência',
-                text: 'No modo noturno o botão de emergência continua vermelho cheio — é a única coisa que não escurece.',
+                text: 'No modo noturno o botão de emergência continua vermelho cheio - é a única coisa que não escurece.',
                 sections: [
                     {
                         label: 'Tema',
@@ -226,7 +226,7 @@ function fieldApp() {
          * A barra do sistema acompanha o tema escolhido.
          *
          * Os dois `<meta theme-color>` do HTML respondem a prefers-color-scheme,
-         * que não sabe nada de uma escolha explícita — sem isto, o modo noturno
+         * que não sabe nada de uma escolha explícita - sem isto, o modo noturno
          * conviveria com uma barra de status clara no topo.
          */
         syncThemeColor() {
@@ -247,7 +247,7 @@ function fieldApp() {
             const bg = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()
 
             // Convertido para sRGB antes de sair: os tokens são oklch(), e a
-            // barra de status do iOS ignora `theme-color` que não saiba ler —
+            // barra de status do iOS ignora `theme-color` que não saiba ler -
             // o resultado seria uma faixa branca no topo do modo noturno.
             tag.content = toSrgb(bg) ?? bg
         },
@@ -373,7 +373,7 @@ function fieldApp() {
 
         /**
          * Uma ação principal por tela, exibida em destaque acima das abas. As
-         * secundárias ficam no conteúdo — antes eram até três blocos empilhados
+         * secundárias ficam no conteúdo - antes eram até três blocos empilhados
          * e o rodapé comia um quarto da tela.
          */
         primaryAction() {
@@ -672,7 +672,7 @@ function fieldApp() {
                 }
             } catch (error) {
                 // Sem dado nenhum é erro de verdade. Com dado velho, o aplicativo
-                // segue funcionando — mas o vigilante precisa SABER que está
+                // segue funcionando - mas o vigilante precisa SABER que está
                 // rondando com um roteiro desatualizado. Antes isso era engolido.
                 if (!this.data) {
                     this.toast(error.message, 'error')
@@ -778,11 +778,11 @@ function fieldApp() {
             if (this.busy) return
 
             // Antes, iniciar uma ronda com outra em andamento sobrescrevia a
-            // anterior sem encerrá-la — o servidor ficava com uma ronda órfã.
+            // anterior sem encerrá-la - o servidor ficava com uma ronda órfã.
             if (this.patrol) {
                 const choice = await this.choose({
                     title: 'Já existe uma ronda em andamento',
-                    text: `${this.route?.name ?? 'Roteiro'} — ${this.routeCheckpoints.length - this.remainingCount} de ${this.routeCheckpoints.length} pontos.`,
+                    text: `${this.route?.name ?? 'Roteiro'} - ${this.routeCheckpoints.length - this.remainingCount} de ${this.routeCheckpoints.length} pontos.`,
                     options: [
                         { label: 'Retomar a ronda atual', value: 'resume', variant: 'primary' },
                         { label: 'Encerrar a atual e iniciar esta', value: 'switch', variant: 'critical' },
@@ -909,7 +909,7 @@ function fieldApp() {
 
         /**
          * Há quanto tempo a medida foi feita. A distância é de quando o GPS foi
-         * lido pela última vez, não de agora — dizer isso evita que o vigilante
+         * lido pela última vez, não de agora - dizer isso evita que o vigilante
          * confie num número velho.
          */
         get lastPositionAgeLabel() {
@@ -1024,7 +1024,7 @@ function fieldApp() {
             }
 
             const choice = await this.choose({
-                title: `${item.checkpoint.code} — ${item.checkpoint.name}`,
+                title: `${item.checkpoint.code} - ${item.checkpoint.name}`,
                 text: 'O QR Code é o registro preferencial. Use o manual só quando a etiqueta estiver danificada ou coberta.',
                 options: [
                     { label: 'Registrar manualmente', value: 'manual', variant: 'primary' },
@@ -1074,7 +1074,7 @@ function fieldApp() {
          *
          * O servidor já marca `out_of_radius`, mas só o supervisor vê, no dia
          * seguinte. Avisar aqui é o que permite ao vigilante andar mais vinte
-         * metros e registrar certo — ou saber que aquele registro vai constar
+         * metros e registrar certo - ou saber que aquele registro vai constar
          * como desvio, em vez de descobrir depois.
          */
         get checkpointTooFar() {
@@ -1121,7 +1121,7 @@ function fieldApp() {
                             cancelLabel: 'Voltar e me aproximar',
                         })
 
-                        // O registro nunca é recusado — só confirmado. Mas se a
+                        // O registro nunca é recusado - só confirmado. Mas se a
                         // pessoa preferir andar até o ponto, não gravamos nada.
                         if (!ok) return
                     }
@@ -1284,7 +1284,7 @@ function fieldApp() {
          *
          * Antes eram dezessete opções achatadas numa roda nativa, na tela que se
          * usa logo depois de encontrar um portão arrombado. Agora: grupo, depois
-         * tipo — com atalho para os mais registrados nesta unidade, que é dado
+         * tipo - com atalho para os mais registrados nesta unidade, que é dado
          * medido, não palpite. Voltar da segunda etapa devolve à primeira em vez
          * de cancelar tudo.
          */
@@ -1515,7 +1515,7 @@ function fieldApp() {
          * Espera o reconhecimento humano.
          *
          * "Entregue" só diz que o servidor gravou. Quem apertou o botão precisa
-         * saber que alguém viu — é a diferença entre esperar sozinho e saber que
+         * saber que alguém viu - é a diferença entre esperar sozinho e saber que
          * há resposta a caminho. Consulta de 10 em 10 segundos, por até 15
          * minutos, e para assim que alguém reconhece.
          */
@@ -1558,7 +1558,7 @@ function fieldApp() {
             }
         },
 
-        /** "Supervisão reconheceu às 02:14" — o dado que faltava no aparelho. */
+        /** "Supervisão reconheceu às 02:14" - o dado que faltava no aparelho. */
         get panicAcknowledgedLabel() {
             if (!this.panic.acknowledgedAt) return ''
 

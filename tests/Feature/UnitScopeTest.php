@@ -96,7 +96,7 @@ class UnitScopeTest extends TestCase
     public function test_manager_without_unit_is_not_scoped_by_accident(): void
     {
         // Gestor sem unidade definida não deve virar um usuário cego nem um
-        // usuário com acesso total silencioso — hoje o comportamento é ver tudo,
+        // usuário com acesso total silencioso - hoje o comportamento é ver tudo,
         // então o cadastro precisa exigir a unidade.
         $manager = User::factory()->create(['role' => User::ROLE_UNIT_MANAGER, 'unit_id' => null]);
 

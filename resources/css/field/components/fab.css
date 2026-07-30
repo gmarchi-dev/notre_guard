@@ -3,14 +3,14 @@
  *
  * Fora da barra de abas de propósito: vizinho aos itens de navegação, o
  * acionamento de socorro ficaria a um toque de distância de "Início". Aqui ele
- * não se confunde com nada — é o único elemento circular e o único vermelho
+ * não se confunde com nada - é o único elemento circular e o único vermelho
  * preenchido da interface.
  *
  * Ancorado ao dock (e não à janela) para subir junto quando existe faixa de
  * ação: sem isso ele cobriria o botão principal da tela.
  *
  * O preço é cobrir um pedaço do conteúdo; por isso a região de rolagem ganha
- * folga extra no fim — ver layout.css.
+ * folga extra no fim - ver layout.css.
  */
 
 @layer components {

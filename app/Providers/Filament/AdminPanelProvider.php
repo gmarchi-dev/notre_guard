@@ -79,7 +79,7 @@ class AdminPanelProvider extends PanelProvider
             // criaria dívida a cada upgrade.
             //
             // A condição fica dentro da closure, avaliada a cada render, para
-            // que virar o flag no .env baste — sem republicar nada.
+            // que virar o flag no .env baste - sem republicar nada.
             ->renderHook(
                 PanelsRenderHook::AUTH_LOGIN_FORM_AFTER,
                 fn (): string => config('google.enabled')

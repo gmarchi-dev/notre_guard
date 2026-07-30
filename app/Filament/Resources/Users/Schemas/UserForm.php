@@ -50,7 +50,7 @@ class UserForm
                         ->searchable()
                         ->preload()
                         // Sem unidade, o gestor enxergaria a operação de todo o
-                        // colégio — ver ScopedToUnit.
+                        // colégio - ver ScopedToUnit.
                         ->required(fn (Get $get) => $get('role') === User::ROLE_UNIT_MANAGER)
                         ->visible(fn (Get $get) => $get('role') === User::ROLE_UNIT_MANAGER)
                         ->helperText('O gestor só enxerga esta unidade.'),

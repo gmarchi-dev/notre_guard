@@ -3,7 +3,7 @@
 
     Existe porque antes não existia: o estado inicial era 'loading' e nenhum
     bloco correspondia a ele, então o aplicativo abria em branco enquanto lia o
-    IndexedDB — e ficava preso ali para sempre se a leitura falhasse.
+    IndexedDB - e ficava preso ali para sempre se a leitura falhasse.
 --}}
 <template x-if="screen === 'boot'">
     <div class="stack">
@@ -22,7 +22,7 @@
                 <div class="card">
                     <p class="notice">
                         Os registros que ainda não subiram continuam salvos no aparelho.
-                        Tente de novo antes de entrar novamente — sair apaga o que está na fila.
+                        Tente de novo antes de entrar novamente - sair apaga o que está na fila.
                     </p>
                 </div>
 

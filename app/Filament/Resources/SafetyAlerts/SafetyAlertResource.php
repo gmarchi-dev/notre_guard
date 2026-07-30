@@ -35,7 +35,7 @@ class SafetyAlertResource extends Resource
     }
 
     /**
-     * Contador na navegação com os alertas em aberto — o número que a supervisão
+     * Contador na navegação com os alertas em aberto - o número que a supervisão
      * precisa ver sem abrir a tela.
      */
     public static function getNavigationBadge(): ?string

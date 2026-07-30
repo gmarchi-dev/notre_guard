@@ -1,4 +1,4 @@
-# 09 — Notificações
+# 09 - Notificações
 
 Aviso de ocorrência que não pode esperar o RDO do dia seguinte.
 
@@ -10,7 +10,7 @@ painel já perdeu o propósito. O gatilho é o observer `IncidentObserver`.
 Dois critérios, avaliados em `IncidentNotifier::deservesNotification()`:
 
 1. Gravidade **alta** ou **crítica**;
-2. Tipo de ocorrência marcado com `notify_supervision` — é como a gestão sinaliza um assunto
+2. Tipo de ocorrência marcado com `notify_supervision` - é como a gestão sinaliza um assunto
    sensível independente da gravidade que o vigilante escolheu em campo (por exemplo "câmera
    inoperante", que costuma ser registrada como média).
 
@@ -24,7 +24,7 @@ supervisão passar a ignorar o sistema.
 | Administrador | todas as unidades |
 | Supervisão | todas as unidades |
 | Gestor de unidade | apenas ocorrências da unidade dele |
-| Vigilante | nunca — está em campo, não em posição de tratar |
+| Vigilante | nunca - está em campo, não em posição de tratar |
 
 Usuário inativo não recebe.
 
@@ -32,7 +32,7 @@ Usuário inativo não recebe.
 
 - **Sino no painel** (`database`), com polling de 30s. É a via que funciona sem WebSockets.
 - **E-mail**, com número da ocorrência e gravidade no assunto:
-  `[SEDE] Crítica — RO 002/2026`.
+  `[SEDE] Crítica - RO 002/2026`.
 
 Ambos trazem link direto para a ficha da ocorrência.
 
@@ -42,7 +42,7 @@ A notificação é `ShouldQueue` com **`afterCommit`**. A ocorrência nasce dent
 evento de sincronização, e sem isso a fila poderia processar o aviso antes do commit e não
 encontrar o registro.
 
-Cada destinatário gera um job por canal — dois destinatários com dois canais são quatro jobs.
+Cada destinatário gera um job por canal - dois destinatários com dois canais são quatro jobs.
 **É preciso ter um worker rodando**, senão os avisos ficam parados na tabela `jobs`:
 
 ```bash

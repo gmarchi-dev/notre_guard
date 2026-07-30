@@ -36,7 +36,7 @@ class KeyPermissionTest extends TestCase
 
     public function test_nobody_gets_the_keys_module_by_default(): void
     {
-        // Nenhuma permissão é concedida automaticamente — nem pelo perfil, nem
+        // Nenhuma permissão é concedida automaticamente - nem pelo perfil, nem
         // pela migração.
         foreach ([User::ROLE_GUARD, User::ROLE_SUPERVISOR, User::ROLE_UNIT_MANAGER] as $role) {
             $user = User::factory()->create(['role' => $role]);

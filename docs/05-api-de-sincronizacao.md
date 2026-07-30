@@ -1,4 +1,4 @@
-# 05 — API de sincronização
+# 05 - API de sincronização
 
 Base: `/api/v1`. Autenticação por token Sanctum, um por aparelho.
 Todas as rotas autenticadas exigem o cabeçalho `X-Device-Id`.
@@ -7,12 +7,12 @@ Todas as rotas autenticadas exigem o cabeçalho `X-Device-Id`.
 
 ```
 POST /api/v1/auth/login
-{ "registration": "VIG-001", "password": "…", "device_id": "uuid", "device_name": "Moto G — Portaria" }
+{ "registration": "VIG-001", "password": "…", "device_id": "uuid", "device_name": "Moto G - Portaria" }
 → { "token": "…", "guard": { "id", "name", "registration", "refresher_expired" } }
 ```
 
 A credencial é a **matrícula**, não o e-mail: é o que o vigilante sabe de cor e o que está no
-crachá. Um novo login no mesmo aparelho revoga o token anterior daquele aparelho — os outros
+crachá. Um novo login no mesmo aparelho revoga o token anterior daquele aparelho - os outros
 seguem válidos, então trocar de vigilante num celular não derruba os demais postos.
 
 Aparelho marcado como `revoked` é recusado no login e em qualquer requisição: é assim que a
@@ -55,7 +55,7 @@ inválido no meio do lote não impede os outros de entrarem. O dispositivo só r
 que voltou como `accepted` ou `duplicate`.
 
 **Idempotência pelo uuid**, gerado no aparelho. Reenviar o mesmo lote devolve `duplicate` e não
-duplica nada — inclusive não incrementa de novo o contador de pontos da ronda.
+duplica nada - inclusive não incrementa de novo o contador de pontos da ronda.
 
 **`retryable` distingue o que fazer com a falha.** `parent_missing` (o evento chegou antes do
 turno ou da ronda que ele referencia) e `server_error` são retentáveis: ficam na fila. Os
@@ -72,7 +72,7 @@ demais são permanentes: saem da fila marcados como rejeitados, com o motivo pre
 | `patrol.end` | `patrol_uuid` | fecha a ronda, marca `incomplete` se faltou ponto |
 | `incident.report` | `incident_type_id`, `description`, `severity`, `classification`, `shift_uuid?`, `patrol_uuid?`, `attachments[]` | `incidents` |
 
-`outcome: "skipped"` exige `justification` — sem ela o evento é recusado como falha permanente.
+`outcome: "skipped"` exige `justification` - sem ela o evento é recusado como falha permanente.
 
 A numeração `RO NNN/AAAA` é alocada **no servidor**, dentro de transação com `lockForUpdate`.
 No dispositivo, dois aparelhos offline na mesma unidade chegariam ao mesmo número.
@@ -103,7 +103,7 @@ O binário sobe **separado do evento**: numa rede ruim uma foto de 3 MB não pod
 de registros. O evento referencia o uuid da evidência, o servidor cria a linha como `pending`, e
 o upload posterior a marca como `stored` com hash SHA-256.
 
-HTTP 409 significa que o evento que referencia a foto ainda não subiu — o dispositivo tenta de
+HTTP 409 significa que o evento que referencia a foto ainda não subiu - o dispositivo tenta de
 novo depois de sincronizar os eventos.
 
 ## Auditoria

@@ -1,5 +1,5 @@
 {{--
-    Bottom sheet — substitui confirm() e prompt() nativos.
+    Bottom sheet - substitui confirm() e prompt() nativos.
 
     Sobe da base porque é onde o polegar está. Foco vai ao título ao abrir e
     volta ao gatilho ao fechar; Tab fica preso dentro; Escape e o botão voltar
@@ -47,7 +47,7 @@
 
             {{-- Variante de seleção: lista rolável de linhas, não pilha de
                  botões. Um seletor de tipo de ocorrência tem dezessete opções
-                 em cinco grupos — como botões empilhados viraria uma parede. --}}
+                 em cinco grupos - como botões empilhados viraria uma parede. --}}
             <template x-if="sheet.kind === 'pick'">
                 <div class="sheet__list">
                     <template x-for="section in sheet.sections" :key="section.label">

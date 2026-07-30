@@ -31,7 +31,7 @@ class PatrolResource extends Resource
 
     protected static ?int $navigationSort = 3;
 
-    /** Rondas nascem em campo — o painel apenas consulta. */
+    /** Rondas nascem em campo - o painel apenas consulta. */
     public static function canCreate(): bool
     {
         return false;
