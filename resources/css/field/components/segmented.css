@@ -92,12 +92,6 @@
         color: var(--critical-text);
     }
 
-    /* Escolha de tema: neutra, porque nenhuma das quatro é "melhor". */
-    .segmented__option[class*='--theme-'][aria-checked='true'] {
-        background: var(--accent);
-        color: var(--accent-on);
-    }
-
     /* Os itens vivem dentro de um `group`, que já desenha o fio entre irmãos. */
     .checklist-item {
         padding: var(--space-4);

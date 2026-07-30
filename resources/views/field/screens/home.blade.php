@@ -105,35 +105,6 @@
             </div>
         </template>
 
-        {{-- Aparência. O modo noturno não é "escuro mais escuro": ele apaga os
-             preenchimentos claros, que são o que de fato ilumina o rosto de
-             quem ronda às duas da manhã. --}}
-        <section class="section">
-            <div class="section__head">
-                <h2 class="section__title" id="theme-label">Aparência</h2>
-            </div>
-
-            <div class="segmented" role="radiogroup" aria-labelledby="theme-label">
-                <template x-for="option in themes" :key="option.value">
-                    <button type="button" role="radio" class="segmented__option"
-                            :class="'segmented__option--theme-' + option.value"
-                            :aria-checked="theme === option.value"
-                            :tabindex="theme === option.value ? 0 : -1"
-                            @click="setTheme(option.value)"
-                            @keydown.arrow-right.prevent="moveTheme(1)"
-                            @keydown.arrow-left.prevent="moveTheme(-1)">
-                        <span class="segmented__mark" aria-hidden="true" x-text="option.mark"></span>
-                        <span x-text="option.label"></span>
-                    </button>
-                </template>
-            </div>
-
-            <p class="field__hint">
-                No modo noturno o botão de emergência continua vermelho cheio — é a
-                única coisa que não escurece.
-            </p>
-        </section>
-
         {{-- Ações secundárias vivem no conteúdo: o dock guarda só a principal. --}}
         <template x-if="shift">
             <button type="button" class="btn btn--critical" @click="endShift()">

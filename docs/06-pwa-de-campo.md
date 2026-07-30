@@ -65,10 +65,19 @@ já registrado. No modo noturno ele passa a ser, de longe, o mais claro, com qua
 luminância do preenchimento seguinte. Não foi efeito colateral: a emergência é o único token que o
 modo noturno **não** redefine, e há teste garantindo isso.
 
-A troca é manual e permanente (`Sistema / Claro / Escuro / Noturno` na tela inicial), nunca
-automática por horário: mudar a tela sozinho no meio do turno faz o vigilante achar que o
-aplicativo travou. O `<meta theme-color>` acompanha a escolha, convertido para sRGB — os tokens são
-`oklch()`, que a barra de status do iOS não lê.
+A troca é manual e permanente (`Sistema / Claro / Escuro / Noturno`), nunca automática por horário:
+mudar a tela sozinho no meio do turno faz o vigilante achar que o aplicativo travou.
+
+O controle fica **na barra de topo**, atrás de um sheet — não no conteúdo. A área central é do
+turno, da ronda e da ocorrência; um ajuste de aparência no meio dela concorre com o que o vigilante
+está fazendo. Em subfluxo a marca cede o lugar: a seta dá o caminho de volta e o `<h1>` logo abaixo
+já diz onde se está. Sheet em vez de ciclar por toque porque são quatro opções, e ciclar obrigaria a passar
+pelas outras três para chegar na desejada. O botão existe **antes do login** de propósito: escolher
+o modo noturno é exatamente o que se quer fazer ao pegar o aparelho no início do turno da noite.
+Há teste garantindo que o controle não volte para o conteúdo.
+
+O `<meta theme-color>` acompanha a escolha, convertido para sRGB — os tokens são `oklch()`, que a
+barra de status do iOS não lê.
 
 **Contraste verificado por número**, não por olhômetro: todos os pares de token passam de 4,5:1 nos
 três temas, medidos no navegador (ver seção de verificação). Essa medição também encontrou dois
@@ -128,6 +137,19 @@ padrão móvel. Trocar de aba com uma ocorrência já digitada pede confirmaçã
 de propósito: vizinho aos itens de navegação, o acionamento de socorro ficaria a um toque de
 distância de "Início". É o único elemento circular e o único vermelho preenchido da interface, e
 sobe junto quando existe faixa de ação.
+
+## Casca
+
+A grade é `auto 1fr auto` em `100dvh`, com o `<main>` como única região de rolagem.
+
+**A coluna é `minmax(0, 1fr)`, não a coluna implícita.** Sem isso a coluna do grid fica `auto`, que
+se dimensiona pelo **max-content**: um nome de posto longo somado à pastilha de sincronização
+esticava a barra de topo para **552px num aparelho de 375**, e a página inteira rolava na horizontal.
+O `max-width` do `.app` não impedia — quem mandava era a faixa de conteúdo do filho mais largo.
+Defeito antigo, que só apareceu quando a barra ganhou um quarto item; hoje é teste.
+
+Pela mesma razão a marca da barra nunca quebra linha: comprimida entre a pastilha e o ajuste de
+aparência, ela empilhava em duas linhas e esticava a altura da barra de 48 para 71px.
 
 ## Decisões de interface
 

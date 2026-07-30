@@ -160,10 +160,10 @@ function fieldApp() {
 
         // ------------------------------------------------------------- tema
         themes: [
-            { value: 'system', label: 'Sistema', mark: '◐' },
-            { value: 'light', label: 'Claro', mark: '☀' },
-            { value: 'dark', label: 'Escuro', mark: '☾' },
-            { value: 'night', label: 'Noturno', mark: '●' },
+            { value: 'system', label: 'Sistema', mark: '◐', hint: 'segue o aparelho' },
+            { value: 'light', label: 'Claro', mark: '☀', hint: 'sol direto, turno diurno' },
+            { value: 'dark', label: 'Escuro', mark: '☾', hint: 'pouca luz, contraste alto' },
+            { value: 'night', label: 'Noturno', mark: '●', hint: 'preserva a visão noturna' },
         ],
 
         /**
@@ -185,10 +185,41 @@ function fieldApp() {
             this.syncThemeColor()
         },
 
-        moveTheme(step) {
-            const index = this.themes.findIndex((t) => t.value === this.theme)
+        themeMark() {
+            return this.themes.find((t) => t.value === this.theme)?.mark ?? '◐'
+        },
 
-            this.setTheme(this.themes[(index + step + this.themes.length) % this.themes.length].value)
+        themeLabel() {
+            return this.themes.find((t) => t.value === this.theme)?.label ?? 'Sistema'
+        },
+
+        /**
+         * Aparência mora na barra de topo, não no conteúdo.
+         *
+         * A área central é do turno, da ronda e da ocorrência; um ajuste no meio
+         * dela concorre com o que o vigilante está fazendo. Sheet, e não um
+         * ciclo por toque, porque são quatro opções — ciclar obrigaria a passar
+         * pelas outras três para chegar na desejada.
+         */
+        async openThemeSheet() {
+            const choice = await this.pick({
+                title: 'Aparência',
+                text: 'No modo noturno o botão de emergência continua vermelho cheio — é a única coisa que não escurece.',
+                sections: [
+                    {
+                        label: 'Tema',
+                        items: this.themes.map((option) => ({
+                            value: option.value,
+                            title: `${option.mark}  ${option.label}`,
+                            meta: option.value === this.theme ? 'em uso' : option.hint,
+                            leaf: true,
+                        })),
+                    },
+                ],
+                cancelLabel: 'Fechar',
+            })
+
+            if (choice) this.setTheme(choice)
         },
 
         /**

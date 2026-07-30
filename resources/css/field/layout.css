@@ -14,6 +14,16 @@
     .app {
         display: grid;
         grid-template-rows: auto 1fr auto;
+        /*
+         * `minmax(0, 1fr)`, e não a coluna implícita.
+         *
+         * Sem isto a coluna é `auto`, que se dimensiona pelo MAX-CONTENT: um
+         * nome de posto longo somado à pastilha de sincronização esticava a
+         * barra de topo para além da largura do aparelho e a página inteira
+         * rolava na horizontal. O `max-width` do .app não impedia — quem
+         * mandava era a faixa de conteúdo do filho mais largo.
+         */
+        grid-template-columns: minmax(0, 1fr);
         height: 100dvh;
         max-width: 620px;
         margin-inline: auto;
@@ -52,10 +62,23 @@
         flex: 1;
     }
 
+    /* Nunca quebra: comprimida entre a pastilha e o ajuste de aparência, a
+       marca empilhava em duas linhas e esticava a altura da barra. */
     .appbar__brand {
+        display: block;
         font-size: var(--text-sm);
         font-weight: var(--weight-bold);
         letter-spacing: 0.02em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* Em subfluxo a marca cede o lugar: a seta dá o caminho de volta e o <h1>
+       logo abaixo já diz onde se está. Insistir nela aqui é gastar a largura
+       mais disputada da tela com decoração. */
+    .appbar:has(.appbar__back) .appbar__identity {
+        display: none;
     }
 
     .appbar__context {

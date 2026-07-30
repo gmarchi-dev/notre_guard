@@ -201,6 +201,49 @@ class FieldAppTest extends TestCase
         }
     }
 
+    public function test_the_shell_column_cannot_be_widened_by_its_content(): void
+    {
+        // Sem `minmax(0, 1fr)` a coluna implícita do grid é `auto`, que se
+        // dimensiona pelo MAX-CONTENT: um nome de posto longo somado à pastilha
+        // de sincronização esticava a barra de topo para 552px num aparelho de
+        // 375 e a página inteira rolava na horizontal. O max-width do .app não
+        // impedia — quem mandava era o filho mais largo.
+        $layout = File::get(resource_path('css/field/layout.css'));
+
+        $this->assertMatchesRegularExpression(
+            '/grid-template-columns:\s*minmax\(\s*0\s*,\s*1fr\s*\)/',
+            $layout,
+            'a casca voltou a deixar o conteúdo definir a largura da coluna.',
+        );
+
+        // A marca não pode empilhar: comprimida, ela esticava a altura da barra.
+        $this->assertMatchesRegularExpression(
+            '/\.appbar__brand\s*\{[^}]*white-space:\s*nowrap/s',
+            $layout,
+            'a marca da barra de topo voltou a poder quebrar linha.',
+        );
+    }
+
+    public function test_the_appearance_control_stays_out_of_the_content_area(): void
+    {
+        // A área central é do turno, da ronda e da ocorrência. Um ajuste no
+        // meio dela concorre com o que o vigilante está fazendo — por isso a
+        // aparência vive na barra de topo, atrás de um sheet.
+        $this->assertStringContainsString(
+            'openThemeSheet()',
+            File::get(resource_path('views/field/partials/appbar.blade.php')),
+            'o ajuste de aparência saiu da barra de topo',
+        );
+
+        foreach (File::allFiles(resource_path('views/field/screens')) as $screen) {
+            $this->assertStringNotContainsString(
+                'setTheme(',
+                File::get($screen->getPathname()),
+                "{$screen->getFilename()} traz o ajuste de aparência para o conteúdo.",
+            );
+        }
+    }
+
     public function test_the_blocking_theme_script_knows_the_night_mode(): void
     {
         // O script roda antes do @vite de propósito. Se ele não reconhecer o
