@@ -10,16 +10,26 @@
  */
 
 @layer components {
-    .field + .field {
+    /*
+     * O espaçamento entre campos é do CONTÊINER (`.fieldset` tem gap), nunca do
+     * campo. Enquanto as duas regras coexistiram elas se somaram: o vão
+     * projetado para 20px saía com 40, e um formulário de seis campos gastava
+     * 100px em espaço que ninguém pediu.
+     *
+     * Fora de um fieldset, o campo solto ainda precisa de respiro - daí o
+     * seletor excluir quem já está num contêiner que resolve isso.
+     */
+    :not(.fieldset) > .field + .field {
         margin-top: var(--space-5);
     }
 
     .field__label {
         display: block;
         margin-bottom: var(--space-2);
-        padding-inline: var(--space-1);
+        padding-inline: var(--space-3);
         font-size: var(--text-sm);
         font-weight: var(--weight-semibold);
+        line-height: var(--leading-snug);
         color: var(--text);
     }
 
@@ -45,8 +55,19 @@
         line-height: var(--leading-normal);
     }
 
+    /*
+     * A caixa de texto começa com duas linhas e CRESCE com o conteúdo.
+     *
+     * Antes eram 108px fixos, reservados para um texto que quase sempre tem uma
+     * linha: numa tela de 812px, duas dessas comiam um quarto do espaço antes
+     * de alguém digitar qualquer coisa. `field-sizing: content` tem a mesma
+     * linha de base do resto do app (Chrome 123+); onde não existir, o
+     * min-height sozinho ainda entrega um campo utilizável, só que fixo.
+     */
     textarea.field__control {
-        min-height: 108px;
+        field-sizing: content;
+        min-height: calc(var(--tap-lg) + var(--space-5));
+        max-height: 40dvh;
         resize: vertical;
     }
 

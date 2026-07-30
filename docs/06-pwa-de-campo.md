@@ -93,6 +93,47 @@ mesma largura, 4px abaixo do botão de pânico.
 **Alvos de toque:** 56px na ação primária, 48px no restante, 64px em linha de lista. O degrau de
 44px foi extinto.
 
+## Densidade e forma
+
+Uma segunda passada, depois de o app rodar: as telas estavam corretas em alvo de toque e erradas em
+peso visual. Tudo tinha 343px de largura, tudo era um bloco empilhado, e nada se distinguia de nada.
+
+**Alvo de toque não é peso visual** - é a chave desta etapa. Toda área de toque continua em 48/56px;
+o que mudou foi o desenho em volta.
+
+| | antes | depois |
+|---|---|---|
+| raio do botão | 14px (proporção 0,25 contra a altura) | **totalmente arredondado** |
+| caixa de texto | 108px fixos | **76px, crescendo com o conteúdo** |
+| cartão do próximo ponto | 250px | **182px** |
+| "Posto / em serviço desde" | 114px, empilhado | **77px, lado a lado** |
+| tela de ocorrência | 998px | **754px** |
+
+O que mudou, e por quê:
+
+- **Botão totalmente arredondado.** Um retângulo de 343x56 com raio 14 lê-se como laje por mais
+  correto que esteja o alvo. É a mudança que mais muda a leitura do app, e virou teste.
+- **`field-sizing: content`** na caixa de texto, com piso de duas linhas e teto de 40dvh. Os 108px
+  fixos eram espaço reservado para um texto que quase sempre tem uma linha. Mesma linha de base do
+  resto do app (Chrome 123+); onde não existir, o campo fica fixo, não quebrado.
+- **Composição horizontal.** `.facts` põe dois fatos curtos lado a lado. Era a única coluna do app
+  sem nenhuma quebra horizontal, e é a quebra que dá ritmo à leitura.
+- **Fim das caixas dentro de caixas.** A instrução do próximo ponto virou texto com fio à esquerda,
+  em vez de superfície aninhada dentro do cartão: 24px a menos, sem perder hierarquia.
+- **O botão de nova medida saiu da linha de distância** e foi para o canto do cartão. Dentro de uma
+  linha de texto, ele impunha seus 48px ao bloco inteiro - 23% da altura do cartão para uma ação
+  secundária.
+- **A ocorrência virou um formulário contínuo.** Três seções tituladas custavam ~96px numa tela que
+  já se chama "Registrar ocorrência", e duas delas tinham um campo só.
+- **Hierarquia tipográfica.** O título da tela subiu de 22 para 26px: contra os 17px do corpo, a
+  diferença anterior não chegava a criar níveis.
+
+### O defeito que a medição encontrou
+
+`.fieldset` tem `gap` e `.field + .field` tinha `margin-top`. **As duas regras se somavam**: o vão
+projetado para 20px saía com 40, e um formulário de seis campos gastava 100px em espaço que ninguém
+pediu. O espaçamento entre campos passou a ser responsabilidade só do contêiner, e há teste.
+
 ## Menos molduras
 
 A primeira versão do redesenho usava cartão com borda para tudo: a tela inicial chegava a quatro

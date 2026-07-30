@@ -28,6 +28,13 @@
         <template x-if="nextCheckpoint">
             <div class="now">
                 <span class="now__position" x-text="nextPosition"></span>
+
+                {{-- No canto, não numa linha própria: dentro da linha de
+                     distância este botão impunha seus 48px ao bloco inteiro. --}}
+                <button type="button" class="btn btn--ghost btn--icon now__refresh"
+                        @click="locate()" :aria-busy="locating"
+                        aria-label="Medir a distância até o próximo ponto">&#8635;</button>
+
                 <div class="now__body">
                     <p class="now__eyebrow">Próximo ponto</p>
                     <p class="now__code" x-text="nextCheckpoint.code"></p>
@@ -40,7 +47,7 @@
                         Distância medida na última leitura de GPS, não em tempo
                         real: acompanhar a posição continuamente seria rastrear
                         o vigilante o turno inteiro. Por isso o rótulo diz
-                        quando foi medida, e o botão permite atualizar a pedido.
+                        quando foi medida.
                     --}}
                     <p class="now__distance">
                         <template x-if="nextDistanceLabel">
@@ -52,9 +59,6 @@
                         <template x-if="!nextDistanceLabel">
                             <span class="now__distance-age">Distância não medida</span>
                         </template>
-                        <button type="button" class="btn btn--ghost btn--icon"
-                                @click="locate()" :aria-busy="locating"
-                                aria-label="Medir a distância até o próximo ponto">&#8635;</button>
                     </p>
                 </div>
             </div>

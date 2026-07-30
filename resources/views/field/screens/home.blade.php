@@ -53,15 +53,17 @@
 
         <template x-if="shift">
             <div class="stack">
-                {{-- Duas informações não precisam de um cartão inteiro. --}}
-                <div class="group">
-                    <div class="row">
-                        <span class="row__label">Posto</span>
-                        <span class="row__value" x-text="post?.name ?? '—'"></span>
+                {{-- Lado a lado, não empilhados: dois fatos curtos custavam
+                     114px como linhas, e a coluna inteira tinha a mesma
+                     largura, sem nenhuma quebra horizontal. --}}
+                <div class="facts">
+                    <div class="fact">
+                        <span class="fact__label">Posto</span>
+                        <span class="fact__value" x-text="post?.name ?? '—'"></span>
                     </div>
-                    <div class="row">
-                        <span class="row__label">Em serviço desde</span>
-                        <time class="row__value numeric" x-text="formatTime(shift.started_at)"></time>
+                    <div class="fact">
+                        <span class="fact__label">Em serviço desde</span>
+                        <time class="fact__value fact__value--time" x-text="formatTime(shift.started_at)"></time>
                     </div>
                 </div>
 

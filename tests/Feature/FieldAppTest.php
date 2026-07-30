@@ -201,6 +201,34 @@ class FieldAppTest extends TestCase
         }
     }
 
+    public function test_field_spacing_comes_from_the_container_only(): void
+    {
+        // `.fieldset` tem gap e `.field + .field` tinha margin-top: as duas se
+        // somavam, e o vão projetado para 20px saía com 40. Num formulário de
+        // seis campos eram 100px gastos em espaço que ninguém pediu.
+        $css = File::get(resource_path('css/field/components/field.css'));
+
+        $this->assertDoesNotMatchRegularExpression(
+            '/^\s*\.field \+ \.field\s*\{/m',
+            $css,
+            'o campo voltou a espaçar a si mesmo, somando com o gap do fieldset.',
+        );
+    }
+
+    public function test_buttons_are_not_rectangular_slabs(): void
+    {
+        // Um botão de 343x56 com raio 14 tem proporção raio/altura de 0,25 e
+        // lê-se como laje, por mais correto que esteja o alvo de toque. Área de
+        // toque e peso visual são coisas distintas.
+        $button = File::get(resource_path('css/field/components/button.css'));
+
+        $this->assertMatchesRegularExpression(
+            '/\.btn\s*\{[^}]*border-radius:\s*var\(--radius-pill\)/s',
+            $button,
+            'o botão voltou a ter cantos de bloco.',
+        );
+    }
+
     public function test_the_shell_column_cannot_be_widened_by_its_content(): void
     {
         // Sem `minmax(0, 1fr)` a coluna implícita do grid é `auto`, que se

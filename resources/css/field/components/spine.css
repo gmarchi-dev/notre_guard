@@ -56,12 +56,23 @@
     /* Sem borda: o preenchimento tingido já separa o cartão do fundo, e o
        contorno só somava mais uma moldura. */
     .now {
+        position: relative;
         display: flex;
         gap: var(--space-4);
-        padding: var(--space-5);
+        padding: var(--space-4);
         background: var(--accent-quiet);
-        border-radius: var(--radius-lg);
+        border-radius: var(--radius-xl);
         text-align: left;
+    }
+
+    /* O botão de nova medida ocupa o canto vazio ao lado do rótulo, em vez de
+       forçar uma linha inteira: dentro de uma linha de texto ele impunha os
+       seus 48px ao bloco todo, 23% da altura do cartão para uma ação
+       secundária. A área de toque continua a mesma. */
+    .now__refresh {
+        position: absolute;
+        top: var(--space-2);
+        right: var(--space-2);
     }
 
     .now__position {
@@ -111,23 +122,22 @@
         overflow: hidden;
     }
 
+    /* Fio à esquerda, não caixa dentro de caixa: a instrução já está dentro de
+       um cartão, e mais uma superfície aninhada engordava o bloco em 24px sem
+       acrescentar hierarquia nenhuma. */
     .now__instruction {
         margin-top: var(--space-3);
-        padding: var(--space-3);
-        border-radius: var(--radius-sm);
-        background: var(--surface);
-        font-size: var(--text-base);
+        padding-left: var(--space-3);
+        border-left: 2px solid var(--accent);
+        font-size: var(--text-sm);
+        line-height: var(--leading-snug);
         color: var(--text);
     }
 
-    /* Distância até o ponto, com o botão de nova medida na mesma linha. */
+    /* Distância: uma linha de texto, não uma faixa com botão dentro. */
     .now__distance {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: var(--space-2);
-        margin-top: var(--space-3);
-        font-size: var(--text-base);
+        margin-top: var(--space-2);
+        font-size: var(--text-sm);
         font-variant-numeric: tabular-nums;
     }
 

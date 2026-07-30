@@ -90,10 +90,16 @@
         --space-12: 48px;
 
         /* -------------------------------------------------------- raio */
-        --radius-sm: 10px;
-        --radius-md: 14px;
-        --radius-lg: 18px;
-        --radius-xl: 24px;
+        /*
+         * Escala generosa de propósito. Um botão de 343x56 com raio 14 tem
+         * proporção raio/altura de 0,25 e lê-se como uma laje retangular, por
+         * mais que o alvo de toque esteja correto. Alvo de toque não é peso
+         * visual: a área continua com 56px, o desenho é que deixa de ser bloco.
+         */
+        --radius-sm: 12px;
+        --radius-md: 16px;
+        --radius-lg: 22px;
+        --radius-xl: 28px;
         --radius-pill: 999px;
 
         /* -------------------------------------------------- tipografia */

@@ -50,11 +50,14 @@
         margin: 0;
     }
 
+    /* O título da tela precisa se destacar do corpo. Com 22px contra os 17px
+       do texto, a diferença não chegava a criar hierarquia: a tela inteira
+       parecia ter um único nível. */
     h1 {
-        font-size: var(--text-xl);
-        line-height: var(--leading-snug);
+        font-size: var(--text-2xl);
+        line-height: var(--leading-tight);
         font-weight: var(--weight-bold);
-        letter-spacing: -0.01em;
+        letter-spacing: -0.02em;
     }
 
     h2 {

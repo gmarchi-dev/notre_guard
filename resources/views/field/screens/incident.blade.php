@@ -1,20 +1,16 @@
 {{--
     Ocorrência.
 
-    Três seções na ordem da pergunta real - o que houve, onde, o que você fez -
-    mas sem cartão em volta de cada uma: os campos já são superfície, e a
-    moldura extra só apertava a tela.
+    Um formulário contínuo, na ordem da pergunta real: o que houve, onde, o que
+    você fez. Antes eram três seções tituladas, e os títulos custavam ~96px numa
+    tela que já se chama "Registrar ocorrência" - estrutura demais para seis
+    campos, sendo que duas das seções tinham um campo só.
 --}}
 <template x-if="screen === 'incident'">
     <div class="stack">
         <h1 tabindex="-1">Registrar ocorrência</h1>
 
-        <section class="section">
-            <div class="section__head">
-                <h2 class="section__title">O que aconteceu</h2>
-            </div>
-
-            <div class="fieldset">
+        <div class="fieldset">
                 {{-- Tipo: seleção em duas etapas por sheet, no lugar da roda
                      nativa com dezessete opções achatadas. A linha mostra a
                      escolha e o grupo a que ela pertence. --}}
@@ -32,7 +28,7 @@
                             <span class="choice__title" id="incident-type-value"
                                   x-text="incidentType?.name ?? 'Escolher o tipo'"></span>
                             <span class="choice__meta"
-                                  x-text="incidentType?.group ?? 'Cinco grupos, do patrimônio ao operacional'"></span>
+                                  x-text="incidentType?.group ?? 'Cinco grupos'"></span>
                         </span>
                         <span class="choice__chevron" aria-hidden="true">›</span>
                     </button>
@@ -104,27 +100,18 @@
 
                     <p class="field__hint">Alta e crítica avisam a supervisão na hora.</p>
                 </div>
+
+                <div class="field">
+                    <label class="field__label" for="incident-location">Onde</label>
+                    <input class="field__control" id="incident-location" x-model="incident.location"
+                           placeholder="Bloco B, portão dos fundos…">
+                </div>
+
+                <div class="field">
+                    <label class="field__label" for="incident-actions">O que você fez</label>
+                    <textarea class="field__control" id="incident-actions" x-model="incident.actions_taken"
+                              placeholder="Comunicou pelo rádio, isolou a área…"></textarea>
+                </div>
             </div>
-        </section>
-
-        <section class="section">
-            <div class="section__head">
-                <h2 class="section__title">Onde</h2>
-            </div>
-
-            <input class="field__control" id="incident-location" x-model="incident.location"
-                   aria-label="Local da ocorrência"
-                   placeholder="Bloco B, portão dos fundos…">
-        </section>
-
-        <section class="section">
-            <div class="section__head">
-                <h2 class="section__title">O que você fez</h2>
-            </div>
-
-            <textarea class="field__control" id="incident-actions" x-model="incident.actions_taken"
-                      aria-label="Providências tomadas"
-                      placeholder="Comunicou pelo rádio, isolou a área…"></textarea>
-        </section>
     </div>
 </template>

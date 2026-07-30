@@ -23,8 +23,10 @@
         gap: var(--space-2);
         width: 100%;
         min-height: var(--tap-lg);
-        padding-inline: var(--space-5);
-        border-radius: var(--radius-md);
+        padding-inline: var(--space-6);
+        /* Totalmente arredondado. É a mudança que mais muda a leitura do app:
+           a mesma área de toque deixa de parecer um bloco. */
+        border-radius: var(--radius-pill);
         background: var(--surface-2);
         color: var(--text);
         font-size: var(--text-base);
@@ -102,12 +104,14 @@
     }
 
     /* --- tamanhos --- */
+    /* Secundário em linha: largura pelo conteúdo, não de bloco. Um "Remover"
+       ocupando os 343px inteiros pesava tanto quanto a ação principal. */
     .btn--md {
         min-height: var(--tap-md);
         width: auto;
-        padding-inline: var(--space-4);
+        padding-inline: var(--space-5);
         font-size: var(--text-sm);
-        border-radius: var(--radius-sm);
+        border-radius: var(--radius-pill);
     }
 
     .btn--icon {
