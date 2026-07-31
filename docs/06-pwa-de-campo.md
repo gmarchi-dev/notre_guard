@@ -26,6 +26,33 @@ ficam disponíveis a qualquer momento.
 O indicador da barra de topo e uma linha na tela inicial abrem a **fila**, que lista o que está
 no aparelho: aguardando envio, tentando de novo e recusado, com o motivo devolvido pelo servidor.
 
+### Encerrar turno e sair são coisas diferentes
+
+**Encerrar turno** fecha o turno e mantém o vigilante logado - o aparelho é corporativo e fica com
+o posto. **Sair** revoga o token e apaga o IndexedDB inteiro.
+
+O "Sair" fica **sempre visível**, inclusive em serviço. Antes só aparecia sem turno aberto, e isso
+tinha uma consequência que só aparece na operação: quem entrasse com a matrícula errada precisava
+**encerrar um turno que não era dele** para conseguir sair - e aquele turno ia para o RDO como se
+tivesse acontecido.
+
+Com turno aberto, sair não decide nada sozinho. Abre uma escolha:
+
+| Opção | O que faz |
+|---|---|
+| **Encerrar turno e sair** | enfileira o `shift.end`, **espera a entrega**, depois apaga a sessão |
+| **Sair e deixar o turno aberto** | confirmação reforçada; o turno fica aberto até alguém encerrar pelo painel |
+| **Continuar em serviço** | cancela |
+
+Dois cuidados que valem como requisito:
+
+- **O encerramento é entregue antes de a fila ser apagada.** Sem isso, enfileirar o `shift.end` e
+  sair em seguida jogaria fora o próprio evento que acabou de ser criado. Se a entrega falhar, o
+  aviso diz exatamente o que está em risco: *"Sem rede: o fim do turno e mais N registro(s)
+  continuam no aparelho. Sair apaga tudo, e o turno permanece aberto no servidor."*
+- **Ronda em andamento bloqueia**, mesma regra do botão de encerrar turno: fechar uma ronda por
+  tabela esconderia pontos que ninguém leu.
+
 ## Sistema visual
 
 **Alinhado ao painel administrativo.** A tipografia é a Inter, e as cores saem das mesmas escalas

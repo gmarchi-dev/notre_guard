@@ -114,8 +114,9 @@
             </button>
         </template>
 
-        <template x-if="!shift">
-            <button type="button" class="btn btn--ghost" @click="doLogout()">Sair</button>
-        </template>
+        {{-- Sempre visível, inclusive em serviço. Quando só aparecia sem turno,
+             quem entrasse com a matrícula errada precisava encerrar um turno que
+             não era dele para conseguir sair - e aquilo ia para o RDO. --}}
+        <button type="button" class="btn btn--ghost" @click="doLogout()">Sair</button>
     </div>
 </template>

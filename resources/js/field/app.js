@@ -631,18 +631,96 @@ function fieldApp() {
             }
         },
 
+        /**
+         * Sair do aparelho.
+         *
+         * Fica SEMPRE visível, inclusive em serviço. Antes só aparecia sem
+         * turno aberto: quem entrasse com a matrícula errada precisava encerrar
+         * um turno que não era dele para conseguir sair, e isso ia para o RDO.
+         *
+         * Sair não encerra o turno por conta própria. Com turno aberto a
+         * escolha é explícita, porque turno aberto no servidor impede o
+         * fechamento do relatório do dia.
+         */
         async doLogout() {
-            if (this.pending > 0) {
-                const ok = await this.ask({
-                    title: 'Sair com registros pendentes?',
-                    text: `Há ${this.pending} registro(s) que ainda não subiram. Sair apaga tudo o que está no aparelho.`,
-                    confirmLabel: 'Sair mesmo assim',
-                    destructive: true,
-                })
+            let encerramentoNaFila = false
 
-                if (!ok) return
+            if (this.shift) {
+                const decisao = await this.resolveShiftBeforeExit()
+
+                if (decisao === null) return
+
+                encerramentoNaFila = decisao === 'end-unsent'
             }
 
+            if (!(await this.confirmDataLoss(encerramentoNaFila))) return
+
+            await this.wipeSession()
+        },
+
+        /**
+         * O que fazer com o turno aberto antes de sair.
+         *
+         * @return {Promise<'end'|'end-unsent'|'keep'|null>} null = desistiu.
+         */
+        async resolveShiftBeforeExit() {
+            const escolha = await this.choose({
+                title: 'Você está em serviço',
+                text: 'Sair não encerra o turno sozinho. Turno aberto no servidor impede o fechamento do relatório do dia.',
+                options: [
+                    { label: 'Encerrar turno e sair', value: 'end', variant: 'primary' },
+                    { label: 'Sair e deixar o turno aberto', value: 'keep', variant: 'critical' },
+                ],
+                cancelLabel: 'Continuar em serviço',
+            })
+
+            if (!escolha) return null
+
+            if (escolha === 'keep') {
+                return (await this.ask({
+                    title: 'Sair com o turno aberto?',
+                    text: 'O turno continua em aberto no servidor até que alguém o encerre pelo painel.',
+                    confirmLabel: 'Sair assim mesmo',
+                    destructive: true,
+                }))
+                    ? 'keep'
+                    : null
+            }
+
+            // Mesma regra do botão de encerrar turno: fechar uma ronda por
+            // tabela esconderia pontos que ninguém leu.
+            if (this.patrol) {
+                this.toast('Encerre a ronda em andamento antes de sair.', 'error')
+
+                return null
+            }
+
+            await this.closeShift()
+
+            // Sair apaga o IndexedDB, e o shift.end acabou de entrar na fila:
+            // sem tentar entregar agora, o encerramento morre no aparelho.
+            await sync()
+
+            return this.pending > 0 ? 'end-unsent' : 'end'
+        },
+
+        async confirmDataLoss(encerramentoNaFila) {
+            if (this.pending === 0) return true
+
+            return this.ask({
+                title: encerramentoNaFila
+                    ? 'O encerramento não foi enviado'
+                    : 'Sair com registros pendentes?',
+                text: encerramentoNaFila
+                    ? `Sem rede: o fim do turno e mais ${this.pending - 1} registro(s) continuam no aparelho. `
+                      + 'Sair apaga tudo, e o turno permanece aberto no servidor.'
+                    : `Há ${this.pending} registro(s) que ainda não subiram. Sair apaga tudo o que está no aparelho.`,
+                confirmLabel: 'Sair mesmo assim',
+                destructive: true,
+            })
+        },
+
+        async wipeSession() {
             try {
                 await api.logout?.()
             } catch {
@@ -764,6 +842,20 @@ function fieldApp() {
 
             if (!ok) return
 
+            await this.closeShift()
+            sync()
+
+            this.toast('Turno encerrado.')
+        },
+
+        /**
+         * Enfileira o fim do turno e limpa o estado local.
+         *
+         * Sem `sync()`: quem chama decide se dispara e segue (encerrar turno) ou
+         * se espera a entrega (sair do aparelho, que logo em seguida apaga o
+         * IndexedDB e levaria o evento junto).
+         */
+        async closeShift() {
             await enqueue('shift.end', {
                 shift_uuid: this.shift.uuid,
                 handover_notes: this.handoverNotes || null,
@@ -774,9 +866,6 @@ function fieldApp() {
             await putCache('shift', null)
             await putCache('handover', '')
             await refreshPending()
-            sync()
-
-            this.toast('Turno encerrado.')
         },
 
         /** A passagem de serviço sobrevive a um recarregamento do aplicativo. */

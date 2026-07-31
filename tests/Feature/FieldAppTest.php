@@ -131,6 +131,42 @@ class FieldAppTest extends TestCase
         );
     }
 
+    public function test_leaving_the_device_is_always_reachable(): void
+    {
+        // "Sair" só aparecia sem turno aberto. Quem entrasse com a matrícula
+        // errada precisava encerrar um turno que não era dele para conseguir
+        // sair - e aquele turno ia para o RDO como se tivesse acontecido.
+        $home = File::get(resource_path('views/field/screens/home.blade.php'));
+
+        $this->assertStringContainsString('doLogout()', $home);
+
+        // O botão não pode estar dentro de um x-if que dependa do turno.
+        $this->assertDoesNotMatchRegularExpression(
+            '/x-if="!shift"[^>]*>\s*(?:<[^>]+>\s*)*<button[^>]*doLogout/s',
+            $home,
+            'o botão de sair voltou a depender de não haver turno aberto.',
+        );
+    }
+
+    public function test_leaving_never_closes_the_shift_silently(): void
+    {
+        // Sair apaga o IndexedDB. Encerrar o turno por conta própria, sem
+        // decisão explícita, gravaria um fim de turno que ninguém pediu; não
+        // encerrar e não avisar deixaria um turno aberto travando o RDO do dia.
+        $js = File::get(resource_path('js/field/app.js'));
+
+        // A escolha é oferecida, com as duas saídas nomeadas.
+        $this->assertStringContainsString('Encerrar turno e sair', $js);
+        $this->assertStringContainsString('Sair e deixar o turno aberto', $js);
+
+        // E o encerramento é entregue ANTES de a fila ser apagada.
+        $this->assertMatchesRegularExpression(
+            '/await this\.closeShift\(\)\s*\n\s*(?:\/\/[^\n]*\n\s*)*await sync\(\)/',
+            $js,
+            'o fim do turno deixou de ser entregue antes de a sessão ser apagada.',
+        );
+    }
+
     public function test_nothing_is_allowed_to_cover_the_emergency_button(): void
     {
         // Medido: com a pilha de toasts em `bottom: 0`, as quatro abas passavam
