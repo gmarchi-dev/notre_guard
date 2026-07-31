@@ -24,9 +24,9 @@
         width: 100%;
         min-height: var(--tap-lg);
         padding-inline: var(--space-6);
-        /* Cantos contidos: arredondado o bastante para não ler como laje,
-           longe do estádio - que numa ferramenta de trabalho ficava macio. */
-        border-radius: var(--radius-md);
+        /* 6px, o raio de botão que o design system fixa - explicitamente "não
+           pill". Já foi 14 (lia como laje) e já foi estádio (macio demais). */
+        border-radius: var(--radius-sm);
         background: var(--surface-2);
         color: var(--text);
         font-size: var(--text-base);

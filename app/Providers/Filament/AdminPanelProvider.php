@@ -34,12 +34,22 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->brandName('Notre Guard')
+            // Marca do colégio no topo, com o nome do sistema ao lado: o painel
+            // é uma entre várias aplicações da instituição.
+            ->brandLogo(fn () => view('filament.marca', ['nome' => 'Notre Guard']))
+            ->favicon('/icons/notre-guard.svg')
             // Sino no topo do painel. O polling é a via mais simples que
             // funciona sem WebSockets; 30s é suficiente para o uso aqui.
             ->databaseNotifications()
             ->databaseNotificationsPolling('30s')
+            // Navy institucional (navy-900 do docs/design-system.md). O
+            // Filament gera a escala inteira a partir dele, então botões,
+            // badges e navegação já nascem na identidade do colégio.
             ->colors([
-                'primary' => Color::Blue,
+                'primary' => Color::hex('#013d53'),
+                'danger' => Color::hex('#b3423a'),
+                'warning' => Color::hex('#b8873a'),
+                'success' => Color::hex('#2f7a52'),
             ])
             ->navigationGroups([
                 NavigationGroup::make('Operação'),
@@ -80,6 +90,10 @@ class AdminPanelProvider extends PanelProvider
             //
             // A condição fica dentro da closure, avaliada a cada render, para
             // que virar o flag no .env baste - sem republicar nada.
+            ->renderHook(
+                PanelsRenderHook::STYLES_AFTER,
+                fn () => view('filament.identidade'),
+            )
             ->renderHook(
                 PanelsRenderHook::AUTH_LOGIN_FORM_AFTER,
                 fn (): string => config('google.enabled')

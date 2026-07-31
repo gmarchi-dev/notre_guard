@@ -355,16 +355,17 @@ class FieldAppTest extends TestCase
 
     public function test_the_radius_scale_stays_restrained(): void
     {
-        // A escala já foi ao extremo nos dois sentidos: 14px lia como laje, o
-        // arredondamento total ficou macio para uma ferramenta de trabalho. O
-        // que se protege aqui é o meio-termo - e que ninguém volte a usar
-        // forma de estádio em botão, pastilha de sincronia ou escala.
+        // "6-8px em toda a aplicação", como manda o design system, com dois
+        // degraus a mais para o que ele não cobre - ele foi escrito para um
+        // sistema de desktop, e um bottom sheet a 8px não lê como bottom sheet.
+        // A escala já foi ao extremo nos dois sentidos antes disso: 14px lia
+        // como laje, e o arredondamento total ficou macio.
         $tokens = File::get(resource_path('css/field/tokens.css'));
 
         preg_match_all('/--radius-(sm|md|lg|xl):\s*(\d+)px/', $tokens, $m);
         $escala = array_combine($m[1], array_map('intval', $m[2]));
 
-        $this->assertSame(['sm' => 8, 'md' => 12, 'lg' => 16, 'xl' => 20], $escala);
+        $this->assertSame(['sm' => 6, 'md' => 8, 'lg' => 12, 'xl' => 16], $escala);
 
         // `--radius-pill` só onde a forma é pastilha por natureza.
         foreach (['button.css', 'chip.css', 'scale.css', 'tabbar.css'] as $arquivo) {
@@ -504,7 +505,27 @@ class FieldAppTest extends TestCase
         $tokens = File::get(resource_path('css/field/tokens.css'));
 
         $this->assertStringContainsString('@supports not (color: light-dark(', $tokens);
-        $this->assertStringContainsString('--bg: oklch(0.129 0.042 264.695)', $tokens);
+        $this->assertStringContainsString('--bg: #04202b', $tokens);
+    }
+
+    public function test_the_palette_comes_from_the_institutional_design_system(): void
+    {
+        // A paleta anterior era a escala Slate/Blue do Filament. Agora é a
+        // identidade do colégio, e o navy tem de ser o navy do documento -
+        // não "um azul parecido".
+        $tokens = File::get(resource_path('css/field/tokens.css'));
+
+        foreach (['#013d53', '#0a5570', '#e4edf0', '#cfb276', '#a88a52', '#171a1c', '#52606b'] as $marca) {
+            $this->assertStringContainsString(
+                $marca,
+                $tokens,
+                "{$marca} saiu da paleta - ver docs/design-system.md.",
+            );
+        }
+
+        // O anel de foco é dourado, e é gold-700 no claro: o design system diz
+        // explicitamente que gold-500 não tem contraste para indicar foco.
+        $this->assertStringContainsString('--focus: light-dark(#a88a52', $tokens);
     }
 
     // ------------------------------------------------------------- assets
@@ -540,8 +561,19 @@ class FieldAppTest extends TestCase
         $this->assertFileExists(public_path('sw.js'));
         $this->assertFileExists(public_path('manifest.webmanifest'));
 
-        foreach (['192', '512', 'maskable'] as $variant) {
-            $this->assertFileExists(public_path("icons/notre-guard-{$variant}.png"));
+        // Ícones em SVG: nítidos em qualquer densidade e um arquivo em vez de
+        // um por tamanho. Gerados do brasão por scripts/gerar-marca.ps1.
+        foreach (['notre-guard.svg', 'notre-guard-maskable.svg'] as $icone) {
+            $this->assertFileExists(public_path("icons/{$icone}"));
         }
+
+        $manifesto = json_decode(File::get(public_path('manifest.webmanifest')), true);
+
+        $this->assertSame('#013d53', $manifesto['theme_color'], 'o manifesto saiu do navy institucional.');
+        $this->assertContains(
+            'maskable',
+            array_column($manifesto['icons'], 'purpose'),
+            'sem ícone maskable, o Android recorta o brasão.',
+        );
     }
 }

@@ -98,8 +98,14 @@
 
     /* Foco visível em tudo. Antes existia só em campos de formulário, o que
        deixava a navegação por teclado invisível em todos os botões. */
+    /* Anel de foco em dourado, 2px, offset 2px - a especificação do design
+       system. O dourado é gold-700 no claro e gold-500 no escuro: gold-700
+       não tem contraste contra fundo escuro, e o design system só cobre o
+       tema claro. Desenhado FORA do elemento pelo offset, então o contraste
+       que importa é contra a superfície em volta, não contra o preenchimento
+       do botão - medido em 3.07 no pior caso. */
     :focus-visible {
-        outline: 3px solid var(--focus);
+        outline: 2px solid var(--focus);
         outline-offset: 2px;
         border-radius: var(--radius-sm);
     }

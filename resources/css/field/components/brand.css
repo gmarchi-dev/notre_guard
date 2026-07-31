@@ -1,0 +1,37 @@
+/*
+ * Marca do colégio.
+ *
+ * O SVG é de cor única e herda `currentColor`, então a marca acompanha o tema
+ * sem um arquivo por fundo: navy sobre branco no claro, clara sobre navy no
+ * escuro e no noturno.
+ *
+ * `display: block` no SVG importa: como inline ele herdaria o espaço de
+ * descida da linha de texto e desalinharia dentro de qualquer contêiner
+ * centrado - o mesmo defeito que o botão de emergência teve.
+ */
+
+@layer components {
+    .brand {
+        display: inline-flex;
+        color: var(--accent-text);
+    }
+
+    .brand svg {
+        display: block;
+        width: auto;
+        height: 100%;
+    }
+
+    /* Na barra de topo: só o brasão, na altura da linha de texto. */
+    .appbar__mark {
+        height: var(--space-8);
+        flex: none;
+    }
+
+    /* No login: marca completa, centrada, com respiro acima do formulário. */
+    .brand--login {
+        height: var(--space-12);
+        align-self: center;
+        margin-block: var(--space-4) var(--space-2);
+    }
+}

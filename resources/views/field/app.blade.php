@@ -7,11 +7,14 @@
          é o que impede o iOS de dar zoom sozinho ao focar. --}}
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#0b1120" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#04202b" media="(prefers-color-scheme: dark)">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="/manifest.webmanifest">
-    <link rel="apple-touch-icon" href="/icons/notre-guard-192.png">
+    {{-- O Safari não aceita SVG aqui. Enquanto a frota for Android, o ícone da
+         tela inicial no iOS cai no favicon — trocar por um PNG se entrar iPhone. --}}
+    <link rel="apple-touch-icon" href="/icons/notre-guard.svg">
+    <link rel="icon" href="/icons/notre-guard.svg" type="image/svg+xml">
     <title>Notre Guard - Campo</title>
 
     {{-- Bloqueante e antes do @vite de propósito: o Alpine carrega como módulo

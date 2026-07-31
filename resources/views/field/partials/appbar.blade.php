@@ -17,6 +17,10 @@
         </button>
     </template>
 
+    {{-- O brasão em vez do nome escrito: identifica a instituição em muito
+         menos largura, que é o recurso mais disputado desta barra. --}}
+    @include('brand.mark', ['variant' => 'shield', 'class' => 'appbar__mark', 'label' => ''])
+
     <div class="appbar__identity">
         <span class="appbar__brand">Notre Guard</span>
         <span class="appbar__context" x-show="shift && post" x-text="contextLine()"></span>

@@ -35,8 +35,16 @@ class PortariaPanelProvider extends PanelProvider
             ->path('portaria')
             ->login(Login::class)
             ->brandName('Notre Guard · Portaria')
+            ->brandLogo(fn () => view('filament.marca', ['nome' => 'Portaria']))
+            ->favicon('/icons/notre-guard.svg')
+            // A mesma paleta institucional do painel administrativo e do app
+            // de campo. A portaria usava Slate, o que a deixava visualmente
+            // órfã dentro do próprio sistema.
             ->colors([
-                'primary' => Color::Slate,
+                'primary' => Color::hex('#013d53'),
+                'danger' => Color::hex('#b3423a'),
+                'warning' => Color::hex('#b8873a'),
+                'success' => Color::hex('#2f7a52'),
             ])
             ->discoverResources(
                 in: app_path('Filament/Portaria/Resources'),
@@ -44,6 +52,10 @@ class PortariaPanelProvider extends PanelProvider
             )
             ->pages([])
             ->widgets([])
+            ->renderHook(
+                PanelsRenderHook::STYLES_AFTER,
+                fn () => view('filament.identidade'),
+            )
             ->renderHook(
                 PanelsRenderHook::STYLES_AFTER,
                 fn () => view('filament.portaria.styles'),

@@ -1,5 +1,9 @@
 <template x-if="screen === 'login'">
     <div class="stack">
+        {{-- A marca completa só aqui: é a única tela em que sobra espaço e a
+             única em que o vigilante ainda não sabe onde entrou. --}}
+        @include('brand.mark', ['variant' => 'full', 'class' => 'brand--login'])
+
         <div>
             <h1 tabindex="-1">Entrar</h1>
             <p class="muted mt-2">Use sua matrícula e senha.</p>

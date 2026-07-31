@@ -22,6 +22,7 @@
 @import './field/fonts.css';
 @import './field/base.css';
 @import './field/layout.css';
+@import './field/components/brand.css';
 @import './field/components/icon.css';
 @import './field/components/button.css';
 @import './field/components/card.css';

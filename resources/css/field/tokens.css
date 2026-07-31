@@ -5,9 +5,9 @@
  * Todos os demais usam var(). Há teste que verifica isso - ver
  * tests/Feature/FieldAppTest.php.
  *
- * As cores saem das mesmas escalas OKLCH do painel administrativo
- * (vendor/filament/support/src/Colors/Color.php), copiadas literalmente: o
- * painel e o aplicativo passam a ter a mesma paleta, não "um azul parecido".
+ * As cores saem de docs/design-system.md - a identidade do Colégio Notre Dame
+ * Campinas. Os painéis administrativo e da portaria recebem a MESMA paleta,
+ * via FilamentColor, então o sistema inteiro fala uma língua só.
  *
  * Claro e escuro convivem em light-dark(), declarados uma vez só. O
  * interruptor é o color-scheme do :root - que de quebra acerta scrollbar,
@@ -18,65 +18,99 @@
     :root {
         color-scheme: light dark;
 
+        /* =============================================================
+         * PALETA INSTITUCIONAL — Colégio Notre Dame Campinas
+         *
+         * Os valores do tema CLARO vêm de docs/design-system.md, copiados
+         * literalmente. Os temas ESCURO e NOTURNO são derivados: o design
+         * system é só de tema claro, e o app de campo roda de madrugada.
+         *
+         * A derivação não é cosmética. `navy-900` (#013d53) é quase preto -
+         * como preenchimento de acento sobre fundo escuro ele desapareceria.
+         * No escuro o acento INVERTE: navy claro com rótulo em navy profundo,
+         * a mesma solução que o azul anterior já exigia.
+         *
+         * Todo par foi medido no navegador, não estimado. Ver a seção de
+         * verificação em docs/06-pwa-de-campo.md.
+         * ============================================================= */
+
         /* ---------------------------------------------------- superfície */
-        /* Claro é branco puro, não Slate-50: sob sol direto quem decide
+        /* Claro é branco puro (surface-0): sob sol direto quem decide
            legibilidade é luminância absoluta, não elegância. */
-        --bg: light-dark(oklch(1 0 0), oklch(0.129 0.042 264.695));
-        --surface: light-dark(oklch(0.984 0.003 247.858), oklch(0.208 0.042 265.755));
-        --surface-2: light-dark(oklch(0.968 0.007 247.896), oklch(0.279 0.041 260.031));
+        --bg: light-dark(#ffffff, #04202b);
+        --surface: light-dark(#f7f8f8, #082e3d);
+        --surface-2: light-dark(#eef0f1, #0d3f52);
 
-        /* Borda em Slate-400 no claro: a borda "discreta" padrão desaparece
-           ao sol. Aqui borda é estrutura, não decoração - e por isso é usada
-           com parcimônia: só onde separa de fato. */
-        --border: light-dark(oklch(0.704 0.04 256.788), oklch(0.372 0.044 257.287));
-        /* Slate-500 nos dois temas. No escuro era Slate-600, que dava 2.66:1
-           contra o fundo - abaixo dos 3:1 que a WCAG 1.4.11 pede para o
-           contorno de um controle. Medido, não estimado. */
-        --border-strong: light-dark(oklch(0.554 0.046 257.417), oklch(0.554 0.046 257.417));
+        /* O `--color-border` do design system (#dde2e4) é o FIO INTERNO aqui,
+           não a borda: a borda discreta some ao sol, e este aplicativo é usado
+           no pátio ao meio-dia. `--border` é derivado mais escuro de propósito
+           - aqui borda é estrutura, não decoração. */
+        --border: light-dark(#b3bec4, #17596f);
+        /* >= 3:1 contra o fundo nos quatro temas, que é o que a WCAG 1.4.11
+           pede para o contorno de um controle. Medido. */
+        --border-strong: light-dark(#7c8b93, #4b8ba3);
 
-        /* Fio interno de um agrupamento. Mais leve que --border: separa itens
-           irmãos sem desenhar uma caixa em volta de cada um. */
-        --divider: light-dark(oklch(0.929 0.013 255.508), oklch(0.279 0.041 260.031));
+        --divider: light-dark(#dde2e4, #0d3f52);
 
         /* ------------------------------------------------------- texto */
-        --text: light-dark(oklch(0.129 0.042 264.695), oklch(0.984 0.003 247.858));
-        --text-muted: light-dark(oklch(0.372 0.044 257.287), oklch(0.869 0.022 252.894));
+        --text: light-dark(#171a1c, #eef4f6);
+        --text-muted: light-dark(#52606b, #b3c8d1);
         /* Só para texto >= 17px. Nunca para informação operacional. */
-        --text-faint: light-dark(oklch(0.554 0.046 257.417), oklch(0.704 0.04 256.788));
+        --text-faint: light-dark(#7c8b93, #85a5b3);
 
         /* ------------------------------------------------------ acento */
-        /* No escuro o botão primário INVERTE: azul claro com texto quase
-           preto. Passa de 3,6:1 para mais de 7:1. Escurecer o azul original
-           só pioraria. */
-        --accent: light-dark(oklch(0.488 0.243 264.376), oklch(0.707 0.165 254.624));
-        --accent-on: light-dark(oklch(1 0 0), oklch(0.282 0.091 267.935));
-        --accent-text: light-dark(oklch(0.424 0.199 265.638), oklch(0.809 0.105 251.813));
-        --accent-quiet: light-dark(oklch(0.932 0.032 255.585), oklch(0.282 0.091 267.935));
+        /* navy-900 preenchido com rótulo branco no claro; invertido no escuro,
+           porque o mesmo navy sobre fundo escuro seria invisível. */
+        --accent: light-dark(#013d53, #7cc0da);
+        --accent-on: light-dark(#ffffff, #01212d);
+        --accent-text: light-dark(#013d53, #9ed4ea);
+        --accent-quiet: light-dark(#e4edf0, #06334a);
+        /* navy-700: estado ativo/hover de elementos navy. */
+        --accent-strong: light-dark(#0a5570, #a6dbef);
 
-        /* Sky, fora das escalas de acento e de perigo, para o anel de foco
-           continuar visível SOBRE o botão azul e sobre o vermelho. */
-        --focus: light-dark(oklch(0.379 0.146 265.522), oklch(0.828 0.111 230.318));
+        /* ------------------------------------------------------ dourado */
+        /* Usado com parcimônia, como manda o design system: anel de foco, fio
+           de assinatura e pouco mais. Se uma tela passar de ~10% de área em
+           dourado, passou do ponto. */
+        --gold: #cfb276;
+        --gold-soft: #e3d3b3;
+        /* gold-700 para texto/ícone sobre fundo claro e para o ANEL DE FOCO -
+           gold-500 não tem contraste para indicar foco. */
+        --gold-deep: #a88a52;
+
+        /* O design system fixa o foco em gold-700. No escuro ele perderia
+           contraste contra o fundo, então lá sobe para gold-500 - mesma
+           família, mesma leitura, contraste preservado. */
+        --focus: light-dark(#a88a52, #cfb276);
 
         /* ------------------------------------------------------ estado */
-        --success: light-dark(oklch(0.527 0.154 150.069), oklch(0.792 0.209 151.711));
-        --success-on: light-dark(oklch(1 0 0), oklch(0.266 0.065 152.934));
-        --success-quiet: light-dark(oklch(0.962 0.044 156.743), oklch(0.266 0.065 152.934));
-        --success-text: light-dark(oklch(0.448 0.119 151.328), oklch(0.871 0.15 154.449));
+        --success: light-dark(#2f7a52, #6bbf8f);
+        --success-on: light-dark(#ffffff, #05261a);
+        --success-quiet: light-dark(#e6f2ea, #06301f);
+        --success-text: light-dark(#276244, #8ed4ac);
 
-        --warning: light-dark(oklch(0.555 0.163 48.998), oklch(0.828 0.189 84.429));
-        --warning-on: light-dark(oklch(1 0 0), oklch(0.279 0.077 45.635));
-        --warning-quiet: light-dark(oklch(0.962 0.059 95.617), oklch(0.279 0.077 45.635));
-        --warning-text: light-dark(oklch(0.473 0.137 46.201), oklch(0.879 0.169 91.605));
+        --warning: light-dark(#b8873a, #e0b063);
+        /* Rótulo ESCURO sobre o âmbar, nos dois temas. Branco sobre o
+           `warning` do design system dá 3.2:1 - o âmbar é claro demais para
+           carregar texto branco. O design system fixa o preenchimento, não o
+           rótulo; aqui o rótulo cede. */
+        --warning-on: light-dark(#2b1c06, #2b1c06);
+        --warning-quiet: light-dark(#f7efe1, #33220a);
+        --warning-text: light-dark(#7d5c24, #eac489);
 
-        --critical-text: light-dark(oklch(0.505 0.213 27.518), oklch(0.808 0.114 19.571));
-        --critical-quiet: light-dark(oklch(0.936 0.032 17.717), oklch(0.258 0.092 26.042));
+        --critical-text: light-dark(#b3423a, #f0968f);
+        --critical-quiet: light-dark(#f9eae9, #3d1613);
 
-        /* Vermelho preenchido é EXCLUSIVO da emergência. Nenhuma outra regra
-           pode usar --emergency como background - ver button.css e panic.css,
-           e o teste que garante isso. */
-        --emergency: light-dark(oklch(0.505 0.213 27.518), oklch(0.577 0.245 27.325));
-        --emergency-on: oklch(1 0 0);
-        --emergency-edge: light-dark(oklch(0.396 0.141 25.723), oklch(0.444 0.177 26.899));
+        /* Vermelho PREENCHIDO é exclusivo da emergência - ver button.css,
+           panic.css e o teste que garante isso.
+
+           Deliberadamente mais saturado que o `danger` do design system:
+           aquele classifica gravidade num relatório, este precisa gritar mais
+           alto que tudo na tela. A medição do modo noturno mostrou que ele
+           tem de ser o preenchimento mais claro da interface. */
+        --emergency: light-dark(#c0392b, #cf4133);
+        --emergency-on: #ffffff;
+        --emergency-edge: light-dark(#8f2a20, #9c3226);
 
         /* ------------------------------------------------- espaçamento */
         --space-1: 4px;
@@ -91,28 +125,27 @@
 
         /* -------------------------------------------------------- raio */
         /*
-         * Escala contida. Uma passada anterior levou tudo ao arredondamento
-         * total - botões e pastilhas em forma de estádio - e ficou macio
-         * demais para uma ferramenta de trabalho.
+         * "6-8px em toda a aplicação", como manda o design system, com dois
+         * degraus a mais para o que ele não cobre: ele foi escrito para um
+         * sistema administrativo de desktop, e um bottom sheet de celular a
+         * 8px de raio não se lê como bottom sheet.
          *
-         * O que continua valendo daquela leitura: o problema nunca foi o alvo
-         * de toque, e sim o desenho. Um retângulo de 343x56 com raio 14 lê-se
-         * como laje; com 12 num conjunto que também encolheu de densidade, lê
-         * como controle.
+         *   sm  6   o raio do botão que o design system fixa
+         *   md  8   campos, pastilhas, escala
+         *   lg  12  agrupamentos, cartões, toasts
+         *   xl  16  sheet e cartão do próximo ponto - superfícies da casca
          *
          * `--radius-pill` sobrevive só para o que é pastilha por NATUREZA -
          * onde nenhum outro raio faz sentido: o contador de pendências (uma
-         * bolha de número), os segmentos de progresso e a alça do sheet (barras
-         * de 6 e 4px). Botão, pastilha de sincronia e escala de gravidade
-         * saíram de lá.
+         * bolha de número), os segmentos de progresso e a alça do sheet.
          *
          * Redondo de verdade fica só onde a forma É um círculo: emergência,
          * botão de ícone, disco de posição e os pontos da escala.
          */
-        --radius-sm: 8px;
-        --radius-md: 12px;
-        --radius-lg: 16px;
-        --radius-xl: 20px;
+        --radius-sm: 6px;
+        --radius-md: 8px;
+        --radius-lg: 12px;
+        --radius-xl: 16px;
         --radius-pill: 999px;
 
         /* -------------------------------------------------- tipografia */
@@ -210,36 +243,42 @@
     :root[data-theme='night'] {
         color-scheme: dark;
 
-        --bg: oklch(0.11 0.03 264);
-        --surface: oklch(0.16 0.035 265);
-        --surface-2: oklch(0.21 0.038 260);
-        --border: oklch(0.3 0.04 257);
-        --border-strong: oklch(0.5 0.043 257);
-        --divider: oklch(0.21 0.038 260);
+        --bg: #021620;
+        --surface: #05222e;
+        --surface-2: #0a3040;
+        --border: #12475c;
+        --border-strong: #3a748a;
+        --divider: #0a3040;
 
-        --text: oklch(0.704 0.04 256.788);
-        --text-muted: oklch(0.62 0.04 257);
-        --text-faint: oklch(0.52 0.042 257);
+        --text: #93b3bf;
+        --text-muted: #7ba0ae;
+        --text-faint: #628b9a;
 
-        --accent: oklch(0.3 0.1 267);
-        --accent-on: oklch(0.78 0.11 252);
-        --accent-text: oklch(0.72 0.11 252);
-        --accent-quiet: oklch(0.21 0.07 268);
+        /* Invertido em relação ao escuro comum: preenchimento navy profundo,
+           rótulo em navy claro. É a área preenchida que ilumina o rosto. */
+        --accent: #0a3446;
+        --accent-on: #8cc6dd;
+        --accent-text: #7fbdd4;
+        --accent-quiet: #062634;
+        --accent-strong: #0f4560;
 
-        --focus: oklch(0.72 0.1 230);
+        --gold: #8d7850;
+        --gold-soft: #a08b60;
+        --gold-deep: #b39a68;
+        --focus: #b39a68;
 
-        --success: oklch(0.32 0.09 152);
-        --success-on: oklch(0.8 0.14 154);
-        --success-quiet: oklch(0.19 0.05 153);
-        --success-text: oklch(0.78 0.14 154);
+        --success: #0e3625;
+        --success-on: #74c194;
+        --success-quiet: #08281a;
+        --success-text: #6fbc8f;
 
-        --warning: oklch(0.34 0.1 60);
-        --warning-on: oklch(0.84 0.15 91);
-        --warning-quiet: oklch(0.21 0.06 46);
-        --warning-text: oklch(0.8 0.15 91);
+        --warning: #3a2a10;
+        --warning-on: #d0a35e;
+        --warning-quiet: #2a1e0b;
+        --warning-text: #c99d5c;
 
-        --critical-text: oklch(0.72 0.11 20);
-        --critical-quiet: oklch(0.2 0.08 26);
+        --critical-text: #d38a83;
+        --critical-quiet: #2c1210;
 
         --shadow-color: oklch(0 0 0 / 0.6);
     }
@@ -252,32 +291,33 @@
      */
     @supports not (color: light-dark(#000, #fff)) {
         :root {
-            --bg: oklch(0.129 0.042 264.695);
-            --surface: oklch(0.208 0.042 265.755);
-            --surface-2: oklch(0.279 0.041 260.031);
-            --border: oklch(0.372 0.044 257.287);
-            --border-strong: oklch(0.554 0.046 257.417);
-            --divider: oklch(0.279 0.041 260.031);
-            --text: oklch(0.984 0.003 247.858);
-            --text-muted: oklch(0.869 0.022 252.894);
-            --text-faint: oklch(0.704 0.04 256.788);
-            --accent: oklch(0.707 0.165 254.624);
-            --accent-on: oklch(0.282 0.091 267.935);
-            --accent-text: oklch(0.809 0.105 251.813);
-            --accent-quiet: oklch(0.282 0.091 267.935);
-            --focus: oklch(0.828 0.111 230.318);
-            --success: oklch(0.792 0.209 151.711);
-            --success-on: oklch(0.266 0.065 152.934);
-            --success-quiet: oklch(0.266 0.065 152.934);
-            --success-text: oklch(0.871 0.15 154.449);
-            --warning: oklch(0.828 0.189 84.429);
-            --warning-on: oklch(0.279 0.077 45.635);
-            --warning-quiet: oklch(0.279 0.077 45.635);
-            --warning-text: oklch(0.879 0.169 91.605);
-            --critical-text: oklch(0.808 0.114 19.571);
-            --critical-quiet: oklch(0.258 0.092 26.042);
-            --emergency: oklch(0.577 0.245 27.325);
-            --emergency-edge: oklch(0.444 0.177 26.899);
+            --bg: #04202b;
+            --surface: #082e3d;
+            --surface-2: #0d3f52;
+            --border: #17596f;
+            --border-strong: #4b8ba3;
+            --divider: #0d3f52;
+            --text: #eef4f6;
+            --text-muted: #b3c8d1;
+            --text-faint: #85a5b3;
+            --accent: #7cc0da;
+            --accent-on: #01212d;
+            --accent-text: #9ed4ea;
+            --accent-quiet: #06334a;
+            --accent-strong: #a6dbef;
+            --focus: #cfb276;
+            --success: #6bbf8f;
+            --success-on: #05261a;
+            --success-quiet: #06301f;
+            --success-text: #8ed4ac;
+            --warning: #e0b063;
+            --warning-on: #2b1c06;
+            --warning-quiet: #33220a;
+            --warning-text: #eac489;
+            --critical-text: #f0968f;
+            --critical-quiet: #3d1613;
+            --emergency: #cf4133;
+            --emergency-edge: #9c3226;
             --shadow-color: oklch(0 0 0 / 0.55);
         }
     }
