@@ -101,6 +101,61 @@ class IdentidadeVisualTest extends TestCase
         }
     }
 
+    public function test_the_sidebar_selectors_still_match_what_filament_renders(): void
+    {
+        // A identidade entra por render hook, mirando classes do Filament. Se
+        // um upgrade renomear qualquer uma delas, o CSS deixa de aplicar EM
+        // SILÊNCIO - a barra volta ao cinza e nada quebra. Este teste é o
+        // alarme.
+        $porteiro = \App\Models\User::factory()->create([
+            'role' => \App\Models\User::ROLE_GUARD,
+            'permissions' => [\App\Models\User::PERMISSION_KEYS],
+        ]);
+
+        $html = $this->actingAs($porteiro)->get('/portaria/key-items')->assertOk()->getContent();
+
+        foreach ([
+            'fi-sidebar',
+            'fi-sidebar-header',
+            'fi-sidebar-item-btn',
+            'fi-sidebar-item-badge-ctn',
+            'fi-logo',
+        ] as $classe) {
+            $this->assertStringContainsString(
+                $classe,
+                $html,
+                "a classe {$classe} sumiu do Filament - o CSS da barra lateral parou de aplicar.",
+            );
+        }
+
+        // O item ativo é o que carrega o fio dourado; sem esta classe, "onde
+        // você está" deixa de ser marcado.
+        $this->assertStringContainsString('fi-active', $html);
+
+        // E o render hook precisa disparar nas páginas internas, não só no
+        // login - é lá dentro que a barra lateral existe.
+        $this->assertStringContainsString('--nd-navy-900', $html);
+    }
+
+    public function test_the_sidebar_is_navy_not_grey(): void
+    {
+        $css = File::get(resource_path('views/filament/identidade.blade.php'));
+
+        $this->assertMatchesRegularExpression(
+            '/\.fi-sidebar[^{]*\{[^}]*background-color:\s*var\(--nd-navy-900\)/s',
+            $css,
+            'a barra lateral saiu do navy institucional.',
+        );
+
+        // A marca herda a cor do contêiner. Fixar navy nela a deixaria
+        // invisível dentro da barra navy - quase aconteceu.
+        $this->assertMatchesRegularExpression(
+            '/\.fi-logo svg\s*\{[^}]*color:\s*inherit/s',
+            $css,
+            'a marca voltou a ter cor fixa e some dentro da barra navy.',
+        );
+    }
+
     public function test_the_login_pages_render_with_the_identity(): void
     {
         // Render de verdade: um erro no partial da marca derrubaria a única

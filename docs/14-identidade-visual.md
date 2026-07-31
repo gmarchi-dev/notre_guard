@@ -102,12 +102,33 @@ foi cometido e corrigido duas vezes neste projeto.
 No modo noturno a emergência mantém **6× a luminância** do preenchimento seguinte, que é a
 invariante que o modo existe para proteger.
 
+## A barra lateral
+
+Em **navy**. "Navy carrega peso e autoridade: estrutura", diz o design system, e a barra lateral é
+exatamente a estrutura da tela — em cinza ela competia com o conteúdo, em navy ela emoldura.
+
+O item ativo se distingue por **preenchimento e por um fio dourado à esquerda**, com o ícone também
+em dourado. Cor sozinha não basta, e aqui ela seria a única diferença entre o item ativo e o item
+sob o cursor.
+
+Contraste medido contra o navy: rótulo inativo **8,62**, ícone inativo **5,83**, rótulo ativo
+**8,25**, ícone dourado **4,04**, fio dourado **5,73**, marca **11,71**. O cinza padrão do Filament
+ficava em 2,4.
+
+**A marca passou a herdar a cor do contêiner** (`color: inherit`) em vez de ser fixada em navy.
+Fixada, ela ficaria invisível assim que a barra virou navy — navy sobre navy. Há teste para isso.
+
 ## Como os painéis recebem a identidade
 
 Via render hook (`resources/views/filament/identidade.blade.php`), não como tema Vite do Filament:
 um tema exigiria pipeline de build própria mais `filament:assets` no deploy. O bloco cobre só o que
-o `FilamentColor` não alcança - forma, foco e o dourado de assinatura. Se crescer, aí o tema se
-justifica.
+o `FilamentColor` não alcança - forma, foco, barra lateral e o dourado de assinatura.
+
+**O risco dessa escolha é conhecido:** o CSS mira classes do Filament (`fi-sidebar-item-btn`,
+`fi-active`, `fi-logo`). Se um upgrade renomear qualquer uma delas, o estilo deixa de aplicar **em
+silêncio** - a barra volta ao cinza e nada quebra. Por isso há um teste que renderiza uma página
+autenticada e confere que cada classe ainda existe. Quando o bloco crescer a ponto de o teste virar
+uma lista longa, aí o tema Vite se justifica.
 
 ## Pendências
 
