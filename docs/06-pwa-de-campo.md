@@ -103,7 +103,7 @@ o que mudou foi o desenho em volta.
 
 | | antes | depois |
 |---|---|---|
-| raio do botão | 14px (proporção 0,25 contra a altura) | **totalmente arredondado** |
+| raio do botão | 14px (proporção 0,25 contra a altura) | **12px, numa escala revista** |
 | caixa de texto | 108px fixos | **76px, crescendo com o conteúdo** |
 | cartão do próximo ponto | 250px | **182px** |
 | "Posto / em serviço desde" | 114px, empilhado | **77px, lado a lado** |
@@ -111,8 +111,17 @@ o que mudou foi o desenho em volta.
 
 O que mudou, e por quê:
 
-- **Botão totalmente arredondado.** Um retângulo de 343x56 com raio 14 lê-se como laje por mais
-  correto que esteja o alvo. É a mudança que mais muda a leitura do app, e virou teste.
+- **Cantos revistos.** Um retângulo de 343x56 com raio 14 lê-se como laje, por mais correto que
+  esteja o alvo. A primeira correção foi ao outro extremo - arredondamento total, forma de estádio -
+  e ficou macia demais para uma ferramenta de trabalho. A escala parou no meio: **8 / 12 / 16 / 20**,
+  com `--radius-pill` reservado ao que é pastilha por natureza (contador, segmentos de progresso,
+  alça do sheet) e círculo verdadeiro só onde a forma é um círculo (emergência, botão de ícone,
+  disco de posição, pontos da escala). Há teste travando a escala e proibindo forma de estádio em
+  botão, pastilha de sincronia, escala de gravidade e indicador de aba.
+
+  Os painéis administrativo e da portaria **não entram nessa conta**: usam os raios do próprio
+  Filament, medidos entre 4 e 12px - já mais contidos que o app de campo. Alterá-los exigiria um
+  tema Vite do Filament, com pipeline de build própria.
 - **`field-sizing: content`** na caixa de texto, com piso de duas linhas e teto de 40dvh. Os 108px
   fixos eram espaço reservado para um texto que quase sempre tem uma linha. Mesma linha de base do
   resto do app (Chrome 123+); onde não existir, o campo fica fixo, não quebrado.

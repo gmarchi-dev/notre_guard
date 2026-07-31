@@ -317,18 +317,29 @@ class FieldAppTest extends TestCase
         );
     }
 
-    public function test_buttons_are_not_rectangular_slabs(): void
+    public function test_the_radius_scale_stays_restrained(): void
     {
-        // Um botão de 343x56 com raio 14 tem proporção raio/altura de 0,25 e
-        // lê-se como laje, por mais correto que esteja o alvo de toque. Área de
-        // toque e peso visual são coisas distintas.
-        $button = File::get(resource_path('css/field/components/button.css'));
+        // A escala já foi ao extremo nos dois sentidos: 14px lia como laje, o
+        // arredondamento total ficou macio para uma ferramenta de trabalho. O
+        // que se protege aqui é o meio-termo - e que ninguém volte a usar
+        // forma de estádio em botão, pastilha de sincronia ou escala.
+        $tokens = File::get(resource_path('css/field/tokens.css'));
 
-        $this->assertMatchesRegularExpression(
-            '/\.btn\s*\{[^}]*border-radius:\s*var\(--radius-pill\)/s',
-            $button,
-            'o botão voltou a ter cantos de bloco.',
-        );
+        preg_match_all('/--radius-(sm|md|lg|xl):\s*(\d+)px/', $tokens, $m);
+        $escala = array_combine($m[1], array_map('intval', $m[2]));
+
+        $this->assertSame(['sm' => 8, 'md' => 12, 'lg' => 16, 'xl' => 20], $escala);
+
+        // `--radius-pill` só onde a forma é pastilha por natureza.
+        foreach (['button.css', 'chip.css', 'scale.css', 'tabbar.css'] as $arquivo) {
+            $css = File::get(resource_path("css/field/components/{$arquivo}"));
+
+            $this->assertDoesNotMatchRegularExpression(
+                '/\.(btn|chip|scale__option|tabbar__icon)(?:--[\w-]+)?\s*\{[^}]*border-radius:\s*var\(--radius-pill\)/s',
+                $css,
+                "{$arquivo} voltou a usar forma de estádio num controle.",
+            );
+        }
     }
 
     public function test_the_shell_column_cannot_be_widened_by_its_content(): void

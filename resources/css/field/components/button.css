@@ -24,9 +24,9 @@
         width: 100%;
         min-height: var(--tap-lg);
         padding-inline: var(--space-6);
-        /* Totalmente arredondado. É a mudança que mais muda a leitura do app:
-           a mesma área de toque deixa de parecer um bloco. */
-        border-radius: var(--radius-pill);
+        /* Cantos contidos: arredondado o bastante para não ler como laje,
+           longe do estádio - que numa ferramenta de trabalho ficava macio. */
+        border-radius: var(--radius-md);
         background: var(--surface-2);
         color: var(--text);
         font-size: var(--text-base);
@@ -111,15 +111,17 @@
         width: auto;
         padding-inline: var(--space-5);
         font-size: var(--text-sm);
-        border-radius: var(--radius-pill);
+        border-radius: var(--radius-sm);
     }
 
+    /* O de ícone continua redondo: é um alvo quadrado com um símbolo no meio,
+       e qualquer canto ali vira um retângulo estranho em volta do desenho. */
     .btn--icon {
         width: var(--tap-md);
         min-width: var(--tap-md);
         min-height: var(--tap-md);
         padding: 0;
-        border-radius: var(--radius-pill);
+        border-radius: 50%;
         font-size: var(--text-lg);
     }
 

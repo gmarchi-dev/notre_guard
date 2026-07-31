@@ -67,7 +67,9 @@
         width: fit-content;
         max-width: 100%;
         padding: var(--space-3) var(--space-4);
-        border-radius: var(--radius-xl);
+        /* `lg` e não `xl`: num aviso de 46px de altura, 20px de raio já é
+           quase um estádio. */
+        border-radius: var(--radius-lg);
         background: var(--surface-2);
         color: var(--text);
         /* Anel interno em vez de borda: a borda entra no cálculo da caixa, e o

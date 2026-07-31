@@ -91,15 +91,28 @@
 
         /* -------------------------------------------------------- raio */
         /*
-         * Escala generosa de propósito. Um botão de 343x56 com raio 14 tem
-         * proporção raio/altura de 0,25 e lê-se como uma laje retangular, por
-         * mais que o alvo de toque esteja correto. Alvo de toque não é peso
-         * visual: a área continua com 56px, o desenho é que deixa de ser bloco.
+         * Escala contida. Uma passada anterior levou tudo ao arredondamento
+         * total - botões e pastilhas em forma de estádio - e ficou macio
+         * demais para uma ferramenta de trabalho.
+         *
+         * O que continua valendo daquela leitura: o problema nunca foi o alvo
+         * de toque, e sim o desenho. Um retângulo de 343x56 com raio 14 lê-se
+         * como laje; com 12 num conjunto que também encolheu de densidade, lê
+         * como controle.
+         *
+         * `--radius-pill` sobrevive só para o que é pastilha por NATUREZA -
+         * onde nenhum outro raio faz sentido: o contador de pendências (uma
+         * bolha de número), os segmentos de progresso e a alça do sheet (barras
+         * de 6 e 4px). Botão, pastilha de sincronia e escala de gravidade
+         * saíram de lá.
+         *
+         * Redondo de verdade fica só onde a forma É um círculo: emergência,
+         * botão de ícone, disco de posição e os pontos da escala.
          */
-        --radius-sm: 12px;
-        --radius-md: 16px;
-        --radius-lg: 22px;
-        --radius-xl: 28px;
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --radius-xl: 20px;
         --radius-pill: 999px;
 
         /* -------------------------------------------------- tipografia */
