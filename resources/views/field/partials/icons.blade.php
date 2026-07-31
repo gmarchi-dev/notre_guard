@@ -72,6 +72,11 @@
         <path d="M6 6 18 18M18 6 6 18"/>
     </symbol>
 
+    <symbol id="i-check-circle" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9"/>
+        <path d="m8 12.2 2.7 2.8L16 9.5"/>
+    </symbol>
+
     <symbol id="i-alert" viewBox="0 0 24 24">
         <circle cx="12" cy="12" r="9"/>
         <path d="M12 7.5v5.5"/>

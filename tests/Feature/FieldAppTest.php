@@ -131,6 +131,61 @@ class FieldAppTest extends TestCase
         );
     }
 
+    public function test_nothing_is_allowed_to_cover_the_emergency_button(): void
+    {
+        // Medido: com a pilha de toasts em `bottom: 0`, as quatro abas passavam
+        // a receber o toque do toast, e um toast longo cobria o botão de
+        // socorro. Um erro persistente - que por definição não some sozinho -
+        // travava a navegação e escondia a emergência ao mesmo tempo.
+        $css = File::get(resource_path('css/field/components/toast.css'));
+
+        $this->assertMatchesRegularExpression(
+            '/\.toasts\s*\{[^}]*bottom:\s*calc\(100% \+ var\(--tap-row\)/s',
+            $css,
+            'a pilha de toasts voltou a se ancorar por cima do dock e do botão de emergência.',
+        );
+    }
+
+    public function test_the_two_toast_mounts_are_mutually_exclusive(): void
+    {
+        // A pilha é montada em dois lugares: dentro do dock, onde se ancora
+        // acima da barra de abas, e flutuante em boot/login, onde não há dock.
+        // Os dois blocos existem no HTML compilado - o que não pode existir são
+        // os dois ATIVOS: duas regiões aria-live fariam o leitor de tela
+        // anunciar cada aviso duas vezes.
+        $html = $this->fieldHtml();
+
+        $this->assertSame(
+            2,
+            substr_count($html, 'aria-live="polite"'),
+            'a quantidade de pontos de montagem da pilha de toasts mudou.',
+        );
+
+        // O do dock é guardado por showDock(); o flutuante, pela negação.
+        $this->assertStringContainsString('x-if="showDock()"', $html);
+        $this->assertStringContainsString('x-if="!showDock()"', $html);
+
+        // E só o flutuante carrega o modificador de posicionamento.
+        $this->assertSame(
+            1,
+            substr_count($html, 'toasts--floating'),
+            'o modificador flutuante deveria existir só no ponto de montagem sem dock.',
+        );
+    }
+
+    public function test_a_toast_that_vanishes_alone_has_no_close_button(): void
+    {
+        // O botão de fechar impunha 48px a um aviso de quatro segundos: era ele
+        // que fazia "PC-01 registrado." ocupar 74px de altura.
+        $blade = File::get(resource_path('views/field/partials/toasts.blade.php'));
+
+        $this->assertMatchesRegularExpression(
+            '/x-if="toast\.persistent"/',
+            $blade,
+            'o botão de fechar voltou a aparecer em toast que some sozinho.',
+        );
+    }
+
     public function test_icons_are_drawn_not_typed(): void
     {
         // Glifo de texto depende da fonte do sistema: muda de desenho, de peso

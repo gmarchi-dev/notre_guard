@@ -320,6 +320,12 @@ function fieldApp() {
         // ------------------------------------------------ barra inferior
         tabs: TABS,
 
+        /** O dock existe em toda tela operacional — e é ele que ancora os
+         *  toasts e o botão de emergência. */
+        showDock() {
+            return this.screen !== 'boot' && this.screen !== 'login'
+        },
+
         showTabBar() {
             return !SUBFLOWS.includes(this.screen)
         },
@@ -499,10 +505,14 @@ function fieldApp() {
         // ------------------------------------------------------------ toasts
         toast(text, kind = 'ok', ttl = null) {
             const id = crypto.randomUUID()
-            this.toasts = [...this.toasts.slice(-1), { id, text, kind }]
 
             // Sucesso some sozinho; erro e alerta ficam até serem fechados.
             const life = ttl ?? (kind === 'ok' ? 4000 : null)
+
+            // `persistent` decide se o aviso ganha botão de fechar. Sem isso, um
+            // toast de quatro segundos carregava um alvo de 48px pedindo uma
+            // decisão que ninguém precisa tomar.
+            this.toasts = [...this.toasts.slice(-1), { id, text, kind, persistent: !life }]
 
             if (life) {
                 setTimeout(() => this.dismissToast(id), life)

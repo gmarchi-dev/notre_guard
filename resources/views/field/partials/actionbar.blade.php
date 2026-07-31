@@ -6,8 +6,12 @@
     disputam mais o mesmo espaço: as ações secundárias vivem no conteúdo, e o
     retorno é a seta do cabeçalho.
 --}}
-<template x-if="screen !== 'boot' && screen !== 'login'">
+<template x-if="showDock()">
     <div class="dock">
+        {{-- Os toasts moram DENTRO do dock: ancorados nele, sobem junto com a
+             faixa de ação em vez de cobrir a barra de abas. --}}
+        @include('field.partials.toasts')
+
         {{-- Emergência: único elemento circular e único vermelho preenchido da
              interface. Ancorado ao dock, sobe junto com a faixa de ação. --}}
         <button type="button" class="fab" @click="askPanic()" aria-label="Acionar emergência">

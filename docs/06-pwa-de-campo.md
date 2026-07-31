@@ -156,6 +156,39 @@ rampa se lê antes do texto. Cabe em uma linha (338px de 343) e quebra sozinha e
 de 8px em vermelho forte é a rampa; o preenchimento da pastilha marcada é o vermelho suave. O teste
 foi refeito para exigir exatamente isso, em vez de proibir a cor por inteiro.
 
+### Toasts
+
+O modelo anterior era uma **faixa de largura total**, com fundo tingido, borda de 1px e texto
+colorido - o padrão de *alert* de página, não de toast. Três consequências:
+
+1. Gastava **74px** para dizer "PC-01 registrado.", porque o botão de fechar impunha seus 48px
+   mesmo a um aviso que some sozinho em quatro segundos.
+2. O fundo tingido carregava a semântica, então o texto precisava ser colorido também - dois canais
+   gastos na mesma informação.
+3. Esticado de borda a borda, competia com o conteúdo em vez de flutuar sobre ele.
+
+Agora é uma superfície elevada neutra, **dimensionada pelo conteúdo** (191px para o aviso curto,
+contra 288), com a cor concentrada no ícone e o texto de volta ao contraste máximo do tema. O botão
+de fechar só existe no aviso que **persiste**; o que some sozinho não pede decisão nenhuma. Altura
+do aviso de sucesso: **46px**, contra 74.
+
+Contraste medido nos três temas: texto entre 6,75 e 18,4; ícone entre 5,86 e 10,1.
+
+#### Dois defeitos que a medição encontrou
+
+Com a pilha em `bottom: 0`, o toast ficava **por cima do dock**. Medido com `elementFromPoint`, as
+quatro abas passavam a receber o toque do toast em vez do próprio - e um erro persistente, que por
+definição não some sozinho, **travava a navegação inteira**.
+
+Pior: um toast longo ocupa a largura toda e **cobria o botão de emergência**. Nada pode cobrir o
+acionamento de socorro, nem por três segundos.
+
+A pilha passou a ser ancorada ao dock (`bottom: calc(100% + var(--tap-row) + …)`), pelo mesmo
+mecanismo do botão de emergência, com folga da altura dele. Em `boot` e `login` não há dock, então
+há um segundo ponto de montagem flutuante - os dois em ramos mutuamente exclusivos, porque duas
+regiões `aria-live` ativas fariam o leitor de tela anunciar cada aviso duas vezes. Há teste para as
+três coisas.
+
 ### O botão de SOS
 
 O relato era "desalinhado", e a medição achou a causa: `display: grid` com duas linhas automáticas

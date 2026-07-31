@@ -2,70 +2,120 @@
  * Toasts.
  *
  * O aviso antigo ficava no topo do conteúdo e empurrava o layout - numa tela
- * rolada, o vigilante nem via. Agora flutua acima do rodapé, onde o olho já
- * está, e não desloca nada.
+ * rolada, o vigilante nem via. Flutua acima do rodapé, onde o olho já está.
  *
  * Sucesso some sozinho em 4s (role=status). Erro e alerta PERSISTEM até serem
  * fechados (role=alert): informação de falha não pode evaporar.
+ *
+ * O modelo anterior era uma FAIXA de largura total, com fundo tingido, borda
+ * de 1px e texto colorido - o padrão de "alert" de página, não de toast. Três
+ * consequências:
+ *
+ *   1. Gastava 74px para dizer "PC-01 registrado.", porque o botão de fechar
+ *      impunha seus 48px mesmo a um aviso que some sozinho.
+ *   2. O fundo tingido carregava a semântica, então o texto precisava ser
+ *      colorido também - dois canais gastos na mesma informação.
+ *   3. Esticado de borda a borda, competia com o conteúdo em vez de flutuar
+ *      sobre ele.
+ *
+ * Agora: superfície elevada neutra, dimensionada pelo conteúdo, com a cor
+ * concentrada no ícone. O texto volta a ser texto.
  */
 
 @layer components {
+    /*
+     * Ancorada ACIMA do dock, não sobre ele.
+     *
+     * Com `bottom: 0` a pilha cobria a barra de abas: medido, as quatro abas
+     * recebiam o toque do toast em vez do próprio. Um erro persistente - que
+     * por definição não some sozinho - travava a navegação inteira.
+     *
+     * `bottom: 100%` do dock resolve pelo mesmo mecanismo do botão de
+     * emergência: a pilha sobe junto quando existe faixa de ação.
+     *
+     * A folga extra é a altura do próprio botão de emergência: um toast longo
+     * ocupa a largura toda e passaria por cima dele. Nada pode cobrir o
+     * acionamento de socorro - nem por três segundos.
+     */
     .toasts {
-        position: fixed;
+        position: absolute;
         inset-inline: 0;
-        bottom: 0;
+        bottom: calc(100% + var(--tap-row) + var(--space-4));
         z-index: var(--z-toast);
         display: flex;
         flex-direction: column;
+        align-items: center;
         gap: var(--space-2);
+        padding-inline: var(--space-4);
+        /* A pilha não deve bloquear o conteúdo que está atrás dela. */
+        pointer-events: none;
+    }
+
+    /* Sem dock (boot e login) a pilha volta a se ancorar na janela. */
+    .toasts--floating {
+        position: fixed;
+        bottom: var(--space-4);
         max-width: 620px;
         margin-inline: auto;
-        padding: var(--space-4);
-        /* A pilha não deve bloquear o rodapé que está atrás dela. */
-        pointer-events: none;
+        padding-bottom: env(safe-area-inset-bottom);
     }
 
     .toast {
         display: flex;
-        align-items: flex-start;
+        align-items: center;
         gap: var(--space-3);
+        width: fit-content;
+        max-width: 100%;
         padding: var(--space-3) var(--space-4);
-        border-radius: var(--radius-lg);
-        border: 1px solid;
-        box-shadow: var(--shadow-md);
-        font-size: var(--text-base);
+        border-radius: var(--radius-xl);
+        background: var(--surface-2);
+        color: var(--text);
+        /* Anel interno em vez de borda: a borda entra no cálculo da caixa, e o
+           anel separa do fundo nos quatro temas sem alterar a métrica. */
+        box-shadow:
+            var(--shadow-md),
+            inset 0 0 0 1px var(--border);
+        font-size: var(--text-sm);
         font-weight: var(--weight-medium);
-        line-height: var(--leading-normal);
+        line-height: var(--leading-snug);
+        text-align: left;
         pointer-events: auto;
         animation: toast-in var(--dur-base) var(--ease-spring);
     }
 
-    .toast--ok {
-        background: var(--success-quiet);
-        border-color: var(--success);
+    /* Só o ícone carrega a cor. O texto mantém o contraste máximo do tema, em
+       vez de herdar um tom que existia para combinar com o fundo tingido. */
+    .toast__icon {
+        flex: none;
+    }
+
+    .toast--ok .toast__icon {
         color: var(--success-text);
     }
 
-    .toast--warn {
-        background: var(--warning-quiet);
-        border-color: var(--warning);
+    .toast--warn .toast__icon {
         color: var(--warning-text);
     }
 
-    .toast--error {
-        background: var(--critical-quiet);
-        border-color: var(--critical-text);
+    .toast--error .toast__icon {
         color: var(--critical-text);
     }
 
     .toast__body {
-        flex: 1;
         min-width: 0;
+        overflow-wrap: anywhere;
+    }
+
+    /* O botão de fechar existe só no aviso que PERSISTE. Num toast que some em
+       quatro segundos, ele era um alvo de 48px pedindo uma decisão que ninguém
+       precisa tomar - e era ele que fazia o aviso de sucesso ter 74px. */
+    .toast__close {
+        margin-right: calc(var(--space-2) * -1);
     }
 
     @keyframes toast-in {
         from {
-            transform: translateY(8px);
+            transform: translateY(16px) scale(0.96);
             opacity: 0;
         }
     }

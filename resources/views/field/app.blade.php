@@ -53,7 +53,13 @@
     </main>
 
     @include('field.partials.actionbar')
-    @include('field.partials.toasts')
+
+    {{-- Sem dock (boot e login) a pilha se ancora na janela. Os dois pontos de
+         montagem são mutuamente exclusivos: nunca há duas regiões aria-live. --}}
+    <template x-if="!showDock()">
+        @include('field.partials.toasts', ['floating' => true])
+    </template>
+
     @include('field.partials.sheet')
     @include('field.partials.panic')
 </div>
