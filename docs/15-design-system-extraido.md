@@ -234,6 +234,30 @@ app offline. O custo é que os dois sistemas não ficam tipograficamente idênti
 daria. `font-variant-numeric: tabular-nums` na Inter cobre o alinhamento de dígito, que é o que
 mais importa aqui; letras em código alfanumérico continuam de largura variável.
 
+## 8c. Aplicado em 31/07/2026
+
+Aplicado nas quatro superfícies. Contraste medido, **zero falhas nos três temas** do app de campo:
+
+| Tema | Pior razão |
+|---|---|
+| Claro | 3,42 |
+| Escuro | 3,87 |
+| Noturno | 3,39 |
+
+No modo noturno a emergência mantém **9,2× a luminância** do preenchimento de acento — a invariante
+que o modo existe para proteger.
+
+Três ajustes que a medição exigiu sobre a paleta de origem, além das três correções já previstas:
+
+1. **`--border-strong` derivado em `#71829d`** (claro) e `#4d6d8d` (noturno). Os valores anteriores
+   davam 2,70 e 2,86 contra o fundo — abaixo dos 3:1 de contorno de controle.
+2. **`--success` desceu um degrau, para `#15803d`.** Branco sobre o `--nc-success` da referência
+   (`#16a34a`) rende 3,30, e verde preenchido carrega rótulo branco em vários lugares aqui. O valor
+   usado é o `--nc-success-text`, que já existe na paleta — não é cor inventada.
+3. **`--warning-on` é escuro**, nos dois temas: branco sobre o âmbar não alcança 4,5.
+
+No painel, o botão primário mede **6,52**.
+
 ## 9. O que muda no Notre Guard
 
 Aplicar isto reverte a passada anterior, feita sobre o `docs/design-system.md` (navy `#013d53` +

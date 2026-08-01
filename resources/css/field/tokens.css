@@ -5,9 +5,9 @@
  * Todos os demais usam var(). Há teste que verifica isso - ver
  * tests/Feature/FieldAppTest.php.
  *
- * As cores saem de docs/design-system.md - a identidade do Colégio Notre Dame
- * Campinas. Os painéis administrativo e da portaria recebem a MESMA paleta,
- * via FilamentColor, então o sistema inteiro fala uma língua só.
+ * As cores saem do sistema de Ativos do colégio - ver
+ * docs/15-design-system-extraido.md, que traz os tokens de origem, o contraste
+ * medido e as decisões tomadas sobre os pares que reprovam.
  *
  * Claro e escuro convivem em light-dark(), declarados uma vez só. O
  * interruptor é o color-scheme do :root - que de quebra acerta scrollbar,
@@ -19,95 +19,104 @@
         color-scheme: light dark;
 
         /* =============================================================
-         * PALETA INSTITUCIONAL — Colégio Notre Dame Campinas
+         * PALETA INSTITUCIONAL — sistema de Ativos do colégio
          *
-         * Os valores do tema CLARO vêm de docs/design-system.md, copiados
-         * literalmente. Os temas ESCURO e NOTURNO são derivados: o design
-         * system é só de tema claro, e o app de campo roda de madrugada.
+         * Ver docs/15-design-system-extraido.md, que traz os tokens de origem
+         * e as decisões tomadas sobre eles.
          *
-         * A derivação não é cosmética. `navy-900` (#013d53) é quase preto -
-         * como preenchimento de acento sobre fundo escuro ele desapareceria.
-         * No escuro o acento INVERTE: navy claro com rótulo em navy profundo,
-         * a mesma solução que o azul anterior já exigia.
+         * DOIS AZUIS COM PAPÉIS DISTINTOS, e é o eixo da paleta:
+         *   --structure  #0d2144  estrutura - barra, cabeçalho pesado
+         *   --accent     #1752d9  AÇÃO - botão, link, item ativo, destaque
          *
-         * Todo par foi medido no navegador, não estimado. Ver a seção de
-         * verificação em docs/06-pwa-de-campo.md.
+         * O tema CLARO usa os valores de origem. ESCURO e NOTURNO são
+         * derivados: a referência é um painel de desktop, só de tema claro, e
+         * o app de campo roda de madrugada.
+         *
+         * TRÊS CORREÇÕES sobre a origem, decididas em 31/07/2026 - a paleta
+         * de origem reprova em três pares na WCAG:
+         *   1. `--nc-text-muted` (#94a3b8) rende 2.56 sobre branco. Aqui ele
+         *      vira `--text-faint`, decorativo, e o texto secundário passa a
+         *      usar #475569 (7.58).
+         *   2. O dourado rende 2.74 nas duas direções: não carrega texto e
+         *      não recebe texto. Fica como preenchimento decorativo.
+         *   3. As bordas de origem rendem 1.65 e 1.23 - servem de fio, não de
+         *      contorno de controle. `--border-strong` é derivado para os 3:1
+         *      que a WCAG 1.4.11 pede.
+         *
+         * Todo par é medido no navegador, nunca estimado.
          * ============================================================= */
 
         /* ---------------------------------------------------- superfície */
-        /* Claro é branco puro (surface-0): sob sol direto quem decide
-           legibilidade é luminância absoluta, não elegância. */
-        --bg: light-dark(#ffffff, #04202b);
-        --surface: light-dark(#f7f8f8, #082e3d);
-        --surface-2: light-dark(#eef0f1, #0d3f52);
+        /* O cartão branco flutua sobre o fundo azulado frio - é o que dá
+           elevação quase sem sombra. */
+        --bg: light-dark(#edf0f7, #071120);
+        --surface: light-dark(#ffffff, #0d1b30);
+        --surface-2: light-dark(#f1f5f9, #16273f);
 
-        /* O `--color-border` do design system (#dde2e4) é o FIO INTERNO aqui,
-           não a borda: a borda discreta some ao sol, e este aplicativo é usado
-           no pátio ao meio-dia. `--border` é derivado mais escuro de propósito
-           - aqui borda é estrutura, não decoração. */
-        --border: light-dark(#b3bec4, #17596f);
-        /* >= 3:1 contra o fundo nos quatro temas, que é o que a WCAG 1.4.11
-           pede para o contorno de um controle. Medido. */
-        --border-strong: light-dark(#7c8b93, #4b8ba3);
+        /* Estrutura pesada: o navy que na referência pinta barra lateral e
+           cabeçalho de tabela. */
+        --structure: light-dark(#0d2144, #050d18);
+        --structure-on: #ffffff;
 
-        --divider: light-dark(#dde2e4, #0d3f52);
+        --divider: light-dark(#e2e8f0, #16273f);
+        --border: light-dark(#c0cade, #274058);
+        /* Derivado, não copiado: a borda de origem rende 1.65 contra branco, e
+           contorno de controle precisa de 3:1. */
+        --border-strong: light-dark(#71829d, #5b7a9c);
 
         /* ------------------------------------------------------- texto */
-        --text: light-dark(#171a1c, #eef4f6);
-        --text-muted: light-dark(#52606b, #b3c8d1);
-        /* Só para texto >= 17px. Nunca para informação operacional. */
-        --text-faint: light-dark(#7c8b93, #85a5b3);
+        --text: light-dark(#0f172a, #eef2f8);
+        /* #475569 da origem. NÃO o `--nc-text-muted` (#94a3b8), que rende
+           2.56 e ainda assim carrega timestamp e código no sistema de Ativos. */
+        --text-muted: light-dark(#475569, #b3c2d6);
+        /* Decorativo. Nunca informação operacional. */
+        --text-faint: light-dark(#6b7a90, #8496ad);
 
         /* ------------------------------------------------------ acento */
-        /* navy-900 preenchido com rótulo branco no claro; invertido no escuro,
-           porque o mesmo navy sobre fundo escuro seria invisível. */
-        --accent: light-dark(#013d53, #7cc0da);
-        --accent-on: light-dark(#ffffff, #01212d);
-        --accent-text: light-dark(#013d53, #9ed4ea);
-        --accent-quiet: light-dark(#e4edf0, #06334a);
-        /* navy-700: estado ativo/hover de elementos navy. */
-        --accent-strong: light-dark(#0a5570, #a6dbef);
+        --accent: light-dark(#1752d9, #7ba6f5);
+        --accent-on: light-dark(#ffffff, #06132c);
+        --accent-text: light-dark(#1d4ed8, #9dbcff);
+        --accent-quiet: light-dark(#dbeafe, #0f2547);
+        --accent-strong: light-dark(#123fa8, #a3c2ff);
 
         /* ------------------------------------------------------ dourado */
-        /* Usado com parcimônia, como manda o design system: anel de foco, fio
-           de assinatura e pouco mais. Se uma tela passar de ~10% de área em
-           dourado, passou do ponto. */
-        --gold: #cfb276;
-        --gold-soft: #e3d3b3;
-        /* gold-700 para texto/ícone sobre fundo claro e para o ANEL DE FOCO -
-           gold-500 não tem contraste para indicar foco. */
-        --gold-deep: #a88a52;
+        /* Existe na paleta de origem, mas rende 2.74 nas duas direções: não
+           carrega texto e não recebe texto. Preenchimento decorativo apenas -
+           fio, ponto, ícone grande. */
+        --gold: #c4943e;
 
-        /* O design system fixa o foco em gold-700. No escuro ele perderia
-           contraste contra o fundo, então lá sobe para gold-500 - mesma
-           família, mesma leitura, contraste preservado. */
-        --focus: light-dark(#a88a52, #cfb276);
+        /* O dourado perdeu a base como anel de foco justamente por isso. O
+           acento assume: é a cor de ação da referência e mede 6.47 sobre
+           branco. O anel é desenhado FORA do elemento (outline-offset), então
+           o contraste que importa é contra a superfície em volta. */
+        --focus: light-dark(#1752d9, #9dbcff);
 
         /* ------------------------------------------------------ estado */
-        --success: light-dark(#2f7a52, #6bbf8f);
-        --success-on: light-dark(#ffffff, #05261a);
-        --success-quiet: light-dark(#e6f2ea, #06301f);
-        --success-text: light-dark(#276244, #8ed4ac);
+        /* Um degrau abaixo do `--nc-success` da referência (#16a34a): branco
+           sobre ele rende 3.3, e verde preenchido carrega rótulo branco em
+           vários lugares aqui. Este é o `--nc-success-text`, que já existe na
+           paleta - não é cor inventada. */
+        --success: light-dark(#15803d, #4ade80);
+        --success-on: light-dark(#ffffff, #052e16);
+        --success-quiet: light-dark(#dcfce7, #0a2e1b);
+        --success-text: light-dark(#15803d, #86efac);
 
-        --warning: light-dark(#b8873a, #e0b063);
-        /* Rótulo ESCURO sobre o âmbar, nos dois temas. Branco sobre o
-           `warning` do design system dá 3.2:1 - o âmbar é claro demais para
-           carregar texto branco. O design system fixa o preenchimento, não o
-           rótulo; aqui o rótulo cede. */
+        --warning: light-dark(#d97706, #fbbf24);
+        /* Rótulo escuro sobre o âmbar: branco sobre ele não alcança 4.5. */
         --warning-on: light-dark(#2b1c06, #2b1c06);
-        --warning-quiet: light-dark(#f7efe1, #33220a);
-        --warning-text: light-dark(#7d5c24, #eac489);
+        --warning-quiet: light-dark(#fef9c3, #33260a);
+        --warning-text: light-dark(#a16207, #fcd34d);
 
-        --critical-text: light-dark(#b3423a, #f0968f);
-        --critical-quiet: light-dark(#f9eae9, #3d1613);
+        --critical-text: light-dark(#b91c1c, #fca5a5);
+        --critical-quiet: light-dark(#fee2e2, #3b1414);
 
         /* Vermelho PREENCHIDO é exclusivo da emergência - ver button.css,
            panic.css e o teste que garante isso.
 
-           Deliberadamente mais saturado que o `danger` do design system:
-           aquele classifica gravidade num relatório, este precisa gritar mais
-           alto que tudo na tela. A medição do modo noturno mostrou que ele
-           tem de ser o preenchimento mais claro da interface. */
+           Distinto do `danger` da paleta: aquele classifica gravidade num
+           relatório, este precisa gritar mais alto que tudo na tela. A medição
+           do modo noturno mostrou que ele tem de ser o preenchimento mais
+           claro da interface. */
         --emergency: light-dark(#c0392b, #cf4133);
         --emergency-on: #ffffff;
         --emergency-edge: light-dark(#8f2a20, #9c3226);
@@ -125,15 +134,13 @@
 
         /* -------------------------------------------------------- raio */
         /*
-         * "6-8px em toda a aplicação", como manda o design system, com dois
-         * degraus a mais para o que ele não cobre: ele foi escrito para um
-         * sistema administrativo de desktop, e um bottom sheet de celular a
-         * 8px de raio não se lê como bottom sheet.
+         * A escala da referência (`--nc-r-*`), copiada: 4 / 6 / 10 / 14 / 20.
          *
-         *   sm  6   o raio do botão que o design system fixa
-         *   md  8   campos, pastilhas, escala
-         *   lg  12  agrupamentos, cartões, toasts
-         *   xl  16  sheet e cartão do próximo ponto - superfícies da casca
+         *   xs  4   detalhe
+         *   sm  6   botão, pastilha, escala
+         *   md  10  campo
+         *   lg  14  agrupamento, cartão, toast
+         *   xl  20  sheet e cartão do próximo ponto
          *
          * `--radius-pill` sobrevive só para o que é pastilha por NATUREZA -
          * onde nenhum outro raio faz sentido: o contador de pendências (uma
@@ -142,10 +149,11 @@
          * Redondo de verdade fica só onde a forma É um círculo: emergência,
          * botão de ícone, disco de posição e os pontos da escala.
          */
+        --radius-xs: 4px;
         --radius-sm: 6px;
-        --radius-md: 8px;
-        --radius-lg: 12px;
-        --radius-xl: 16px;
+        --radius-md: 10px;
+        --radius-lg: 14px;
+        --radius-xl: 20px;
         --radius-pill: 999px;
 
         /* -------------------------------------------------- tipografia */
@@ -174,7 +182,9 @@
 
         /* ------------------------------------------------------ sombra */
         /* No escuro a hierarquia vem da borda; no claro, da sombra. */
-        --shadow-color: light-dark(oklch(0.129 0.042 264.695 / 0.16), oklch(0 0 0 / 0.55));
+        /* Tingida de navy (rgba(13,33,68,…)), como na referência, nunca preto
+           puro: preto sobre o fundo azulado frio vira sombra cinza-suja. */
+        --shadow-color: light-dark(rgba(13, 33, 68, 0.14), rgba(0, 0, 0, 0.55));
         --shadow-sm: 0 1px 2px var(--shadow-color);
         --shadow-md: 0 4px 12px var(--shadow-color);
         --shadow-sheet: 0 -8px 32px var(--shadow-color);
@@ -244,43 +254,44 @@
         color-scheme: dark;
 
         --bg: #021620;
-        --surface: #05222e;
-        --surface-2: #0a3040;
-        --border: #12475c;
-        --border-strong: #3a748a;
-        --divider: #0a3040;
+        --surface: #071528;
+        --surface-2: #0d1f36;
+        --border: #1b3050;
+        --border-strong: #4d6d8d;
+        --divider: #0d1f36;
 
-        --text: #93b3bf;
-        --text-muted: #7ba0ae;
-        --text-faint: #628b9a;
+        --structure: #030812;
+        --structure-on: #8fa3bd;
 
-        /* Invertido em relação ao escuro comum: preenchimento navy profundo,
-           rótulo em navy claro. É a área preenchida que ilumina o rosto. */
-        --accent: #0a3446;
-        --accent-on: #8cc6dd;
-        --accent-text: #7fbdd4;
-        --accent-quiet: #062634;
-        --accent-strong: #0f4560;
+        --text: #8fa8c4;
+        --text-muted: #7b93ae;
+        --text-faint: #63798f;
 
-        --gold: #8d7850;
-        --gold-soft: #a08b60;
-        --gold-deep: #b39a68;
-        --focus: #b39a68;
+        /* Invertido em relação ao escuro comum: preenchimento azul profundo,
+           rótulo em azul claro. É a área preenchida que ilumina o rosto. */
+        --accent: #12244a;
+        --accent-on: #8ab0f0;
+        --accent-text: #7fa6e8;
+        --accent-quiet: #0b1830;
+        --accent-strong: #172d5c;
 
-        --success: #0e3625;
-        --success-on: #74c194;
-        --success-quiet: #08281a;
-        --success-text: #6fbc8f;
+        --gold: #7d6136;
+        --focus: #7fa6e8;
 
-        --warning: #3a2a10;
-        --warning-on: #d0a35e;
-        --warning-quiet: #2a1e0b;
-        --warning-text: #c99d5c;
+        --success: #0d3020;
+        --success-on: #63b287;
+        --success-quiet: #082216;
+        --success-text: #5fad82;
 
-        --critical-text: #d38a83;
-        --critical-quiet: #2c1210;
+        --warning: #33260f;
+        --warning-on: #c29550;
+        --warning-quiet: #241a0a;
+        --warning-text: #bb8f4d;
 
-        --shadow-color: oklch(0 0 0 / 0.6);
+        --critical-text: #cc8580;
+        --critical-quiet: #2a1211;
+
+        --shadow-color: rgba(0, 0, 0, 0.6);
     }
 
     /*
@@ -291,34 +302,36 @@
      */
     @supports not (color: light-dark(#000, #fff)) {
         :root {
-            --bg: #04202b;
-            --surface: #082e3d;
-            --surface-2: #0d3f52;
-            --border: #17596f;
-            --border-strong: #4b8ba3;
-            --divider: #0d3f52;
-            --text: #eef4f6;
-            --text-muted: #b3c8d1;
-            --text-faint: #85a5b3;
-            --accent: #7cc0da;
-            --accent-on: #01212d;
-            --accent-text: #9ed4ea;
-            --accent-quiet: #06334a;
-            --accent-strong: #a6dbef;
-            --focus: #cfb276;
-            --success: #6bbf8f;
-            --success-on: #05261a;
-            --success-quiet: #06301f;
-            --success-text: #8ed4ac;
-            --warning: #e0b063;
+            --bg: #071120;
+            --surface: #0d1b30;
+            --surface-2: #16273f;
+            --border: #274058;
+            --border-strong: #5b7a9c;
+            --divider: #16273f;
+            --structure: #050d18;
+            --structure-on: #ffffff;
+            --text: #eef2f8;
+            --text-muted: #b3c2d6;
+            --text-faint: #8496ad;
+            --accent: #7ba6f5;
+            --accent-on: #06132c;
+            --accent-text: #9dbcff;
+            --accent-quiet: #0f2547;
+            --accent-strong: #a3c2ff;
+            --focus: #9dbcff;
+            --success: #4ade80;
+            --success-on: #052e16;
+            --success-quiet: #0a2e1b;
+            --success-text: #86efac;
+            --warning: #fbbf24;
             --warning-on: #2b1c06;
-            --warning-quiet: #33220a;
-            --warning-text: #eac489;
-            --critical-text: #f0968f;
-            --critical-quiet: #3d1613;
+            --warning-quiet: #33260a;
+            --warning-text: #fcd34d;
+            --critical-text: #fca5a5;
+            --critical-quiet: #3b1414;
             --emergency: #cf4133;
             --emergency-edge: #9c3226;
-            --shadow-color: oklch(0 0 0 / 0.55);
+            --shadow-color: rgba(0, 0, 0, 0.55);
         }
     }
 }

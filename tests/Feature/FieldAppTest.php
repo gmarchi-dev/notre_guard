@@ -409,10 +409,10 @@ class FieldAppTest extends TestCase
         // como laje, e o arredondamento total ficou macio.
         $tokens = File::get(resource_path('css/field/tokens.css'));
 
-        preg_match_all('/--radius-(sm|md|lg|xl):\s*(\d+)px/', $tokens, $m);
+        preg_match_all('/--radius-(xs|sm|md|lg|xl):\s*(\d+)px/', $tokens, $m);
         $escala = array_combine($m[1], array_map('intval', $m[2]));
 
-        $this->assertSame(['sm' => 6, 'md' => 8, 'lg' => 12, 'xl' => 16], $escala);
+        $this->assertSame(['xs' => 4, 'sm' => 6, 'md' => 10, 'lg' => 14, 'xl' => 20], $escala);
 
         // `--radius-pill` só onde a forma é pastilha por natureza.
         foreach (['button.css', 'chip.css', 'scale.css', 'tabbar.css'] as $arquivo) {
@@ -552,27 +552,43 @@ class FieldAppTest extends TestCase
         $tokens = File::get(resource_path('css/field/tokens.css'));
 
         $this->assertStringContainsString('@supports not (color: light-dark(', $tokens);
-        $this->assertStringContainsString('--bg: #04202b', $tokens);
+        $this->assertStringContainsString('--bg: #071120', $tokens);
     }
 
-    public function test_the_palette_comes_from_the_institutional_design_system(): void
+    public function test_the_palette_comes_from_the_assets_system(): void
     {
-        // A paleta anterior era a escala Slate/Blue do Filament. Agora é a
-        // identidade do colégio, e o navy tem de ser o navy do documento -
-        // não "um azul parecido".
+        // A paleta é a do sistema de Ativos do colégio - ver
+        // docs/15-design-system-extraido.md. O eixo são DOIS azuis com papéis
+        // distintos, e confundi-los é o erro fácil aqui.
         $tokens = File::get(resource_path('css/field/tokens.css'));
 
-        foreach (['#013d53', '#0a5570', '#e4edf0', '#cfb276', '#a88a52', '#171a1c', '#52606b'] as $marca) {
+        foreach ([
+            '#0d2144',  // estrutura
+            '#1752d9',  // ação
+            '#edf0f7',  // fundo de página
+            '#c0cade',  // borda
+            '#0f172a',  // texto
+            '#475569',  // texto secundário
+            '#c4943e',  // dourado
+        ] as $token) {
             $this->assertStringContainsString(
-                $marca,
+                $token,
                 $tokens,
-                "{$marca} saiu da paleta - ver docs/design-system.md.",
+                "{$token} saiu da paleta - ver docs/15-design-system-extraido.md.",
             );
         }
 
-        // O anel de foco é dourado, e é gold-700 no claro: o design system diz
-        // explicitamente que gold-500 não tem contraste para indicar foco.
-        $this->assertStringContainsString('--focus: light-dark(#a88a52', $tokens);
+        // O anel de foco é o ACENTO, não o dourado: o dourado da referência
+        // rende 2.74 contra branco e não serve para indicar foco.
+        $this->assertStringContainsString('--focus: light-dark(#1752d9', $tokens);
+
+        // E o `--nc-text-muted` da origem (#94a3b8) não pode ter voltado a
+        // carregar texto secundário: ele rende 2.56 sobre branco.
+        $this->assertStringNotContainsString(
+            '--text-muted: light-dark(#94a3b8',
+            $tokens,
+            'o texto secundário voltou ao tom que reprova em 2.56.',
+        );
     }
 
     // ------------------------------------------------------------- assets

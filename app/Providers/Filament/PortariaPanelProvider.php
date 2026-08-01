@@ -41,10 +41,10 @@ class PortariaPanelProvider extends PanelProvider
             // de campo. A portaria usava Slate, o que a deixava visualmente
             // órfã dentro do próprio sistema.
             ->colors([
-                'primary' => Color::hex('#013d53'),
-                'danger' => Color::hex('#b3423a'),
-                'warning' => Color::hex('#b8873a'),
-                'success' => Color::hex('#2f7a52'),
+                'primary' => Color::hex('#1752d9'),
+                'danger' => Color::hex('#dc2626'),
+                'warning' => Color::hex('#d97706'),
+                'success' => Color::hex('#16a34a'),
             ])
             ->discoverResources(
                 in: app_path('Filament/Portaria/Resources'),

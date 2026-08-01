@@ -42,14 +42,15 @@ class AdminPanelProvider extends PanelProvider
             // funciona sem WebSockets; 30s é suficiente para o uso aqui.
             ->databaseNotifications()
             ->databaseNotificationsPolling('30s')
-            // Navy institucional (navy-900 do docs/design-system.md). O
-            // Filament gera a escala inteira a partir dele, então botões,
-            // badges e navegação já nascem na identidade do colégio.
+            // Paleta do sistema de Ativos do colégio - ver
+            // docs/15-design-system-extraido.md. `primary` é a cor de AÇÃO
+            // (#1752d9); o navy de estrutura (#0d2144) entra pelo CSS, no
+            // cabeçalho de tabela e na barra lateral.
             ->colors([
-                'primary' => Color::hex('#013d53'),
-                'danger' => Color::hex('#b3423a'),
-                'warning' => Color::hex('#b8873a'),
-                'success' => Color::hex('#2f7a52'),
+                'primary' => Color::hex('#1752d9'),
+                'danger' => Color::hex('#dc2626'),
+                'warning' => Color::hex('#d97706'),
+                'success' => Color::hex('#16a34a'),
             ])
             ->navigationGroups([
                 NavigationGroup::make('Operação'),
