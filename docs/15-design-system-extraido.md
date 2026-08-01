@@ -215,6 +215,25 @@ Nenhum dos três é motivo para recusar a paleta - são pontos a tratar na aplic
 
 ---
 
+## 8b. Decisões tomadas (31/07/2026)
+
+| Questão | Decisão |
+|---|---|
+| Tipografia | **Manter Inter.** Onest e JetBrains Mono não entram. |
+| Os três pares que reprovam | **Corrigir onde reprova**, conforme as propostas da seção 8. |
+| App de campo | **Paleta e forma sim, densidade não** - adota cor, raio, sombra e marca; mantém corpo de 17px e alvos de 48/56px. |
+| Temas do app de campo | **Manter os três**, rederivando escuro e noturno do novo par de azuis. |
+
+Duas consequências que valem registro:
+
+**Inter no lugar de Onest** é divergência deliberada da referência. É defensável - a Inter já está
+auto-hospedada, é da mesma família geométrica sem serifa, e evita duas fontes novas no bundle de um
+app offline. O custo é que os dois sistemas não ficam tipograficamente idênticos.
+
+**Sem fonte monoespaçada**, código de ativo e matrícula perdem o alinhamento que a JetBrains Mono
+daria. `font-variant-numeric: tabular-nums` na Inter cobre o alinhamento de dígito, que é o que
+mais importa aqui; letras em código alfanumérico continuam de largura variável.
+
 ## 9. O que muda no Notre Guard
 
 Aplicar isto reverte a passada anterior, feita sobre o `docs/design-system.md` (navy `#013d53` +
