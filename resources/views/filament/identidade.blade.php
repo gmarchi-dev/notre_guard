@@ -1,9 +1,9 @@
 {{--
     Identidade institucional nos painéis Filament.
 
-    A paleta vem do sistema de Ativos do colégio - ver
-    docs/15-design-system-extraido.md, com os tokens de origem, o contraste
-    medido e as decisões sobre os pares que reprovam.
+    Âncoras de marca: navy #013d53 e dourado #cfb276, com as rampas fornecidas
+    dando os degraus. Ver docs/16-paleta-institucional.md, com o contraste
+    medido e as derivações justificadas.
 
     Injetado por render hook, e não como tema Vite do Filament: um tema exigiria
     pipeline de build própria mais `filament:assets` no deploy.
@@ -12,30 +12,27 @@
     (`fi-sidebar-item-btn`, `fi-active`, `fi-logo`). Se um upgrade renomear
     qualquer uma, o estilo deixa de aplicar EM SILÊNCIO. Há teste que renderiza
     uma página autenticada e confere que cada classe ainda existe.
-
-    A cor primária não vem daqui: vem do FilamentColor, que gera a escala
-    inteira. Este arquivo cobre o que ele não alcança - estrutura, forma e foco.
 --}}
 <style>
     :root {
-        /* Nomenclatura de origem preservada, para os dois sistemas falarem a
-           mesma língua. */
-        --nc-primary: #0d2144;
-        --nc-accent: #1752d9;
-        --nc-gold: #c4943e;
+        /* Âncoras de marca. */
+        --nd-navy: #013d53;
+        --nd-gold: #cfb276;
 
-        --nc-surface: #ffffff;
-        --nc-surface-2: #edf0f7;
-        --nc-border: #c0cade;
-        --nc-border-light: #e2e8f0;
-        --nc-text: #0f172a;
-        --nc-text-2: #475569;
+        /* Rampa teal. */
+        --nd-teal-100: #D0EBFC;
+        --nd-teal-500: #1B5E7E;
+        --nd-teal-700: #031823;
 
-        --nc-sidebar-bg: #071120;
-        --nc-sidebar-text: #94a3b8;
-        --nc-sidebar-active: rgba(23, 82, 217, 0.18);
+        /* Rampa quente - o neutro do sistema não é cinza. */
+        --nd-warm-100: #F2EDE6;
+        --nd-warm-200: #D5C4AC;
+        --nd-warm-500: #655B4E;
+        --nd-warm-700: #1D1A14;
 
-        /* A escala de raio da referência. */
+        /* Dourado escuro: o de marca não tem contraste para texto nem foco. */
+        --nd-gold-deep: #7C6437;
+
         --radius-xs: 4px;
         --radius-sm: 6px;
         --radius-md: 10px;
@@ -43,93 +40,92 @@
         --radius-xl: 20px;
     }
 
-    /* O fundo azulado frio é o que faz o cartão branco parecer elevado quase
-       sem sombra - é a base do sistema, não um detalhe. */
+    /* Neutro QUENTE, não cinza: é o que dá a leitura de papel e distingue o
+       sistema de um painel administrativo genérico. */
     .fi-body {
-        background-color: var(--nc-surface-2);
+        background-color: var(--nd-warm-100);
     }
 
     /*
-     * Anel de foco no ACENTO, não no dourado.
+     * Anel de foco no dourado ESCURO.
      *
-     * O dourado da paleta rende 2.74 contra branco: não serve para indicar
-     * foco. O acento é a cor de ação da referência e mede 6.47.
+     * O dourado de marca rende 2.2 contra branco: não indica foco. O degrau
+     * escuro da rampa resolve sem sair da família.
      */
     .fi-body :focus-visible {
-        outline: 2px solid var(--nc-accent);
+        outline: 2px solid var(--nd-gold-deep);
         outline-offset: 2px;
     }
 
+    .dark .fi-body :focus-visible {
+        outline-color: #F0CE90;
+    }
+
     /*
-     * Barra lateral quase preta - o eixo vertical da referência.
+     * Barra lateral no degrau mais escuro do teal.
      *
-     * O item ativo é um VÉU translúcido do acento, não um azul sólido: assim
-     * ele se destaca sem virar um bloco claro sobre o quase-preto.
+     * O item ativo combina preenchimento com um fio DOURADO à esquerda: cor
+     * sozinha não basta, e aqui ela seria a única diferença entre o ativo e o
+     * item sob o cursor.
      */
     .fi-sidebar,
     .fi-sidebar-header {
-        background-color: var(--nc-sidebar-bg);
-        border-color: rgba(255, 255, 255, 0.06);
+        background-color: var(--nd-teal-700);
+        border-color: rgba(242, 237, 230, 0.08);
     }
 
     .fi-sidebar .fi-sidebar-item-btn,
     .fi-sidebar .fi-sidebar-group-btn,
     .fi-sidebar .fi-sidebar-group-label {
-        /* Um degrau acima do `--nc-sidebar-text` de origem (#94a3b8, 7.38):
-           aqui vale a folga, porque a portaria opera o dia inteiro nesta
-           barra. */
-        color: #cbd5e1;
+        color: #C6D8E2;
     }
 
     .fi-sidebar .fi-sidebar-item-btn > .fi-icon {
-        color: var(--nc-sidebar-text);
+        color: #8FB2C4;
     }
 
     .fi-sidebar .fi-sidebar-item-btn:hover,
     .fi-sidebar .fi-sidebar-group-btn:hover {
-        background-color: rgba(255, 255, 255, 0.05);
-        color: #ffffff;
+        background-color: rgba(242, 237, 230, 0.06);
+        color: #FFFFFF;
     }
 
     .fi-sidebar .fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
-        background-color: var(--nc-sidebar-active);
-        color: #ffffff;
+        background-color: var(--nd-navy);
+        box-shadow: inset 3px 0 0 var(--nd-gold);
+        color: #FFFFFF;
         font-weight: 600;
     }
 
     .fi-sidebar .fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-icon {
-        color: #9dbcff;
+        color: var(--nd-gold);
     }
 
     .fi-sidebar .fi-sidebar-item-badge-ctn .fi-badge {
-        background-color: var(--nc-accent);
-        color: #ffffff;
+        background-color: var(--nd-gold);
+        color: var(--nd-teal-700);
     }
 
     .fi-sidebar .fi-sidebar-footer,
     .fi-sidebar .fi-sidebar-nav-groups > * + * {
-        border-color: rgba(255, 255, 255, 0.06);
+        border-color: rgba(242, 237, 230, 0.08);
     }
 
-    /*
-     * Cabeçalho de tabela no navy de ESTRUTURA, não no acento.
-     *
-     * É o que amarra tabela e barra lateral como uma coisa só - "estrutura" -
-     * e deixa o acento livre para significar ação.
-     */
+    /* Cabeçalho de tabela no navy de marca - o que amarra tabela e barra
+       lateral como uma coisa só. */
     .fi-ta-header-cell,
     .fi-ta-header-row {
-        background-color: var(--nc-primary);
+        background-color: var(--nd-navy);
     }
 
     .fi-ta-header-cell,
     .fi-ta-header-cell .fi-ta-header-cell-label,
     .fi-ta-header-cell button {
-        color: #ffffff;
+        color: #FFFFFF;
     }
 
     /* A marca herda a cor de quem a contém: navy no login, clara na barra.
-       Fixá-la em navy a deixaria invisível dentro da barra quase preta. */
+       Fixá-la em navy a deixaria invisível dentro da barra escura. */
     .fi-logo {
         display: flex;
         align-items: center;
@@ -145,11 +141,11 @@
 
     .fi-simple-layout .fi-logo,
     .fi-simple-main .fi-logo {
-        color: var(--nc-primary);
+        color: var(--nd-navy);
     }
 
     .fi-sidebar-header .fi-logo,
     .fi-sidebar-header .fi-logo span {
-        color: #ffffff;
+        color: #FFFFFF;
     }
 </style>

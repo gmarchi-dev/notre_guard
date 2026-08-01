@@ -42,15 +42,13 @@ class AdminPanelProvider extends PanelProvider
             // funciona sem WebSockets; 30s é suficiente para o uso aqui.
             ->databaseNotifications()
             ->databaseNotificationsPolling('30s')
-            // Paleta do sistema de Ativos do colégio - ver
-            // docs/15-design-system-extraido.md. `primary` é a cor de AÇÃO
-            // (#1752d9); o navy de estrutura (#0d2144) entra pelo CSS, no
-            // cabeçalho de tabela e na barra lateral.
+            // Paleta institucional: navy de marca como primária, semânticas
+            // tiradas das rampas fornecidas. Ver docs/16-paleta-institucional.md.
             ->colors([
-                'primary' => Color::hex('#1752d9'),
-                'danger' => Color::hex('#dc2626'),
-                'warning' => Color::hex('#d97706'),
-                'success' => Color::hex('#16a34a'),
+                'primary' => Color::hex('#013d53'),
+                'danger' => Color::hex('#A43D32'),
+                'warning' => Color::hex('#7C6437'),
+                'success' => Color::hex('#2F6B4C'),
             ])
             ->navigationGroups([
                 NavigationGroup::make('Operação'),

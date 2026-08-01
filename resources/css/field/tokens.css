@@ -5,9 +5,9 @@
  * Todos os demais usam var(). Há teste que verifica isso - ver
  * tests/Feature/FieldAppTest.php.
  *
- * As cores saem do sistema de Ativos do colégio - ver
- * docs/15-design-system-extraido.md, que traz os tokens de origem, o contraste
- * medido e as decisões tomadas sobre os pares que reprovam.
+ * A paleta vem das âncoras de marca #013d53 e #cfb276 mais as rampas
+ * fornecidas em 31/07/2026 - ver docs/16-paleta-institucional.md, com o
+ * contraste medido e as derivações justificadas.
  *
  * Claro e escuro convivem em light-dark(), declarados uma vez só. O
  * interruptor é o color-scheme do :root - que de quebra acerta scrollbar,
@@ -19,107 +19,110 @@
         color-scheme: light dark;
 
         /* =============================================================
-         * PALETA INSTITUCIONAL — sistema de Ativos do colégio
+         * PALETA INSTITUCIONAL — Colégio Notre Dame Campinas
          *
-         * Ver docs/15-design-system-extraido.md, que traz os tokens de origem
-         * e as decisões tomadas sobre eles.
+         * Âncoras de marca, definidas em 31/07/2026:
+         *   #013d53  navy institucional
+         *   #cfb276  dourado institucional
          *
-         * DOIS AZUIS COM PAPÉIS DISTINTOS, e é o eixo da paleta:
-         *   --structure  #0d2144  estrutura - barra, cabeçalho pesado
-         *   --accent     #1752d9  AÇÃO - botão, link, item ativo, destaque
+         * A escala vem das rampas fornecidas junto. Os tons médios delas
+         * (#0D394E e #CDA75F) são vizinhos das âncoras, não idênticos - as
+         * âncoras mandam onde a marca aparece, as rampas dão os degraus.
          *
-         * O tema CLARO usa os valores de origem. ESCURO e NOTURNO são
-         * derivados: a referência é um painel de desktop, só de tema claro, e
-         * o app de campo roda de madrugada.
+         *   TEAL      #D0EBFC #7ACBF7 #36A6DB #2983AD #1B5E7E #0D394E #031823
+         *   QUENTE    #F2EDE6 #D5C4AC #AE9E88 #8A7E6B #655B4E #3F3930 #1D1A14
+         *   DOURADO   #FEFBF5 #F0CE90 #CDA75F #A5864B #7C6437 #524222 #2C220F
+         *   VERMELHO  #FCF3F2 #F0C2BA #E68D7F #DB5446 #A43D32 #6C261E #39100C
+         *   CINZA     #EDEFF0 #C2C9CC #9BA3A8 #7B8285 #595F61 #383B3D #191B1C
          *
-         * TRÊS CORREÇÕES sobre a origem, decididas em 31/07/2026 - a paleta
-         * de origem reprova em três pares na WCAG:
-         *   1. `--nc-text-muted` (#94a3b8) rende 2.56 sobre branco. Aqui ele
-         *      vira `--text-faint`, decorativo, e o texto secundário passa a
-         *      usar #475569 (7.58).
-         *   2. O dourado rende 2.74 nas duas direções: não carrega texto e
-         *      não recebe texto. Fica como preenchimento decorativo.
-         *   3. As bordas de origem rendem 1.65 e 1.23 - servem de fio, não de
-         *      contorno de controle. `--border-strong` é derivado para os 3:1
-         *      que a WCAG 1.4.11 pede.
+         * NEUTRO QUENTE, não cinza: o fundo do tema claro é #F2EDE6 e o cartão
+         * é branco. É o que dá a leitura de papel, e distingue o sistema do
+         * painel administrativo genérico.
          *
-         * Todo par é medido no navegador, nunca estimado.
+         * A rampa não traz VERDE, e estado de sucesso precisa de um - "conforme"
+         * no checklist é a resposta mais dada do aplicativo. Foi derivado um
+         * verde no mesmo registro abafado das outras rampas, e é a única cor
+         * fora do material fornecido. Está marcado onde aparece.
+         *
+         * ESCURO e NOTURNO são derivados: a paleta fornecida é de tema claro, e
+         * o aplicativo roda de madrugada. Todo par é medido no navegador.
          * ============================================================= */
 
         /* ---------------------------------------------------- superfície */
-        /* O cartão branco flutua sobre o fundo azulado frio - é o que dá
-           elevação quase sem sombra. */
-        --bg: light-dark(#edf0f7, #071120);
-        --surface: light-dark(#ffffff, #0d1b30);
-        --surface-2: light-dark(#f1f5f9, #16273f);
+        --bg: light-dark(#F2EDE6, #031823);
+        --surface: light-dark(#FFFFFF, #072634);
+        --surface-2: light-dark(#E8E0D2, #0D394E);
 
-        /* Estrutura pesada: o navy que na referência pinta barra lateral e
-           cabeçalho de tabela. */
-        --structure: light-dark(#0d2144, #050d18);
-        --structure-on: #ffffff;
+        /* Estrutura pesada: barra lateral e cabeçalho de tabela nos painéis.
+           O degrau mais escuro do teal, para não competir com o navy de marca. */
+        --structure: light-dark(#031823, #010D14);
+        --structure-on: #F2EDE6;
 
-        --divider: light-dark(#e2e8f0, #16273f);
-        --border: light-dark(#c0cade, #274058);
-        /* Derivado, não copiado: a borda de origem rende 1.65 contra branco, e
-           contorno de controle precisa de 3:1. */
-        --border-strong: light-dark(#71829d, #5b7a9c);
+        --divider: light-dark(#E3DACB, #0D394E);
+        --border: light-dark(#D5C4AC, #1B5E7E);
+        /* Derivado para os 3:1 que a WCAG 1.4.11 pede em contorno de controle:
+           o #D5C4AC da rampa fica bem abaixo disso. */
+        --border-strong: light-dark(#8A7E6B, #4E8AA8);
 
         /* ------------------------------------------------------- texto */
-        --text: light-dark(#0f172a, #eef2f8);
-        /* #475569 da origem. NÃO o `--nc-text-muted` (#94a3b8), que rende
-           2.56 e ainda assim carrega timestamp e código no sistema de Ativos. */
-        --text-muted: light-dark(#475569, #b3c2d6);
-        /* Decorativo. Nunca informação operacional. */
-        --text-faint: light-dark(#6b7a90, #8496ad);
+        --text: light-dark(#1D1A14, #F2EDE6);
+        --text-muted: light-dark(#655B4E, #C6BFB4);
+        /* Só para texto >= 17px. Nunca para informação operacional. */
+        --text-faint: light-dark(#8A7E6B, #A79E90);
 
         /* ------------------------------------------------------ acento */
-        --accent: light-dark(#1752d9, #7ba6f5);
-        --accent-on: light-dark(#ffffff, #06132c);
-        --accent-text: light-dark(#1d4ed8, #9dbcff);
-        --accent-quiet: light-dark(#dbeafe, #0f2547);
-        --accent-strong: light-dark(#123fa8, #a3c2ff);
+        /* O navy de marca. Preenchido com rótulo claro no tema claro; no escuro
+           inverte, porque #013d53 sobre fundo escuro desapareceria. */
+        --accent: light-dark(#013d53, #7ACBF7);
+        --accent-on: light-dark(#FFFFFF, #031823);
+        --accent-text: light-dark(#013d53, #A8DDFA);
+        --accent-quiet: light-dark(#D0EBFC, #0A2E3F);
+        --accent-strong: light-dark(#031823, #C4E7FB);
 
         /* ------------------------------------------------------ dourado */
-        /* Existe na paleta de origem, mas rende 2.74 nas duas direções: não
-           carrega texto e não recebe texto. Preenchimento decorativo apenas -
-           fio, ponto, ícone grande. */
-        --gold: #c4943e;
+        /* O dourado de marca. NÃO carrega texto e NÃO recebe texto: #cfb276
+           rende 2.2 contra branco nas duas direções. Preenchimento decorativo
+           apenas - fio de assinatura, ponto, ícone grande. */
+        --gold: #cfb276;
+        --gold-quiet: #F0CE90;
+        /* Degrau escuro da rampa, este sim legível sobre fundo claro. */
+        --gold-deep: light-dark(#7C6437, #F0CE90);
 
-        /* O dourado perdeu a base como anel de foco justamente por isso. O
-           acento assume: é a cor de ação da referência e mede 6.47 sobre
-           branco. O anel é desenhado FORA do elemento (outline-offset), então
-           o contraste que importa é contra a superfície em volta. */
-        --focus: light-dark(#1752d9, #9dbcff);
+        /* O anel de foco usa o dourado ESCURO, não o de marca: o de marca não
+           tem contraste para indicar foco. Desenhado fora do elemento pelo
+           outline-offset, então o que importa é o contraste contra a superfície
+           em volta. */
+        --focus: light-dark(#7C6437, #F0CE90);
 
         /* ------------------------------------------------------ estado */
-        /* Um degrau abaixo do `--nc-success` da referência (#16a34a): branco
-           sobre ele rende 3.3, e verde preenchido carrega rótulo branco em
-           vários lugares aqui. Este é o `--nc-success-text`, que já existe na
-           paleta - não é cor inventada. */
-        --success: light-dark(#15803d, #4ade80);
-        --success-on: light-dark(#ffffff, #052e16);
-        --success-quiet: light-dark(#dcfce7, #0a2e1b);
-        --success-text: light-dark(#15803d, #86efac);
+        /* VERDE DERIVADO - única cor fora do material fornecido. A rampa não
+           traz verde, e "conforme" é a resposta mais dada do aplicativo. */
+        --success: light-dark(#2F6B4C, #6FBF95);
+        --success-on: light-dark(#FFFFFF, #0C2C1E);
+        --success-quiet: light-dark(#E4EFE9, #0F2E21);
+        --success-text: light-dark(#255741, #93D5B2);
 
-        --warning: light-dark(#d97706, #fbbf24);
-        /* Rótulo escuro sobre o âmbar: branco sobre ele não alcança 4.5. */
-        --warning-on: light-dark(#2b1c06, #2b1c06);
-        --warning-quiet: light-dark(#fef9c3, #33260a);
-        --warning-text: light-dark(#a16207, #fcd34d);
+        --warning: light-dark(#7C6437, #F0CE90);
+        --warning-on: light-dark(#FEFBF5, #2C220F);
+        --warning-quiet: light-dark(#FEFBF5, #2C220F);
+        --warning-text: light-dark(#524222, #F0CE90);
 
-        --critical-text: light-dark(#b91c1c, #fca5a5);
-        --critical-quiet: light-dark(#fee2e2, #3b1414);
+        --critical-text: light-dark(#A43D32, #F0C2BA);
+        --critical-quiet: light-dark(#FCF3F2, #39100C);
 
         /* Vermelho PREENCHIDO é exclusivo da emergência - ver button.css,
            panic.css e o teste que garante isso.
 
-           Distinto do `danger` da paleta: aquele classifica gravidade num
-           relatório, este precisa gritar mais alto que tudo na tela. A medição
-           do modo noturno mostrou que ele tem de ser o preenchimento mais
-           claro da interface. */
-        --emergency: light-dark(#c0392b, #cf4133);
-        --emergency-on: #ffffff;
-        --emergency-edge: light-dark(#8f2a20, #9c3226);
+           Um degrau acima do vermelho de severidade: aquele classifica
+           gravidade num relatório, este precisa gritar mais alto que tudo na
+           tela.
+
+           No escuro NÃO usa o #DB5446 da rampa: com rótulo branco ele dá 3.91.
+           O degrau escolhido mede 4.99 e continua sendo 6,7x mais claro que o
+           acento no modo noturno, que é a invariante que importa. */
+        --emergency: light-dark(#A43D32, #C34438);
+        --emergency-on: #FFFFFF;
+        --emergency-edge: light-dark(#6C261E, #A43D32);
 
         /* ------------------------------------------------- espaçamento */
         --space-1: 4px;
@@ -184,7 +187,9 @@
         /* No escuro a hierarquia vem da borda; no claro, da sombra. */
         /* Tingida de navy (rgba(13,33,68,…)), como na referência, nunca preto
            puro: preto sobre o fundo azulado frio vira sombra cinza-suja. */
-        --shadow-color: light-dark(rgba(13, 33, 68, 0.14), rgba(0, 0, 0, 0.55));
+        /* Tingida do navy de marca, nunca preto puro: preto sobre o neutro
+           quente vira sombra cinza-suja. */
+        --shadow-color: light-dark(rgba(1, 61, 83, 0.14), rgba(0, 0, 0, 0.55));
         --shadow-sm: 0 1px 2px var(--shadow-color);
         --shadow-md: 0 4px 12px var(--shadow-color);
         --shadow-sheet: 0 -8px 32px var(--shadow-color);
@@ -253,43 +258,45 @@
     :root[data-theme='night'] {
         color-scheme: dark;
 
-        --bg: #021620;
-        --surface: #071528;
-        --surface-2: #0d1f36;
-        --border: #1b3050;
-        --border-strong: #4d6d8d;
-        --divider: #0d1f36;
+        --bg: #010D14;
+        --surface: #04202B;
+        --surface-2: #07303F;
+        --border: #12495F;
+        --border-strong: #3E7B96;
+        --divider: #07303F;
 
-        --structure: #030812;
-        --structure-on: #8fa3bd;
+        --structure: #000609;
+        --structure-on: #8FA9B5;
 
-        --text: #8fa8c4;
-        --text-muted: #7b93ae;
-        --text-faint: #63798f;
+        --text: #8FA9B5;
+        --text-muted: #7B96A3;
+        --text-faint: #647D8A;
 
-        /* Invertido em relação ao escuro comum: preenchimento azul profundo,
-           rótulo em azul claro. É a área preenchida que ilumina o rosto. */
-        --accent: #12244a;
-        --accent-on: #8ab0f0;
-        --accent-text: #7fa6e8;
-        --accent-quiet: #0b1830;
-        --accent-strong: #172d5c;
+        /* Invertido em relação ao escuro comum: preenchimento teal profundo,
+           rótulo em teal claro. É a área preenchida que ilumina o rosto. */
+        --accent: #0A2E3F;
+        --accent-on: #82BBD6;
+        --accent-text: #7AB3CE;
+        --accent-quiet: #06202C;
+        --accent-strong: #0F3D53;
 
-        --gold: #7d6136;
-        --focus: #7fa6e8;
+        --gold: #5C4A28;
+        --gold-quiet: #6E5930;
+        --gold-deep: #B49560;
+        --focus: #B49560;
 
-        --success: #0d3020;
-        --success-on: #63b287;
-        --success-quiet: #082216;
-        --success-text: #5fad82;
+        --success: #0C2D1F;
+        --success-on: #63AC85;
+        --success-quiet: #082117;
+        --success-text: #5FA680;
 
-        --warning: #33260f;
-        --warning-on: #c29550;
-        --warning-quiet: #241a0a;
-        --warning-text: #bb8f4d;
+        --warning: #2E2412;
+        --warning-on: #B49560;
+        --warning-quiet: #201908;
+        --warning-text: #AD9059;
 
-        --critical-text: #cc8580;
-        --critical-quiet: #2a1211;
+        --critical-text: #C4867C;
+        --critical-quiet: #26100D;
 
         --shadow-color: rgba(0, 0, 0, 0.6);
     }
@@ -302,35 +309,38 @@
      */
     @supports not (color: light-dark(#000, #fff)) {
         :root {
-            --bg: #071120;
-            --surface: #0d1b30;
-            --surface-2: #16273f;
-            --border: #274058;
-            --border-strong: #5b7a9c;
-            --divider: #16273f;
-            --structure: #050d18;
-            --structure-on: #ffffff;
-            --text: #eef2f8;
-            --text-muted: #b3c2d6;
-            --text-faint: #8496ad;
-            --accent: #7ba6f5;
-            --accent-on: #06132c;
-            --accent-text: #9dbcff;
-            --accent-quiet: #0f2547;
-            --accent-strong: #a3c2ff;
-            --focus: #9dbcff;
-            --success: #4ade80;
-            --success-on: #052e16;
-            --success-quiet: #0a2e1b;
-            --success-text: #86efac;
-            --warning: #fbbf24;
-            --warning-on: #2b1c06;
-            --warning-quiet: #33260a;
-            --warning-text: #fcd34d;
-            --critical-text: #fca5a5;
-            --critical-quiet: #3b1414;
-            --emergency: #cf4133;
-            --emergency-edge: #9c3226;
+            --bg: #031823;
+            --surface: #072634;
+            --surface-2: #0D394E;
+            --border: #1B5E7E;
+            --border-strong: #4E8AA8;
+            --divider: #0D394E;
+            --structure: #010D14;
+            --structure-on: #F2EDE6;
+            --text: #F2EDE6;
+            --text-muted: #C6BFB4;
+            --text-faint: #A79E90;
+            --accent: #7ACBF7;
+            --accent-on: #031823;
+            --accent-text: #A8DDFA;
+            --accent-quiet: #0A2E3F;
+            --accent-strong: #C4E7FB;
+            --gold: #cfb276;
+            --gold-quiet: #F0CE90;
+            --gold-deep: #F0CE90;
+            --focus: #F0CE90;
+            --success: #6FBF95;
+            --success-on: #0C2C1E;
+            --success-quiet: #0F2E21;
+            --success-text: #93D5B2;
+            --warning: #F0CE90;
+            --warning-on: #2C220F;
+            --warning-quiet: #2C220F;
+            --warning-text: #F0CE90;
+            --critical-text: #F0C2BA;
+            --critical-quiet: #39100C;
+            --emergency: #C34438;
+            --emergency-edge: #A43D32;
             --shadow-color: rgba(0, 0, 0, 0.55);
         }
     }

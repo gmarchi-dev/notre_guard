@@ -11,38 +11,34 @@ use Tests\TestCase;
  *
  * O que se protege aqui é a coisa que sempre se perde primeiro num sistema com
  * mais de um painel: a paleta divergir. Já houve TRÊS azuis diferentes em telas
- * do mesmo colégio - Blue no administrativo, Slate na portaria e as escalas do
- * Filament no app de campo.
+ * do mesmo colégio.
  *
- * A referência é o sistema de Ativos. Ver docs/15-design-system-extraido.md.
+ * Ver docs/16-paleta-institucional.md.
  */
 class IdentidadeVisualTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** Estrutura: barra lateral, cabeçalho de tabela. */
-    private const NAVY = '#0d2144';
+    private const NAVY = '#013d53';
 
-    /** Ação: botão, link, item ativo, anel de foco. */
-    private const ACCENT = '#1752d9';
+    private const GOLD = '#cfb276';
 
-    private const SIDEBAR = '#071120';
+    /** O de marca não tem contraste para texto nem para foco. */
+    private const GOLD_DEEP = '#7C6437';
 
-    public function test_both_panels_use_the_action_blue_as_primary(): void
+    public function test_both_panels_use_the_brand_navy_as_primary(): void
     {
-        // `primary` no Filament pinta botão e estado ativo - ou seja, AÇÃO.
-        // O navy de estrutura entra pelo CSS, não por aqui: trocá-los faria o
-        // botão primário virar quase preto.
         foreach (['AdminPanelProvider', 'PortariaPanelProvider'] as $painel) {
             $codigo = File::get(app_path("Providers/Filament/{$painel}.php"));
 
             $this->assertStringContainsString(
-                "Color::hex('".self::ACCENT."')",
+                "Color::hex('".self::NAVY."')",
                 $codigo,
-                "{$painel} não usa o azul de ação como cor primária.",
+                "{$painel} não usa o navy de marca como cor primária.",
             );
 
-            foreach (['#dc2626', '#d97706', '#16a34a'] as $semantica) {
+            // Semânticas tiradas das rampas, não os padrões do Filament.
+            foreach (['#A43D32', '#7C6437', '#2F6B4C'] as $semantica) {
                 $this->assertStringContainsString(
                     "Color::hex('{$semantica}')",
                     $codigo,
@@ -52,43 +48,46 @@ class IdentidadeVisualTest extends TestCase
         }
     }
 
-    public function test_the_field_app_shares_the_same_palette(): void
+    public function test_the_field_app_shares_the_same_anchors(): void
     {
-        // Uma paleta, dois sistemas: se os azuis do app de campo divergirem
-        // dos azuis dos painéis, o colégio volta a ter mais de uma identidade.
+        // Uma paleta, dois sistemas: se as âncoras divergirem, o colégio volta
+        // a ter mais de uma identidade.
         $tokens = File::get(resource_path('css/field/tokens.css'));
 
         $this->assertStringContainsString(self::NAVY, $tokens);
-        $this->assertStringContainsString(self::ACCENT, $tokens);
+        $this->assertStringContainsString(self::GOLD, $tokens);
     }
 
-    public function test_the_two_blues_keep_distinct_roles(): void
+    public function test_the_gold_never_carries_text(): void
     {
-        // O erro fácil desta paleta é confundir estrutura com ação. O navy
-        // pinta barra e cabeçalho; o acento pinta o que se toca.
+        // #cfb276 rende 2.2 contra branco nas DUAS direções: não carrega texto
+        // e não recebe texto. É preenchimento decorativo - fio, ponto, ícone.
+        $campo = File::get(resource_path('css/field/tokens.css'));
         $paineis = File::get(resource_path('views/filament/identidade.blade.php'));
 
-        $this->assertMatchesRegularExpression(
-            '/\.fi-ta-header-(cell|row)[^{]*\{[^}]*background-color:\s*var\(--nc-primary\)/s',
-            $paineis,
-            'o cabeçalho de tabela saiu do navy de estrutura.',
-        );
+        $this->assertStringContainsString('--focus: light-dark('.self::GOLD_DEEP, $campo);
+        $this->assertStringContainsString('outline: 2px solid var(--nd-gold-deep)', $paineis);
 
-        $this->assertMatchesRegularExpression(
-            '/:focus-visible\s*\{[^}]*outline:\s*2px solid var\(--nc-accent\)/s',
+        $this->assertStringNotContainsString(
+            'outline: 2px solid var(--nd-gold)',
             $paineis,
-            'o anel de foco saiu do azul de ação.',
+            'o anel de foco voltou ao dourado de marca, que não indica foco.',
         );
     }
 
-    public function test_the_focus_ring_is_not_gold_anymore(): void
+    public function test_the_neutral_is_warm_not_grey(): void
     {
-        // O dourado da referência rende 2.74 contra branco: não indica foco.
-        // Continua existindo como preenchimento decorativo.
+        // É o que dá a leitura de papel e distingue o sistema de um painel
+        // administrativo genérico.
         $campo = File::get(resource_path('css/field/tokens.css'));
+        $paineis = File::get(resource_path('views/filament/identidade.blade.php'));
 
-        $this->assertStringContainsString('--focus: light-dark('.self::ACCENT, $campo);
-        $this->assertStringContainsString('--gold: #c4943e', $campo);
+        $this->assertStringContainsString('--bg: light-dark(#F2EDE6', $campo);
+        $this->assertMatchesRegularExpression(
+            '/\.fi-body\s*\{[^}]*background-color:\s*var\(--nd-warm-100\)/s',
+            $paineis,
+            'o fundo dos painéis voltou ao cinza.',
+        );
     }
 
     public function test_the_mark_is_a_single_source_recoloured_by_context(): void
@@ -150,21 +149,23 @@ class IdentidadeVisualTest extends TestCase
 
         // E o render hook precisa disparar nas páginas internas, não só no
         // login - é lá dentro que a barra lateral existe.
-        $this->assertStringContainsString('--nc-sidebar-bg', $html);
+        $this->assertStringContainsString('--nd-navy', $html);
     }
 
-    public function test_the_sidebar_is_the_near_black_of_the_reference(): void
+    public function test_the_active_item_is_marked_by_more_than_colour(): void
     {
         $css = File::get(resource_path('views/filament/identidade.blade.php'));
 
-        $this->assertStringContainsString('--nc-sidebar-bg: '.self::SIDEBAR, $css);
-
-        // O item ativo é um VÉU translúcido do acento, não um azul sólido:
-        // sólido viraria um bloco claro sobre o quase-preto.
-        $this->assertStringContainsString('rgba(23, 82, 217, 0.18)', $css);
+        // Fio dourado à esquerda: sem ele, a única diferença entre o item
+        // ativo e o item sob o cursor seria o tom do azul.
+        $this->assertMatchesRegularExpression(
+            '/\.fi-active > \.fi-sidebar-item-btn\s*\{[^}]*box-shadow:\s*inset 3px 0 0 var\(--nd-gold\)/s',
+            $css,
+            'o item ativo perdeu o fio dourado e passou a depender só de cor.',
+        );
 
         // A marca herda a cor do contêiner. Fixar navy a deixaria invisível
-        // dentro da barra - já aconteceu uma vez.
+        // dentro da barra escura - já aconteceu uma vez.
         $this->assertMatchesRegularExpression(
             '/\.fi-logo svg\s*\{[^}]*color:\s*inherit/s',
             $css,
@@ -181,7 +182,7 @@ class IdentidadeVisualTest extends TestCase
 
         foreach ([$portaria, $admin] as $html) {
             $this->assertStringContainsString('fi-logo', $html);
-            $this->assertStringContainsString('--nc-accent', $html, 'a folha de identidade não foi injetada.');
+            $this->assertStringContainsString('--nd-gold', $html, 'a folha de identidade não foi injetada.');
         }
     }
 }

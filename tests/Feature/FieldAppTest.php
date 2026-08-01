@@ -552,42 +552,44 @@ class FieldAppTest extends TestCase
         $tokens = File::get(resource_path('css/field/tokens.css'));
 
         $this->assertStringContainsString('@supports not (color: light-dark(', $tokens);
-        $this->assertStringContainsString('--bg: #071120', $tokens);
+        $this->assertStringContainsString('--bg: #031823', $tokens);
     }
 
-    public function test_the_palette_comes_from_the_assets_system(): void
+    public function test_the_palette_is_anchored_on_the_brand_colours(): void
     {
-        // A paleta é a do sistema de Ativos do colégio - ver
-        // docs/15-design-system-extraido.md. O eixo são DOIS azuis com papéis
-        // distintos, e confundi-los é o erro fácil aqui.
+        // Âncoras de marca mais as rampas fornecidas - ver
+        // docs/16-paleta-institucional.md.
         $tokens = File::get(resource_path('css/field/tokens.css'));
 
+        $this->assertStringContainsString('--accent: light-dark(#013d53', $tokens);
+        $this->assertStringContainsString('--gold: #cfb276', $tokens);
+
+        // Degraus das rampas que carregam papel na interface.
         foreach ([
-            '#0d2144',  // estrutura
-            '#1752d9',  // ação
-            '#edf0f7',  // fundo de página
-            '#c0cade',  // borda
-            '#0f172a',  // texto
-            '#475569',  // texto secundário
-            '#c4943e',  // dourado
-        ] as $token) {
+            '#F2EDE6',  // neutro quente - fundo do tema claro
+            '#031823',  // teal mais escuro - estrutura
+            '#7ACBF7',  // teal claro - acento invertido no escuro
+            '#7C6437',  // dourado escuro - foco e aviso
+            '#A43D32',  // vermelho de severidade
+        ] as $degrau) {
             $this->assertStringContainsString(
-                $token,
+                $degrau,
                 $tokens,
-                "{$token} saiu da paleta - ver docs/15-design-system-extraido.md.",
+                "{$degrau} saiu da paleta - ver docs/16-paleta-institucional.md.",
             );
         }
 
-        // O anel de foco é o ACENTO, não o dourado: o dourado da referência
-        // rende 2.74 contra branco e não serve para indicar foco.
-        $this->assertStringContainsString('--focus: light-dark(#1752d9', $tokens);
+        // O neutro do sistema é QUENTE, não cinza: é o que dá a leitura de
+        // papel e distingue o app de um painel administrativo genérico.
+        $this->assertStringContainsString('--bg: light-dark(#F2EDE6', $tokens);
 
-        // E o `--nc-text-muted` da origem (#94a3b8) não pode ter voltado a
-        // carregar texto secundário: ele rende 2.56 sobre branco.
+        // O anel de foco usa o dourado ESCURO. O de marca rende 2.2 contra
+        // branco e não serve para indicar foco.
+        $this->assertStringContainsString('--focus: light-dark(#7C6437', $tokens);
         $this->assertStringNotContainsString(
-            '--text-muted: light-dark(#94a3b8',
+            '--focus: light-dark(#cfb276',
             $tokens,
-            'o texto secundário voltou ao tom que reprova em 2.56.',
+            'o anel de foco voltou ao dourado de marca, que rende 2.2.',
         );
     }
 
