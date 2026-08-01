@@ -44,6 +44,11 @@
         background: var(--accent);
     }
 
+    /* Pulado é desfecho, não pendência: âmbar, não o cinza de "a fazer". */
+    .progress__segment[data-state='skipped'] {
+        background: var(--warning);
+    }
+
     .progress__count {
         flex: none;
         font-size: var(--text-sm);

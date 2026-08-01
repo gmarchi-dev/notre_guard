@@ -45,7 +45,18 @@
                     </template>
 
                     <template x-if="(data?.posts ?? []).length === 0">
-                        <p class="row muted">Nenhum posto disponível. Fale com a supervisão.</p>
+                        <div class="empty">
+                            <span class="empty__icon">
+                                <svg class="icon" aria-hidden="true"><use href="#i-home"/></svg>
+                            </span>
+                            <p class="empty__title">Nenhum posto para esta unidade</p>
+                            <p class="empty__text">
+                                O cadastro de postos é feito pela supervisão. Se você deveria
+                                assumir um posto agora, avise pelo rádio.
+                            </p>
+                            <button type="button" class="btn btn--secondary btn--md"
+                                    @click="refreshData({ force: true })">Atualizar dados</button>
+                        </div>
                     </template>
                 </div>
             </section>
@@ -87,7 +98,18 @@
                             </template>
 
                             <template x-if="routes.length === 0">
-                                <p class="row muted">Nenhum roteiro cadastrado para esta unidade.</p>
+                                <div class="empty">
+                                    <span class="empty__icon">
+                                        <svg class="icon" aria-hidden="true"><use href="#i-patrol"/></svg>
+                                    </span>
+                                    <p class="empty__title">Nenhum roteiro nesta unidade</p>
+                                    <p class="empty__text">
+                                        Você pode seguir registrando ocorrências normalmente.
+                                        A ronda depende de um roteiro cadastrado pela supervisão.
+                                    </p>
+                                    <button type="button" class="btn btn--secondary btn--md"
+                                            @click="refreshData({ force: true })">Atualizar dados</button>
+                                </div>
                             </template>
                         </div>
                     </section>

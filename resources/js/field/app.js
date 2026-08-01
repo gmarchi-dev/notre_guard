@@ -131,6 +131,9 @@ function fieldApp() {
         handoverNotes: '',
         exitArmed: false,
 
+        /** Pulso de meio minuto, só para o tempo decorrido não congelar. */
+        clock: Date.now(),
+
         theme: 'system',
 
         // ------------------------------------------------------ ciclo de vida
@@ -154,6 +157,10 @@ function fieldApp() {
             window.addEventListener('popstate', (event) => this.onPopState(event))
 
             this.theme = localStorage.getItem('ng.theme') ?? 'system'
+
+            // Meio minuto é resolução de sobra para um contador em minutos, e
+            // barato o bastante para não pesar na bateria do turno.
+            setInterval(() => (this.clock = Date.now()), 30000)
 
             await this.boot()
         },
@@ -907,7 +914,16 @@ function fieldApp() {
                     patrol_route_id: routeId,
                 })
 
-                this.patrol = { uuid, route_id: routeId, scanned: [], skipped: [] }
+                // `started_at` é local: alimenta o tempo decorrido na tela e o
+                // resumo do encerramento. O servidor tem o seu próprio, vindo
+                // do evento - este não é fonte de verdade para nada.
+                this.patrol = {
+                    uuid,
+                    route_id: routeId,
+                    started_at: new Date().toISOString(),
+                    scanned: [],
+                    skipped: [],
+                }
                 await putCache('patrol', this.patrol)
                 await refreshPending()
                 sync()
@@ -949,8 +965,20 @@ function fieldApp() {
                 .filter((item) => item.checkpoint)
         },
 
+        /**
+         * Pontos SEM DESFECHO - nem lidos, nem pulados.
+         *
+         * Pulado com justificativa é desfecho registrado, não ponto faltando.
+         * Contá-lo aqui produzia uma contradição na tela: o cartão dizia
+         * "Roteiro completo" (porque `nextItem` já ignorava os pulados) e o
+         * encerramento perguntava "Faltam 1 ponto?" ao mesmo tempo.
+         */
         get remainingCount() {
-            return this.routeCheckpoints.filter((item) => !item.done).length
+            return this.routeCheckpoints.filter((item) => !item.done && !item.skipped).length
+        },
+
+        get skippedCount() {
+            return this.routeCheckpoints.filter((item) => item.skipped).length
         },
 
         /** O primeiro ponto ainda não registrado. É o que o cartão do topo mostra. */
@@ -1046,6 +1074,47 @@ function fieldApp() {
             return `${done} de ${this.routeCheckpoints.length} pontos registrados`
         },
 
+        // ------------------------------------------------- tempo de ronda
+        /** Minutos decorridos desde o início da ronda. */
+        get patrolElapsed() {
+            if (!this.patrol?.started_at) return null
+
+            // `clock` e não Date.now(): getter só recalcula quando algo
+            // reativo muda, e o relógio não é reativo. Sem o pulso, o tempo
+            // congelaria no valor da última renderização.
+            return Math.max(0, Math.floor((this.clock - Date.parse(this.patrol.started_at)) / 60000))
+        },
+
+        get patrolExpected() {
+            return this.route?.expected_duration_min ?? null
+        },
+
+        /**
+         * Ritmo da ronda: decorrido contra previsto.
+         *
+         * O roteiro sempre teve `expected_duration_min` e o app nunca mostrava
+         * o tempo. Sem isso, "fora da janela" só aparecia no RDO do dia
+         * seguinte, quando não dá mais para corrigir o ritmo.
+         *
+         * `late` é aviso, não erro: uma ronda pode legitimamente demorar mais
+         * - o vigilante parou para atender alguém, achou algo. O que não pode
+         * é ele descobrir isso depois.
+         */
+        get patrolPace() {
+            const decorrido = this.patrolElapsed
+
+            if (decorrido === null) return null
+
+            const previsto = this.patrolExpected
+
+            return {
+                elapsed: decorrido,
+                expected: previsto,
+                label: previsto ? `${decorrido} de ~${previsto} min` : `${decorrido} min`,
+                late: previsto !== null && decorrido > previsto,
+            }
+        },
+
         async endPatrol() {
             if (this.remainingCount > 0) {
                 const ok = await this.ask({
@@ -1058,9 +1127,63 @@ function fieldApp() {
                 if (!ok) return
             }
 
+            // O resumo é montado ANTES de encerrar: finishPatrol() zera o
+            // estado local, e depois dele não há mais o que resumir.
+            const resumo = this.patrolSummary()
+
             await this.finishPatrol()
             this.navigate('home')
-            this.toast('Ronda encerrada.')
+
+            await this.showPatrolSummary(resumo)
+        },
+
+        /**
+         * Fotografia da ronda no momento do encerramento.
+         *
+         * @return {{route: string, stats: Array, skipped: number}}
+         */
+        patrolSummary() {
+            const total = this.routeCheckpoints.length
+            const pulados = this.skippedCount
+            const lidos = total - this.remainingCount - pulados
+            const ritmo = this.patrolPace
+
+            const stats = [
+                { label: 'Pontos lidos', value: `${lidos} de ${total}`, tone: lidos === total ? 'ok' : 'neutral' },
+            ]
+
+            if (pulados > 0) {
+                stats.push({ label: 'Pulados', value: String(pulados), tone: 'warn' })
+            }
+
+            if (ritmo) {
+                stats.push({
+                    label: 'Duração',
+                    value: ritmo.expected ? `${ritmo.elapsed} min (previsto ~${ritmo.expected})` : `${ritmo.elapsed} min`,
+                    tone: ritmo.late ? 'warn' : 'neutral',
+                })
+            }
+
+            return { route: this.route?.name ?? 'Roteiro', stats, complete: lidos === total }
+        },
+
+        /**
+         * O fim da ronda é o pico do turno - e era um toast cinza de quatro
+         * segundos.
+         *
+         * O resumo não é comemoração: é a única chance de o vigilante conferir
+         * o que vai para o RDO. Depois daqui o registro entra na fila e some
+         * de vista, e qualquer correção passa a ser conversa com a supervisão.
+         */
+        async showPatrolSummary(resumo) {
+            await this.ask({
+                title: resumo.complete ? 'Ronda completa' : 'Ronda encerrada',
+                text: resumo.route,
+                stats: resumo.stats,
+                tone: resumo.complete ? 'ok' : 'neutral',
+                confirmLabel: 'Entendi',
+                dismissible: true,
+            })
         },
 
         async finishPatrol() {

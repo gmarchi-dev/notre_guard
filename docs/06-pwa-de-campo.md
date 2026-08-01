@@ -374,6 +374,34 @@ sinal `!`. Há teste para isso.
 
 Nenhum `<select>` nativo sobrevive no app de campo - também virou invariante de teste.
 
+## Fechar o ciclo
+
+Uma passada de UX depois de tudo funcionar, olhando o app pelo que o vigilante **sente** e não só
+pelo que ele consegue fazer.
+
+**O fim da ronda é o pico do turno, e era um toast cinza de quatro segundos.** Virou um resumo:
+pontos lidos, pulados e duração contra o previsto. Não é comemoração - é a última chance de conferir
+o que vai para o RDO antes de o registro entrar na fila e sair de vista, quando qualquer correção
+passa a ser conversa com a supervisão. Um resumo não oferece "Cancelar": não há o que desfazer.
+
+**Tempo decorrido contra o previsto**, na tela de ronda. O roteiro sempre teve
+`expected_duration_min` e o app nunca mostrava o tempo - "fora da janela" só aparecia no relatório
+do dia seguinte, quando já não dá para corrigir o ritmo. É aviso, não erro: uma ronda pode
+legitimamente demorar mais, o que não pode é o vigilante descobrir depois.
+
+**Estados vazios com estrutura.** Eram linha de texto solta dentro de um agrupamento - lidos de
+relance, não se distinguiam de um item da lista, e não dava para saber se a tela ainda carregava.
+A fila vazia é caso à parte: ali vazio é a **boa** notícia, e o desenho tranquiliza em vez de
+parecer falta.
+
+### O defeito que essa passada encontrou
+
+`remainingCount` contava os pontos **pulados** como faltando. Pular com justificativa é desfecho
+registrado, não lacuna - e a tela se contradizia: o cartão dizia "Roteiro completo" (porque
+`nextItem` já ignorava os pulados) enquanto o encerramento perguntava "Faltam 1 ponto?". Agora
+`remainingCount` conta só o que não tem desfecho nenhum, o pulado tem estado próprio na barra de
+progresso, e há teste para os dois lados.
+
 ## Retorno ao vigilante
 
 Três informações que o servidor já tinha e o aparelho não mostrava.

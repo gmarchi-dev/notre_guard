@@ -1,0 +1,53 @@
+/*
+ * Números de resumo.
+ *
+ * Fecham um ciclo mostrando o que ficou registrado - hoje ao encerrar uma
+ * ronda, que é o pico do turno e era um toast cinza de quatro segundos.
+ *
+ * Não é comemoração: é a última chance de o vigilante conferir o que vai para
+ * o RDO antes de o registro entrar na fila e sair de vista. Por isso o número
+ * pesa mais que o rótulo - o contrário empurraria o olho para a palavra errada.
+ */
+
+@layer components {
+    .stats {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        margin: var(--space-4) 0 0;
+        background: var(--divider);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+    }
+
+    .stat {
+        display: flex;
+        align-items: baseline;
+        gap: var(--space-4);
+        padding: var(--space-3) var(--space-4);
+        background: var(--surface-2);
+    }
+
+    .stat__label {
+        font-size: var(--text-sm);
+        color: var(--text-muted);
+    }
+
+    .stat__value {
+        margin: 0 0 0 auto;
+        font-size: var(--text-base);
+        font-weight: var(--weight-semibold);
+        font-variant-numeric: tabular-nums;
+        text-align: right;
+    }
+
+    /* O tom marca o que merece atenção. Sem ele, "3 pulados" teria o mesmo
+       peso de "duração", e pulado é o que vira apontamento no relatório. */
+    .stat[data-tone='ok'] .stat__value {
+        color: var(--success-text);
+    }
+
+    .stat[data-tone='warn'] .stat__value {
+        color: var(--warning-text);
+    }
+}

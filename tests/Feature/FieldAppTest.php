@@ -131,6 +131,53 @@ class FieldAppTest extends TestCase
         );
     }
 
+    public function test_a_skipped_checkpoint_is_an_outcome_not_a_gap(): void
+    {
+        // Pular com justificativa é desfecho REGISTRADO. Quando `remainingCount`
+        // contava os pulados, a tela se contradizia: o cartão dizia "Roteiro
+        // completo" (porque `nextItem` já os ignorava) e o encerramento
+        // perguntava "Faltam 1 ponto?" ao mesmo tempo.
+        $js = File::get(resource_path('js/field/app.js'));
+
+        $this->assertMatchesRegularExpression(
+            '/get remainingCount\(\)\s*\{\s*return this\.routeCheckpoints\.filter\(\(item\) => !item\.done && !item\.skipped\)/s',
+            $js,
+            'o ponto pulado voltou a contar como ponto faltando.',
+        );
+
+        // E no progresso ele tem estado próprio: mostrá-lo como "a fazer"
+        // contradiz o trilho, que já o distingue.
+        $patrol = File::get(resource_path('views/field/screens/patrol.blade.php'));
+        $this->assertStringContainsString("item.skipped ? 'skipped'", $patrol);
+    }
+
+    public function test_finishing_a_patrol_shows_what_was_recorded(): void
+    {
+        // O fim da ronda é o pico do turno e era um toast cinza de quatro
+        // segundos. É também a última chance de conferir o que vai para o RDO
+        // antes de o registro entrar na fila e sair de vista.
+        $js = File::get(resource_path('js/field/app.js'));
+
+        $this->assertStringContainsString('patrolSummary()', $js);
+        $this->assertStringContainsString('showPatrolSummary', $js);
+
+        // O resumo é montado ANTES de encerrar: finishPatrol() zera o estado
+        // local, e depois dele não há mais o que resumir.
+        $this->assertMatchesRegularExpression(
+            '/const resumo = this\.patrolSummary\(\)[\s\S]{0,200}await this\.finishPatrol\(\)/',
+            $js,
+            'o resumo passou a ser montado depois de o estado da ronda ser zerado.',
+        );
+
+        // Um resumo não tem o que cancelar - só há um caminho, que é fechar.
+        $sheet = File::get(resource_path('views/field/partials/sheet.blade.php'));
+        $this->assertMatchesRegularExpression(
+            '/x-if="!sheet\.stats\?\.length"[\s\S]{0,200}cancelLabel/',
+            $sheet,
+            'o resumo voltou a oferecer "Cancelar", como se desse para desfazer o registro.',
+        );
+    }
+
     public function test_leaving_the_device_is_always_reachable(): void
     {
         // "Sair" só aparecia sem turno aberto. Quem entrasse com a matrícula

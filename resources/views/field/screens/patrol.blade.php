@@ -18,11 +18,26 @@
                 <div class="progress__track" role="img" :aria-label="progressLabel()">
                     <template x-for="item in routeCheckpoints" :key="'seg-' + item.checkpoint_id">
                         <span class="progress__segment"
-                              :data-state="item.done ? 'done' : (item.checkpoint_id === nextCheckpoint?.id ? 'current' : 'todo')"></span>
+                              {{-- Pulado tem estado próprio: mostrá-lo como
+                                   "a fazer" contradizia o trilho abaixo, que
+                                   já o distinguia. --}}
+                              :data-state="item.done ? 'done' : (item.skipped ? 'skipped' : (item.checkpoint_id === nextCheckpoint?.id ? 'current' : 'todo'))"></span>
                     </template>
                 </div>
                 <span class="progress__count" x-text="(routeCheckpoints.length - remainingCount) + '/' + routeCheckpoints.length"></span>
             </div>
+
+            {{-- Ritmo: decorrido contra previsto. O roteiro sempre teve
+                 duração prevista e o app nunca mostrava o tempo - "fora da
+                 janela" só aparecia no RDO do dia seguinte, quando já não dá
+                 para corrigir o ritmo. Aviso, não erro. --}}
+            <template x-if="patrolPace">
+                <p class="pace" :data-late="patrolPace.late">
+                    <svg class="icon icon--sm" aria-hidden="true"><use href="#i-clock"/></svg>
+                    <span x-text="patrolPace.label"></span>
+                    <span class="pace__note" x-show="patrolPace.late">acima do previsto</span>
+                </p>
+            </template>
         </div>
 
         <template x-if="nextCheckpoint">

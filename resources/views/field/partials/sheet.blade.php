@@ -21,6 +21,20 @@
                 <p class="sheet__text" x-text="sheet.text"></p>
             </template>
 
+            {{-- Números do resumo. Serve a qualquer sheet que precise fechar
+                 um ciclo mostrando o que foi registrado, não só ao fim da
+                 ronda. --}}
+            <template x-if="sheet.stats?.length">
+                <dl class="stats">
+                    <template x-for="stat in sheet.stats" :key="stat.label">
+                        <div class="stat" :data-tone="stat.tone ?? 'neutral'">
+                            <dt class="stat__label" x-text="stat.label"></dt>
+                            <dd class="stat__value" x-text="stat.value"></dd>
+                        </div>
+                    </template>
+                </dl>
+            </template>
+
             {{-- Variante com campo: a justificativa de ponto pulado é registro
                  de auditoria, e antes era capturada num prompt() de uma linha
                  que nem dizia qual ponto estava sendo pulado. --}}
@@ -102,8 +116,13 @@
                             x-text="sheet.confirmLabel ?? 'Confirmar'"></button>
                 </template>
 
-                <button type="button" class="btn btn--secondary" @click="resolveSheet(false)"
-                        x-text="sheet.cancelLabel ?? 'Cancelar'"></button>
+                {{-- Um resumo não tem o que cancelar: só há um caminho, que é
+                     fechar. Um "Cancelar" ali sugeriria que dá para desfazer o
+                     que já foi registrado. --}}
+                <template x-if="!sheet.stats?.length">
+                    <button type="button" class="btn btn--secondary" @click="resolveSheet(false)"
+                            x-text="sheet.cancelLabel ?? 'Cancelar'"></button>
+                </template>
             </div>
         </div>
     </div>

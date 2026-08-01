@@ -5,9 +5,18 @@
             <p class="muted" x-text="queueSummary()"></p>
         </div>
 
+        {{-- Vazio aqui é a BOA notícia, e o desenho tem de tranquilizar em vez
+             de parecer falta. --}}
         <template x-if="queue.events.length === 0">
-            <div class="group">
-                <p class="row">Nada pendente. Tudo que você registrou já está no servidor.</p>
+            <div class="empty empty--ok">
+                <span class="empty__icon">
+                    <svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg>
+                </span>
+                <p class="empty__title">Nada pendente</p>
+                <p class="empty__text">
+                    Tudo o que você registrou já está no servidor. Pode seguir a ronda
+                    tranquilo — se a rede cair, os registros ficam aqui até subirem.
+                </p>
             </div>
         </template>
 

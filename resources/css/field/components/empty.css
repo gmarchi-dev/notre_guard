@@ -1,0 +1,70 @@
+/*
+ * Estado vazio e ritmo da ronda.
+ *
+ * Os estados vazios eram uma linha de texto solta dentro de um agrupamento
+ * ("Nenhum posto disponível. Fale com a supervisão."). Lidos de relance, não
+ * se distinguiam de um item da lista - e o vigilante ficava sem saber se a
+ * tela ainda estava carregando ou se aquilo era tudo.
+ *
+ * A fila vazia é caso à parte: ali "vazio" é a BOA notícia, e o desenho tem de
+ * tranquilizar em vez de parecer falta.
+ */
+
+@layer components {
+    .empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--space-3);
+        padding: var(--space-8) var(--space-5);
+        text-align: center;
+        color: var(--text-muted);
+    }
+
+    .empty__icon {
+        display: grid;
+        place-items: center;
+        width: var(--space-12);
+        height: var(--space-12);
+        border-radius: 50%;
+        background: var(--surface-2);
+        color: var(--text-faint);
+    }
+
+    .empty__title {
+        font-size: var(--text-base);
+        font-weight: var(--weight-semibold);
+        color: var(--text);
+    }
+
+    .empty__text {
+        font-size: var(--text-sm);
+        line-height: var(--leading-normal);
+        max-width: 34ch;
+    }
+
+    /* Nada pendente é conquista, não ausência. */
+    .empty--ok .empty__icon {
+        background: var(--success-quiet);
+        color: var(--success-text);
+    }
+
+    /* --- ritmo da ronda --- */
+    .pace {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        margin-top: var(--space-3);
+        font-size: var(--text-sm);
+        color: var(--text-muted);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .pace[data-late='true'] {
+        color: var(--warning-text);
+    }
+
+    .pace__note {
+        font-weight: var(--weight-semibold);
+    }
+}

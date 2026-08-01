@@ -87,6 +87,16 @@
         <path d="M6 12h12"/>
     </symbol>
 
+    <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9"/>
+        <path d="M12 7v5.2l3.4 2"/>
+    </symbol>
+
+    <symbol id="i-inbox" viewBox="0 0 24 24">
+        <path d="M3 13h4l1.5 3h7L17 13h4"/>
+        <path d="M5.5 5h13l2.5 8v5a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-5z"/>
+    </symbol>
+
     <symbol id="i-refresh" viewBox="0 0 24 24">
         <path d="M20 11a8 8 0 1 0-.7 4.3"/>
         <path d="M20 5v6h-6"/>
