@@ -96,7 +96,7 @@
     .btn--ghost {
         background: transparent;
         color: var(--text-muted);
-        font-weight: var(--weight-medium);
+        font-weight: var(--weight-semibold);
     }
 
     .btn--ghost:active {
@@ -133,7 +133,7 @@
     .btn--confirm-emergency {
         min-height: 84px;
         font-size: var(--text-xl);
-        font-weight: var(--weight-black);
+        font-weight: var(--weight-bold);
         letter-spacing: 0.04em;
     }
 

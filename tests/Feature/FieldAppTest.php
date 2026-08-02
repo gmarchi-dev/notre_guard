@@ -386,6 +386,40 @@ class FieldAppTest extends TestCase
         }
     }
 
+    public function test_no_component_writes_a_font_size_of_its_own(): void
+    {
+        // Medido no navegador: dois componentes usavam 11px literal - abaixo do
+        // piso de 13px que o próprio sistema declara. Um deles era o contador
+        // de pendências da barra de abas, ou seja, informação operacional.
+        foreach ($this->fieldStylesheets() as $path) {
+            if (str_ends_with($path, 'tokens.css')) {
+                continue;
+            }
+
+            $this->assertDoesNotMatchRegularExpression(
+                '/font-size:\s*\d+px/',
+                File::get($path),
+                basename($path).' escreve um tamanho de fonte próprio, fora da escala.',
+            );
+        }
+    }
+
+    public function test_the_weight_scale_has_no_single_use_steps(): void
+    {
+        // A escala tinha CINCO pesos; medido, o 500 e o 800 apareciam uma vez
+        // cada. Peso que aparece uma vez não cria hierarquia - só acrescenta
+        // um valor para alguém escolher errado depois.
+        $tokens = File::get(resource_path('css/field/tokens.css'));
+
+        preg_match_all('/--weight-[\w-]+:\s*(\d+)/', $tokens, $m);
+
+        $this->assertSame(
+            ['400', '600', '700'],
+            $m[1],
+            'a escala de peso voltou a ter degraus que ninguém usa.',
+        );
+    }
+
     public function test_field_spacing_comes_from_the_container_only(): void
     {
         // `.fieldset` tem gap e `.field + .field` tinha margin-top: as duas se

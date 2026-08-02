@@ -192,10 +192,13 @@
         --leading-relaxed: 1.5;
 
         --weight-regular: 400;
-        --weight-medium: 500;
+        /*
+         * TRÊS pesos, não cinco. O 500 e o 800 tinham um uso cada e não
+         * ganhavam nada: um peso que aparece uma vez não cria hierarquia,
+         * só mais um valor para alguém escolher errado depois.
+         */
         --weight-semibold: 600;
         --weight-bold: 700;
-        --weight-black: 800;
 
         /* ------------------------------------------------------ sombra */
         /* No escuro a hierarquia vem da borda; no claro, da sombra. */

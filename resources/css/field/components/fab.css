@@ -48,9 +48,11 @@
         transform: scale(0.94);
     }
 
+    /* 13px e peso 700, ambos da escala. Estavam em 11px literal com peso 800 -
+       um tamanho abaixo do piso declarado e um peso que existia só aqui. */
     .fab__label {
-        font-size: 11px;
-        font-weight: var(--weight-black);
+        font-size: var(--text-xs);
+        font-weight: var(--weight-bold);
         letter-spacing: 0.08em;
         line-height: 1;
     }

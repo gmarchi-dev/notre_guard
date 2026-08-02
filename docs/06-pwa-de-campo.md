@@ -374,6 +374,37 @@ sinal `!`. Há teste para isso.
 
 Nenhum `<select>` nativo sobrevive no app de campo - também virou invariante de teste.
 
+## Auditoria visual por medição
+
+Feita contra os critérios objetivos de UI móvel, medindo o app renderizado em vez de opinar.
+
+**O sistema de cor passa.** A regra 60/30/10 pede ~10% de acento; medido na tela de ronda, a cor
+**forte** ocupa **10,6%** do viewport. A primeira medição deu 31,6% e estava errada - eu classificava
+tinta suave (o cartão AGORA, o botão destrutivo) como acento. Separando por saturação, o número real
+aparece: 10,6% de cor forte, 21,6% de tinta suave, e o resto neutro.
+
+**A tipografia estava acima do orçamento**, e três correções saíram daí:
+
+| | antes | depois |
+|---|---|---|
+| Tamanhos distintos renderizados | 8 | **7** |
+| Pesos distintos | 5 | **3** |
+| Tamanhos fora da escala | 11px, em dois componentes | **nenhum** |
+
+- **O 11px literal era o pior achado.** Aparecia no rótulo do SOS e no **contador de pendências** da
+  barra de abas - este último é informação operacional, abaixo do piso de 13px que o próprio sistema
+  declara, e escrito direto no componente em vez de vir da escala. Os dois foram para `--text-xs`.
+- **Pesos 500 e 800 tinham um uso cada.** Peso que aparece uma vez não cria hierarquia; só
+  acrescenta um valor para alguém escolher errado depois. A escala ficou em 400 / 600 / 700.
+- O contador da barra também tinha três medidas fora da grade (18px, 5px, 18px). Passou a usar
+  `--space-5` e `--space-1`.
+
+Os tamanhos 19, 22 e 32px aparecem **uma vez cada**, mas os três estão no cartão AGORA - é o
+elemento de assinatura, e a hierarquia dele é o ponto. Contagem baixa ali não é desperdício.
+
+Duas invariantes novas: nenhum componente escreve tamanho de fonte próprio, e a escala de peso não
+pode ter degrau de uso único.
+
 ## Fechar o ciclo
 
 Uma passada de UX depois de tudo funcionar, olhando o app pelo que o vigilante **sente** e não só

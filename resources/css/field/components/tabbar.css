@@ -84,14 +84,17 @@
         position: absolute;
         top: -2px;
         left: 58%;
-        min-width: 18px;
-        padding-inline: 5px;
+        min-width: var(--space-5);
+        padding-inline: var(--space-1);
         border-radius: var(--radius-pill);
         background: var(--accent);
         color: var(--accent-on);
-        font-size: 11px;
+        /* 13px, o piso da escala. Estava em 11px literal - abaixo do piso que
+           o próprio sistema declara, e num elemento que carrega CONTAGEM de
+           registros pendentes, não decoração. */
+        font-size: var(--text-xs);
         font-weight: var(--weight-bold);
-        line-height: 18px;
+        line-height: var(--space-5);
         font-variant-numeric: tabular-nums;
     }
 
