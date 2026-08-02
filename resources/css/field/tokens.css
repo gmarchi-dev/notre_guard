@@ -35,9 +35,10 @@
          *   VERMELHO  #FCF3F2 #F0C2BA #E68D7F #DB5446 #A43D32 #6C261E #39100C
          *   CINZA     #EDEFF0 #C2C9CC #9BA3A8 #7B8285 #595F61 #383B3D #191B1C
          *
-         * NEUTRO QUENTE, não cinza: o fundo do tema claro é #F2EDE6 e o cartão
-         * é branco. É o que dá a leitura de papel, e distingue o sistema do
-         * painel administrativo genérico.
+         * NEUTRO FRIO, da rampa de cinza: fundo #EDEFF0 com cartão branco. O
+         * neutro quente (#F2EDE6) foi testado e recusado por julgamento visual
+         * - não por contraste, que é equivalente. A rampa quente sobreviveu só
+         * onde é tinta, nunca como superfície.
          *
          * A rampa não traz VERDE, e estado de sucesso precisa de um - "conforme"
          * no checklist é a resposta mais dada do aplicativo. Foi derivado um
@@ -49,26 +50,36 @@
          * ============================================================= */
 
         /* ---------------------------------------------------- superfície */
-        --bg: light-dark(#F2EDE6, #031823);
+        /* NEUTRO FRIO, da rampa de cinza.
+
+           O neutro quente (#F2EDE6) foi testado no sistema e recusado por
+           julgamento visual. Não foi por contraste: medidos, os dois separam o
+           cartão branco praticamente igual (1.165 contra 1.153). A diferença é
+           de caráter, não de legibilidade.
+
+           A família neutra inteira mudou junto. Bege misturado com cinza fica
+           pior que qualquer um dos dois puro, então a rampa quente sobreviveu
+           só onde é tinta - nunca como superfície, borda ou texto. */
+        --bg: light-dark(#EDEFF0, #031823);
         --surface: light-dark(#FFFFFF, #072634);
-        --surface-2: light-dark(#E8E0D2, #0D394E);
+        --surface-2: light-dark(#E2E6E8, #0D394E);
 
         /* Estrutura pesada: barra lateral e cabeçalho de tabela nos painéis.
            O degrau mais escuro do teal, para não competir com o navy de marca. */
         --structure: light-dark(#031823, #010D14);
-        --structure-on: #F2EDE6;
+        --structure-on: #EDEFF0;
 
-        --divider: light-dark(#E3DACB, #0D394E);
-        --border: light-dark(#D5C4AC, #1B5E7E);
+        --divider: light-dark(#DFE3E5, #0D394E);
+        --border: light-dark(#C2C9CC, #1B5E7E);
         /* Derivado para os 3:1 que a WCAG 1.4.11 pede em contorno de controle:
-           o #D5C4AC da rampa fica bem abaixo disso. */
-        --border-strong: light-dark(#8A7E6B, #4E8AA8);
+           o #C2C9CC da rampa fica bem abaixo disso. */
+        --border-strong: light-dark(#7B8285, #4E8AA8);
 
         /* ------------------------------------------------------- texto */
-        --text: light-dark(#1D1A14, #F2EDE6);
-        --text-muted: light-dark(#655B4E, #C6BFB4);
+        --text: light-dark(#191B1C, #EDEFF0);
+        --text-muted: light-dark(#595F61, #C2C9CC);
         /* Só para texto >= 17px. Nunca para informação operacional. */
-        --text-faint: light-dark(#8A7E6B, #A79E90);
+        --text-faint: light-dark(#7B8285, #9BA3A8);
 
         /* ------------------------------------------------------ acento */
         /* O navy de marca. Preenchido com rótulo claro no tema claro; no escuro
@@ -103,8 +114,11 @@
         --success-text: light-dark(#255741, #93D5B2);
 
         --warning: light-dark(#7C6437, #F0CE90);
-        --warning-on: light-dark(#FEFBF5, #2C220F);
-        --warning-quiet: light-dark(#FEFBF5, #2C220F);
+        --warning-on: light-dark(#FFFFFF, #2C220F);
+        /* Tingido de verdade. O #FEFBF5 da rampa é branco na prática: como
+           fundo de pastilha ele sumia sobre o cartão branco, e sobre o cinza
+           virava uma mancha creme. */
+        --warning-quiet: light-dark(#F6EAD1, #2C220F);
         --warning-text: light-dark(#524222, #F0CE90);
 
         --critical-text: light-dark(#A43D32, #F0C2BA);
@@ -316,10 +330,10 @@
             --border-strong: #4E8AA8;
             --divider: #0D394E;
             --structure: #010D14;
-            --structure-on: #F2EDE6;
-            --text: #F2EDE6;
-            --text-muted: #C6BFB4;
-            --text-faint: #A79E90;
+            --structure-on: #EDEFF0;
+            --text: #EDEFF0;
+            --text-muted: #C2C9CC;
+            --text-faint: #9BA3A8;
             --accent: #7ACBF7;
             --accent-on: #031823;
             --accent-text: #A8DDFA;

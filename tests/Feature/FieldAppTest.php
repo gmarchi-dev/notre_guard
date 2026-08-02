@@ -566,7 +566,7 @@ class FieldAppTest extends TestCase
 
         // Degraus das rampas que carregam papel na interface.
         foreach ([
-            '#F2EDE6',  // neutro quente - fundo do tema claro
+            '#EDEFF0',  // cinza claro - fundo do tema claro
             '#031823',  // teal mais escuro - estrutura
             '#7ACBF7',  // teal claro - acento invertido no escuro
             '#7C6437',  // dourado escuro - foco e aviso
@@ -579,9 +579,9 @@ class FieldAppTest extends TestCase
             );
         }
 
-        // O neutro do sistema é QUENTE, não cinza: é o que dá a leitura de
-        // papel e distingue o app de um painel administrativo genérico.
-        $this->assertStringContainsString('--bg: light-dark(#F2EDE6', $tokens);
+        // O neutro do sistema é a rampa de CINZA. O quente foi testado e o
+        // cartão branco perdia a separação contra ele.
+        $this->assertStringContainsString('--bg: light-dark(#EDEFF0', $tokens);
 
         // O anel de foco usa o dourado ESCURO. O de marca rende 2.2 contra
         // branco e não serve para indicar foco.

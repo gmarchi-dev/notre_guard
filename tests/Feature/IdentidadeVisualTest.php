@@ -75,19 +75,31 @@ class IdentidadeVisualTest extends TestCase
         );
     }
 
-    public function test_the_neutral_is_warm_not_grey(): void
+    public function test_the_neutral_is_cool_grey_everywhere(): void
     {
-        // É o que dá a leitura de papel e distingue o sistema de um painel
-        // administrativo genérico.
+        // O neutro quente (#F2EDE6) foi testado e recusado por julgamento
+        // visual - não por contraste, que é equivalente (1.165 contra 1.153 na
+        // separação do cartão branco). A família neutra inteira mudou junto:
+        // bege misturado com cinza fica pior que qualquer um dos dois puro.
         $campo = File::get(resource_path('css/field/tokens.css'));
         $paineis = File::get(resource_path('views/filament/identidade.blade.php'));
 
-        $this->assertStringContainsString('--bg: light-dark(#F2EDE6', $campo);
+        $this->assertStringContainsString('--bg: light-dark(#EDEFF0', $campo);
         $this->assertMatchesRegularExpression(
-            '/\.fi-body\s*\{[^}]*background-color:\s*var\(--nd-warm-100\)/s',
+            '/\.fi-body\s*\{[^}]*background-color:\s*var\(--nd-neutral-100\)/s',
             $paineis,
-            'o fundo dos painéis voltou ao cinza.',
+            'o fundo dos painéis saiu do cinza claro.',
         );
+
+        // Nenhum degrau da rampa QUENTE pode voltar a ser superfície, borda ou
+        // texto - ela sobrevive só onde é tinta.
+        foreach (['#F2EDE6', '#D5C4AC', '#8A7E6B', '#655B4E', '#1D1A14'] as $quente) {
+            $this->assertDoesNotMatchRegularExpression(
+                '/--(bg|surface|surface-2|border|border-strong|divider|text|text-muted|text-faint|structure-on):[^;]*'.$quente.'/i',
+                $campo,
+                "o neutro quente {$quente} voltou a ser superfície ou texto.",
+            );
+        }
     }
 
     public function test_the_mark_is_a_single_source_recoloured_by_context(): void

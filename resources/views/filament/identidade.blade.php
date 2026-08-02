@@ -24,11 +24,12 @@
         --nd-teal-500: #1B5E7E;
         --nd-teal-700: #031823;
 
-        /* Rampa quente - o neutro do sistema não é cinza. */
-        --nd-warm-100: #F2EDE6;
-        --nd-warm-200: #D5C4AC;
-        --nd-warm-500: #655B4E;
-        --nd-warm-700: #1D1A14;
+        /* Rampa de cinza: o neutro do sistema. O quente foi testado e recusado
+           por julgamento visual - não por contraste, que é equivalente. */
+        --nd-neutral-100: #EDEFF0;
+        --nd-neutral-200: #C2C9CC;
+        --nd-neutral-500: #595F61;
+        --nd-neutral-700: #191B1C;
 
         /* Dourado escuro: o de marca não tem contraste para texto nem foco. */
         --nd-gold-deep: #7C6437;
@@ -40,10 +41,10 @@
         --radius-xl: 20px;
     }
 
-    /* Neutro QUENTE, não cinza: é o que dá a leitura de papel e distingue o
-       sistema de um painel administrativo genérico. */
+    /* Cinza bem claro, da rampa. O neutro quente foi testado antes e recusado
+       por julgamento visual. */
     .fi-body {
-        background-color: var(--nd-warm-100);
+        background-color: var(--nd-neutral-100);
     }
 
     /*
@@ -71,7 +72,7 @@
     .fi-sidebar,
     .fi-sidebar-header {
         background-color: var(--nd-teal-700);
-        border-color: rgba(242, 237, 230, 0.08);
+        border-color: rgba(237, 239, 240, 0.08);
     }
 
     .fi-sidebar .fi-sidebar-item-btn,
@@ -86,7 +87,7 @@
 
     .fi-sidebar .fi-sidebar-item-btn:hover,
     .fi-sidebar .fi-sidebar-group-btn:hover {
-        background-color: rgba(242, 237, 230, 0.06);
+        background-color: rgba(237, 239, 240, 0.06);
         color: #FFFFFF;
     }
 
@@ -108,7 +109,7 @@
 
     .fi-sidebar .fi-sidebar-footer,
     .fi-sidebar .fi-sidebar-nav-groups > * + * {
-        border-color: rgba(242, 237, 230, 0.08);
+        border-color: rgba(237, 239, 240, 0.08);
     }
 
     /* Cabeçalho de tabela no navy de marca - o que amarra tabela e barra

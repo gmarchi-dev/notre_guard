@@ -27,9 +27,16 @@ idênticos**. As âncoras mandam onde a marca aparece; as rampas dão os degraus
 
 ## O caráter da paleta
 
-**Neutro quente, não cinza.** O fundo do tema claro é `#F2EDE6` e o cartão é branco. É o que dá a
-leitura de papel e distingue o sistema de um painel administrativo genérico — a rampa de cinza
-existe, mas fica para gráfico e dado, não para a casca.
+**Neutro frio.** O fundo do tema claro é `#EDEFF0`, da rampa de cinza, com o cartão branco.
+
+> O neutro **quente** (`#F2EDE6`) foi aplicado primeiro e recusado em 31/07/2026 por julgamento
+> visual. **Não foi por contraste:** medidos, os dois separam o cartão branco praticamente igual —
+> 1,165 contra 1,153. A diferença é de caráter, não de legibilidade.
+>
+> A família neutra inteira mudou junto — superfícies, bordas, fios e texto. Bege misturado com cinza
+> fica pior que qualquer um dos dois puro, então a rampa quente sobreviveu só onde é **tinta**,
+> nunca como superfície. Há teste que impede qualquer degrau dela voltar a ser fundo, borda ou
+> texto.
 
 **Dourado com parcimônia.** Ele marca "onde você está" na barra lateral e serve de fio de
 assinatura. Não carrega informação.
